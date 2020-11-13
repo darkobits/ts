@@ -25,10 +25,10 @@
     "unified.eslint": "dist/bin/eslint.js"
   },
   "exports": {
-    "./config/babel": "./dist/config/babel.js",
-    "./config/eslint-react": "./dist/config/eslint-react.js",
-    "./config/eslint": "./dist/config/eslint.js",
-    "./config/jest": "./dist/config/jest.js",
+    "./babel": "./dist/config/babel.js",
+    "./eslint-react": "./dist/config/eslint-react.js",
+    "./eslint": "./dist/config/eslint.js",
+    "./jest": "./dist/config/jest.js",
     "./package-scripts": "./dist/config/package-scripts.js",
     "./tsconfig.json": "./dist/config/tsconfig-base.jsonc"
   },
