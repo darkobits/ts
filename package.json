@@ -1,0 +1,92 @@
+{
+  "name": "@darkobits/ts",
+  "version": "0.1.0-alpha.0",
+  "author": "darkobits",
+  "license": "WTFPL",
+  "description": "TypeScript boilerplate for Node 14+.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/darkobits/ts-unified"
+  },
+  "engineStrict": true,
+  "engines": {
+    "node": ">=14.13.0"
+  },
+  "files": [
+    "dist"
+  ],
+  "bin": {
+    "unified": "dist/bin/nps.js",
+    "unified.babel": "dist/bin/babel.js",
+    "unified.del": "dist/bin/del.js",
+    "unified.jest": "dist/bin/jest.js",
+    "unified.standard-version": "dist/bin/standard-version.js",
+    "unified.ttsc": "dist/bin/ttsc.js",
+    "unified.eslint": "dist/bin/eslint.js"
+  },
+  "exports": {
+    "./config/babel": "./dist/config/babel.js",
+    "./config/eslint-react": "./dist/config/eslint-react.js",
+    "./config/eslint": "./dist/config/eslint.js",
+    "./config/jest": "./dist/config/jest.js",
+    "./package-scripts": "./dist/config/package-scripts.js",
+    "./tsconfig.json": "./dist/config/typescript-config.json"
+  },
+  "scripts": {
+    "lint": "nps lint",
+    "test": "nps test",
+    "build": "nps build",
+    "bump": "nps bump",
+    "prepare": "nps prepare",
+    "help": "nps --scripts"
+  },
+  "dependencies": {
+    "@babel/cli": "^7.10.5",
+    "@babel/core": "^7.11.1",
+    "@babel/plugin-proposal-class-properties": "^7.10.4",
+    "@babel/plugin-proposal-decorators": "^7.10.5",
+    "@babel/plugin-proposal-nullish-coalescing-operator": "^7.10.4",
+    "@babel/plugin-proposal-optional-chaining": "^7.11.0",
+    "@babel/plugin-transform-runtime": "^7.11.0",
+    "@babel/preset-env": "^7.11.0",
+    "@babel/preset-react": "^7.10.4",
+    "@babel/preset-typescript": "^7.10.4",
+    "@babel/register": "^7.10.5",
+    "@babel/runtime": "^7.11.1",
+    "@darkobits/log": "^2.0.0-beta.15",
+    "@typescript-eslint/eslint-plugin": "^4.6.1",
+    "@typescript-eslint/parser": "^4.6.1",
+    "@zerollup/ts-transform-paths": "^1.7.18",
+    "babel-eslint": "^10.1.0",
+    "babel-jest": "^26.2.2",
+    "babel-plugin-add-module-exports": "^1.0.2",
+    "babel-plugin-module-resolver": "^4.0.0",
+    "deepmerge": "^4.2.2",
+    "del-cli": "^3.0.1",
+    "eslint": "^7.6.0",
+    "eslint-codeframe-formatter": "^1.0.2",
+    "eslint-plugin-jsx-a11y": "^6.3.1",
+    "eslint-plugin-prefer-arrow": "^1.2.2",
+    "eslint-plugin-react": "^7.20.5",
+    "eslint-plugin-react-hooks": "^4.0.8",
+    "eslint-plugin-unicorn": "^23.0.0",
+    "jest": "^26.2.2",
+    "npm-check": "^5.9.2",
+    "nps": "^5.10.0",
+    "nps-utils": "^1.7.0",
+    "read-pkg-up": "^7.0.1",
+    "resolve-pkg": "^2.0.0",
+    "standard-version": "^9.0.0",
+    "ts-node": "^9.0.0",
+    "ttypescript": "^1.5.10",
+    "typescript": "^4.0.5"
+  },
+  "peerDependencies": {
+    "@types/jest": "^26.0.8",
+    "@types/node": ">=12.0.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^26.0.8",
+    "@types/node": "^14.0.27"
+  }
+}
