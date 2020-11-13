@@ -1,0 +1,58 @@
+{
+  "compilerOptions": {
+    "plugins": [
+      // Ensures that paths in emitted declaration files are re-written
+      // properly.
+      {"transform": "@zerollup/ts-transform-paths"}
+    ],
+
+    // Specify a list of built-in API groups to include in the project.
+    "lib": [
+      "esnext",
+      "es2015"
+    ],
+
+    // Allow default imports from modules with no default export. This does not
+    // effect code emit, just type-checking.
+    "allowSyntheticDefaultImports": true,
+
+    // Emit declaration files.
+    "declaration": true,
+
+    // Adds support for ES2015 iteration semantics such as the spread operator
+    // when compiling to older targets. Because we don't actually use TypeScript
+    // for compilation, this setting has the effect of suppressing TypeScript
+    // errors when such operators are used.
+    // See: https://mariusschulz.com/blog/downlevel-iteration-for-es3-es5-in-typescript
+    "downlevelIteration": true,
+
+    // Emit design-type metadata for decorated declarations in source.
+    "emitDecoratorMetadata": true,
+
+    // Emit '__importStar' and '__importDefault' helpers for runtime babel
+    // ecosystem compatibility and enable '--allowSyntheticDefaultImports' for
+    // type system compatibility. Requires TypeScript version 2.7 or later.
+    "esModuleInterop": true,
+
+    // Enables experimental support for ES7 decorators.
+    "experimentalDecorators": true,
+
+    // Warn on expressions and declarations with an implied 'any' type.
+    "noImplicitAny": true,
+
+    // Report errors on unused locals.
+    "noUnusedLocals": true,
+
+    // Stylize errors and messages using color and context.
+    "pretty": true,
+
+    // Allow TypeScript to resolve JSON files.
+    "resolveJsonModule": true,
+
+    // Do not emit source maps.
+    "sourceMap": false,
+
+    // Enable all strict options.
+    "strict": true
+  }
+}
