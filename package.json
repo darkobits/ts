@@ -15,12 +15,12 @@
   "files": [
     "dist"
   ],
-  "entries": {
-    "tsconfig.json": "config/tsconfig.json",
-    "babel.js": "config/babel.js",
-    "eslint.js": "config/eslint.js",
-    "jest.js": "config/jest.js",
-    "package-scripts.js": "config/package-scripts.js"
+  "exports": {
+    "./tsconfig.json": "./config/tsconfig.json",
+    "./babel.js": "./config/babel.js",
+    "./eslint.js": "./config/eslint.js",
+    "./jest.js": "./config/jest.js",
+    "./package-scripts.js": "./config/package-scripts.js"
   },
   "bin": {
     "unified": "dist/bin/nps.js",
