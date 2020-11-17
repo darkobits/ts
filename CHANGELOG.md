@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.1.0-beta.3](https://github.com/darkobits/ts/compare/v0.1.0-beta.2...v0.1.0-beta.3) (2020-11-17)
+
+
+### Features
+
+* Add re-pack. ([4a62882](https://github.com/darkobits/ts/commit/4a6288255f8e0b27fb5b9fd1846a56747d22817e))
+
 ## [0.1.0-beta.2](https://github.com/darkobits/ts/compare/v0.1.0-beta.1...v0.1.0-beta.2) (2020-11-13)
 
 ## [0.1.0-beta.1](https://github.com/darkobits/ts/compare/v0.1.0-beta.0...v0.1.0-beta.1) (2020-11-13)
