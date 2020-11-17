@@ -37,6 +37,7 @@
     "build": "nps build",
     "bump": "nps bump",
     "prepare": "nps prepare",
+    "publish": "nps publish",
     "help": "nps --scripts"
   },
   "dependencies": {
