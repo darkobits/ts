@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.1.0-beta.8](https://github.com/darkobits/ts/compare/v0.1.0-beta.7...v0.1.0-beta.8) (2020-11-17)
+
+
+### Bug Fixes
+
+* Fix exports again. ([e582d3e](https://github.com/darkobits/ts/commit/e582d3e0e3541bfa209412a231f6474090422769))
+
 ## [0.1.0-beta.7](https://github.com/darkobits/ts/compare/v0.1.0-beta.6...v0.1.0-beta.7) (2020-11-17)
 
 
