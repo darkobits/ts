@@ -3,12 +3,12 @@
 import path from 'path';
 
 import cli from '@darkobits/saffron';
-import execa from 'execa';
+import chex from '@darkobits/chex';
 import fs from 'fs-extra';
 import ow from 'ow';
+import pacote from 'pacote';
 import * as R from 'ramda';
 import readPkgUp, { NormalizedPackageJson } from 'read-pkg-up';
-import pacote from 'pacote';
 import tar from 'tar';
 import tempy from 'tempy';
 
@@ -265,7 +265,9 @@ async function symlinkEntries(publishWorkspace: string, entries: Array<{from: st
  * be published from the publish workspace.
  */
 async function packDryRun(cwd: string) {
-  await execa('npm', ['pack', '--dry-run', '--ignore-scripts'], {
+  const npm = await chex('npm >=5');
+
+  await npm(['pack', '--dry-run', '--ignore-scripts'], {
     cwd,
     stdout: 'ignore',
     stderr: 'inherit'
@@ -308,32 +310,6 @@ export interface PublishOptions {
 
 
 /**
- * THIS WORKS. REPLACE CALL TO NPM PACK WITH PACOTE
- */
-async function pacoteTesting(pkg: PkgInfo) {
-  try {
-    const tempTarballPath = tempy.file();
-    await fs.ensureDir(path.dirname(tempTarballPath));
-    await pacote.tarball.file(pkg.rootDir, tempTarballPath, { preferOffline: true });
-
-    const outDir = path.resolve(process.cwd(), 'pacote-test');
-    await fs.ensureDir(outDir);
-
-    await tar.extract({
-      file: tempTarballPath,
-      cwd: outDir,
-      strip: 1
-      // Skip extracting package.json into the publish workspace because we will
-      // write our own.
-      // filter: (filePath: string) => !filePath.includes('package.json')
-    });
-  } catch (err) {
-    log.error(log.prefix('pacote'), err.message);
-  }
-}
-
-
-/**
  * Accepts a single subdirectory in a package to "hoist" to the root of the
  * publish workspace.
  */
@@ -346,8 +322,6 @@ async function main({ cwd, buildDir, workspaceDir: workspaceDirFromOpts, entries
     // Gather information about the host package.
     const pkg = await getPkgInfo(resolvedCwd);
     log.info(`Preparing package: ${log.chalk.green(pkg.json.name)}`);
-
-    void pacoteTesting(pkg);
 
     // Compute the absolute path to the publish workspace, create the directory,
     // and ensure it is empty.
