@@ -20,7 +20,7 @@
     "babel.js": "config/babel.js",
     "eslint.js": "config/eslint.js",
     "jest.js": "config/jest.js",
-    "package-scripts": "config/package-scripts.js"
+    "package-scripts.js": "config/package-scripts.js"
   },
   "bin": {
     "unified": "dist/bin/nps.js",
