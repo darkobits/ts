@@ -11,7 +11,7 @@ const ALWAYS_IGNORE = [
 
 export default (userConfig = {}) => merge({
   testEnvironment: 'node',
-  testRegex: '^.+\\.spec.*$',
+  testMatch: ['<rootDir>/src/**/*.spec.*'],
   testPathIgnorePatterns: ALWAYS_IGNORE,
   clearMocks: true,
   collectCoverageFrom: [
