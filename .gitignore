@@ -90,4 +90,5 @@ typings/
 # Build artifacts
 dist
 
-/NOTES.md
+NOTES.md
+/.re-pack
