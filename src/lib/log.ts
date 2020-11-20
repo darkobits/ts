@@ -1,3 +1,3 @@
 import LogFactory from '@darkobits/log';
 
-export default LogFactory({heading: 'ts-unified'});
+export default LogFactory({heading: 'ts'});
