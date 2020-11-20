@@ -20,7 +20,7 @@
     "./eslint": "./config/eslint.js",
     "./jest": "./config/jest.js",
     "./package-scripts": "./config/package-scripts.js",
-    "./tsconfig.json": "./config/tsconfig.json",
+    "./tsconfig.json": "./config/tsconfig-base.json",
     "./lib": "./lib"
   },
   "bin": {
