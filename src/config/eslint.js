@@ -226,9 +226,6 @@ config.rules['no-useless-rename'] = ['error'];
 // Require `let` or `const` instead of `var`.
 config.rules['no-var'] = ['error'];
 
-// Require using arrow functions for callbacks.
-config.rules['prefer-arrow-callback'] = ['error'];
-
 // Require the use of `const` for variables that are never reassigned.
 config.rules['prefer-const'] = ['error'];
 
@@ -240,6 +237,11 @@ config.rules['rest-spread-spacing'] = ['error'];
 
 // Disallow extraneous spaces inside of template string curly brace pairs.
 config.rules['template-curly-spacing'] = ['error', 'never'];
+
+// Require using arrow functions for callbacks.
+// For more rules related to arrow functions, see:
+// - 'prefer-arrow/prefer-arrow-functions' (below)
+config.rules['prefer-arrow-callback'] = ['error'];
 
 
 // ----- [Plugin] @typescript/eslint -------------------------------------------
@@ -735,9 +737,8 @@ config.rules['unicorn/prevent-abbreviations'] = 'off';
 config.rules['prefer-arrow/prefer-arrow-functions'] = ['error', {
   // Exempt top-level function declarations.
   allowStandaloneDeclarations: true,
-  // Functions defined as class instance fields will be converted to arrow
-  // functions when doing so would not alter or break their behavior.
-  classPropertiesAllowed: true,
+  // Class methods will NOT be converted to arrow functions.
+  classPropertiesAllowed: false,
   // Functions assigned to a prototype will be converted to arrow
   // functions when doing so would not alter or break their behavior.
   disallowPrototype: true
