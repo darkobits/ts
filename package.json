@@ -16,11 +16,12 @@
     "dist"
   ],
   "exports": {
-    "./tsconfig.json": "./config/tsconfig.json",
     "./babel": "./config/babel.js",
     "./eslint": "./config/eslint.js",
     "./jest": "./config/jest.js",
-    "./package-scripts": "./config/package-scripts.js"
+    "./package-scripts": "./config/package-scripts.js",
+    "./tsconfig.json": "./config/tsconfig.json",
+    "./lib": "./lib"
   },
   "bin": {
     "unified": "dist/bin/nps.js",
