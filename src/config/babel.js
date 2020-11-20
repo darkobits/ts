@@ -1,5 +1,6 @@
-// N.B. `module.exports` must be used in this file because it configures Babel,
-// which lets us use `export default` in all other files.
+// N.B. This file _must not_ use any language features that need to be
+// transpiled by Babel (ex: import/export) or require any files that also use
+// such features.
 module.exports = {
   presets: [
     ['@babel/preset-env', {

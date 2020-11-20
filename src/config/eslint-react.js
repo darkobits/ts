@@ -2,6 +2,10 @@
 // ----- ESLint Rules (TypeScript + React) -------------------------------------
 // -----------------------------------------------------------------------------
 
+// N.B. This file must _not_ use any TypeScript features, as they will not be
+// properly transpiled, even if we require @babel/register in our root .eslintrc
+// file.
+
 const config = {
   parserOptions: {
     jsx: true,

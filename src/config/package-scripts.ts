@@ -1,4 +1,5 @@
 import merge from 'deepmerge';
+// @ts-expect-error - No type defs exist for this package.
 import * as npsUtils from 'nps-utils';
 import readPkgUp from 'read-pkg-up';
 
@@ -28,7 +29,7 @@ const closestPkgInfo = readPkgUp.sync();
  * the directory tree from process.cwd) and compares it to our package name to
  * determine if prefixing should occur.
  */
-const prefixBin = binName => {
+const prefixBin = (binName: string) => {
   if (closestPkgInfo && closestPkgInfo.packageJson.name === '@darkobits/ts') {
     return binName;
   }
@@ -41,7 +42,7 @@ const prefixBin = binName => {
  * Introspects the argument passed to this module's default export/function, and
  * returns an object representing any user-provided scripts/options.
  */
-const getUserScripts = userArgument => {
+const getUserScripts = (userArgument: any) => {
   let userScripts = {
     scripts: {},
     options: {}
@@ -69,9 +70,9 @@ const getUserScripts = userArgument => {
  * scripts/options object, or a function that returns an NPS scripts/options
  * object.
  */
-export default userArgument => {
-  const scripts = {};
-  const userScripts = getUserScripts(userArgument);
+export default (userArgument: any) => {
+  const scripts: any = {};
+  const userScripts: any = getUserScripts(userArgument);
 
 
   // ----- Dependency Management -----------------------------------------------

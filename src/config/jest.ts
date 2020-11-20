@@ -1,5 +1,5 @@
 import merge from 'deepmerge';
-import {EXTENSIONS, SRC_DIR, OUT_DIR} from 'etc/constants';
+import { EXTENSIONS, SRC_DIR, OUT_DIR } from 'etc/constants';
 
 
 // Paths we always want Jest to ignore.

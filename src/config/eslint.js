@@ -2,7 +2,11 @@
 // ----- ESLint Rules (TypeScript) ---------------------------------------------
 // -----------------------------------------------------------------------------
 
-import {findTsConfig} from 'lib/utils';
+// N.B. This file must _not_ use any TypeScript features, as they will not be
+// properly transpiled, even if we require @babel/register in our root .eslintrc
+// file.
+
+import { findTsConfig } from 'lib/utils';
 
 
 const config = {
