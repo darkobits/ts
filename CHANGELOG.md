@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.1.0-beta.13](https://github.com/darkobits/ts/compare/v0.1.0-beta.12...v0.1.0-beta.13) (2020-11-21)
+
+
+### Features
+
+* Add root-level config exports, remove package exports. ([ea998a3](https://github.com/darkobits/ts/commit/ea998a3036411256f93ed06c6991471d11fe043b))
+
 ## [0.1.0-beta.12](https://github.com/darkobits/ts/compare/v0.1.0-beta.11...v0.1.0-beta.12) (2020-11-20)
 
 
