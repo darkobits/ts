@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.1.0-beta.14](https://github.com/darkobits/ts/compare/v0.1.0-beta.13...v0.1.0-beta.14) (2020-11-21)
+
+
+### Bug Fixes
+
+* Fix package.json fields. ([1501b4e](https://github.com/darkobits/ts/commit/1501b4e12e55699454eb91067b0882eb57820c47))
+
 ## [0.1.0-beta.13](https://github.com/darkobits/ts/compare/v0.1.0-beta.12...v0.1.0-beta.13) (2020-11-21)
 
 
