@@ -1,68 +1,16 @@
 import merge from 'deepmerge';
 // @ts-expect-error - No type defs exist for this package.
 import * as npsUtils from 'nps-utils';
-import readPkgUp from 'read-pkg-up';
 
 import {
   EXTENSIONS_WITH_DOT,
   SRC_DIR,
   OUT_DIR
 } from 'etc/constants';
-import log from 'lib/log';
-
-
-const closestPkgInfo = readPkgUp.sync();
-
-
-/**
- * Because ts-unified shares the below scripts with its own dependents, we need
- * to differentiate when a binary is being invoked by ts-unified and when it is
- * being invoked by a dependent, because during the install/prepare phase for
- * ts-unified, NPM will not have linked the "bin" entries from our package.json
- * yet, and those entries point to files in our "dist" folder, which has not
- * been created yet.
- *
- * So, when used locally, a script needs to use the "raw" bin name, and when
- * used by a dependent, a script needs to use the "unified." prefix.
- *
- * This function checks the name of the closest package.json file (walking up
- * the directory tree from process.cwd) and compares it to our package name to
- * determine if prefixing should occur.
- */
-const prefixBin = (binName: string) => {
-  if (closestPkgInfo && closestPkgInfo.packageJson.name === '@darkobits/ts') {
-    return binName;
-  }
-
-  return `unified.${binName}`;
-};
-
-
-/**
- * Introspects the argument passed to this module's default export/function, and
- * returns an object representing any user-provided scripts/options.
- */
-const getUserScripts = (userArgument: any) => {
-  let userScripts = {
-    scripts: {},
-    options: {}
-  };
-
-  if (typeof userArgument === 'function') {
-    // TODO: Determine if "bin" is still needed here.
-    userScripts = userArgument({ npsUtils, bin: prefixBin });
-  }
-
-  if (typeof userArgument === 'object') {
-    userScripts = userArgument;
-  }
-
-  if (!Reflect.has(userScripts, 'scripts') && !Reflect.has(userScripts, 'options')) {
-    log.warn(log.prefix('package-scripts'), 'Object returned did not contain "scripts" or "options" keys. This may be an error.');
-  }
-
-  return userScripts;
-};
+import {
+  getUserScripts,
+  prefixBin
+} from 'lib/utils';
 
 
 /**

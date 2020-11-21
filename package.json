@@ -15,23 +15,16 @@
   "files": [
     "dist"
   ],
-  "exports": {
-    "./babel": "./config/babel.js",
-    "./eslint": "./config/eslint.js",
-    "./jest": "./config/jest.js",
-    "./package-scripts": "./config/package-scripts.js",
-    "./tsconfig.json": "./config/tsconfig-base.json",
-    "./lib": "./lib"
-  },
   "bin": {
-    "unified": "dist/bin/nps.js",
-    "unified.babel": "dist/bin/babel.js",
-    "unified.del": "dist/bin/del.js",
-    "unified.jest": "dist/bin/jest.js",
-    "unified.standard-version": "dist/bin/standard-version.js",
-    "unified.ttsc": "dist/bin/ttsc.js",
-    "unified.eslint": "dist/bin/eslint.js"
+    "unified": "bin/nps.js",
+    "unified.babel": "bin/babel.js",
+    "unified.del": "bin/del.js",
+    "unified.jest": "bin/jest.js",
+    "unified.standard-version": "bin/standard-version.js",
+    "unified.ttsc": "bin/ttsc.js",
+    "unified.eslint": "bin/eslint.js"
   },
+  "min": "bin/index.js",
   "scripts": {
     "lint": "nps lint",
     "test": "nps test",
@@ -87,7 +80,7 @@
     "@types/node": ">=12.0.0"
   },
   "devDependencies": {
-    "@darkobits/re-pack": "^0.1.0-beta.2",
+    "@darkobits/re-pack": "^0.1.0-beta.3",
     "@types/jest": "^26.0.8",
     "@types/node": "^14.0.27"
   }
