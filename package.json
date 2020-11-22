@@ -32,12 +32,18 @@
   },
   "dependencies": {
     "@darkobits/log": "^2.0.0-beta.15",
-    "@darkobits/ts": "^0.1.0-beta.15",
+    "@darkobits/ts": "^0.1.0-beta.17",
     "@hot-loader/react-dom": "^16.14.0",
     "@svgr/webpack": "^5.5.0",
+    "@types/bytes": "^3.1.0",
+    "@types/copy-webpack-plugin": "^6.0.0",
+    "@types/friendly-errors-webpack-plugin": "^0.1.2",
+    "@types/jest": "^26.0.15",
     "@types/mini-css-extract-plugin": "^1.2.1",
-    "@types/react": "^16.9.49",
-    "@types/react-dom": "^16.9.8",
+    "@types/node": "^14.6.2",
+    "@types/react-dom": "^16.9.10",
+    "@types/react": "^16.14.2",
+    "@types/webpack-dev-server": "^3.11.0",
     "babel-loader": "^8.2.1",
     "bytes": "^3.1.0",
     "clean-webpack-plugin": "^3.0.0",
@@ -55,28 +61,26 @@
     "mini-css-extract-plugin": "^1.3.1",
     "postcss": "^8.1.8",
     "raw-loader": "^4.0.1",
+    "react-dom": "^16.14.0",
     "react-hot-loader": "^4.12.21",
+    "react": "^16.14.0",
     "regenerator-runtime": "^0.13.7",
     "typescript-styled-plugin": "^0.15.0",
     "url-loader": "^4.1.0",
-    "webpack": "^4.44.2",
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.0",
-    "webpack-merge": "^5.4.0"
+    "webpack-merge": "^5.4.0",
+    "webpack": "^4.44.2"
   },
   "devDependencies": {
-    "@darkobits/re-pack": "^0.1.2",
-    "@types/bytes": "^3.1.0",
-    "@types/copy-webpack-plugin": "^6.0.0",
-    "@types/friendly-errors-webpack-plugin": "^0.1.2",
-    "@types/jest": "^26.0.12",
-    "@types/node": "^14.6.2",
-    "@types/webpack-dev-server": "^3.11.0",
-    "react": "^16.14.0",
-    "react-dom": "^16.14.0"
+    "@darkobits/re-pack": "^0.1.3"
   },
   "peerDependencies": {
-    "@types/jest": "^26.0.8",
-    "@types/node": ">=12.0.0"
+    "@types/jest": "^26.0.15",
+    "@types/node": "^14.6.2",
+    "@types/react": "^16.14.2",
+    "@types/react-dom": "^16.9.10",
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0"
   }
 }
