@@ -1,0 +1,10 @@
+{
+  "extends": "@darkobits/ts/config/tsconfig-base.json",
+  "include": ["."],
+  "compilerOptions": {
+    "baseUrl": "src",
+    "outDir": "dist",
+    "paths": {"*": ["*", "src/*"]},
+    "skipLibCheck": true
+  }
+}
