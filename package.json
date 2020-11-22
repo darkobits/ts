@@ -31,6 +31,7 @@
     "build": "nps build",
     "bump": "nps bump",
     "prepare": "nps prepare",
+    "prepublishOnly": "re-pack guard",
     "publish": "nps publish",
     "help": "nps --scripts"
   },
@@ -80,7 +81,7 @@
     "@types/node": ">=12.0.0"
   },
   "devDependencies": {
-    "@darkobits/re-pack": "^0.1.0-beta.4",
+    "@darkobits/re-pack": "^0.1.2",
     "@types/jest": "^26.0.8",
     "@types/node": "^14.0.27"
   }
