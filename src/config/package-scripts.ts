@@ -144,7 +144,7 @@ export default (userArgument: any) => {
         npsUtils.concurrent({
           babel: {
             script: scripts.compile.default.script,
-            color: 'bgYellow.gray'
+            color: 'bgYellow.black'
           },
           ts: {
             script: scripts.ts.default.script,
@@ -163,7 +163,7 @@ export default (userArgument: any) => {
         npsUtils.concurrent({
           babel: {
             script: scripts.compile.watch.script,
-            color: 'bgYellow.gray'
+            color: 'bgYellow.black'
           },
           tsc: {
             script: scripts.ts.watch.script,
