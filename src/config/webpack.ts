@@ -5,7 +5,7 @@ import bytes from 'bytes';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import findUp from 'find-up';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
-// import FriendlyErrorsWebpackPlugin from 'friendly-errors-webpack-plugin';
+import FriendlyErrorsWebpackPlugin from 'friendly-errors-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import webpack from 'webpack';
@@ -212,7 +212,7 @@ const baseWebpackConfigFactory: WebpackConfigurationFactory = ({ argv, config, p
     template: path.resolve(pkgRoot, 'src', 'index.html'),
     inject: true,
     // TODO: Replace this.
-    title: 'App'
+    title: pkgJson.displayName ?? 'App'
   }));
 
   config.plugins.push(new MiniCssExtractPlugin({
@@ -225,12 +225,12 @@ const baseWebpackConfigFactory: WebpackConfigurationFactory = ({ argv, config, p
 
   config.plugins.push(new webpack.EnvironmentPlugin({
     NODE_ENV: argv.mode,
-    DESCRIPTION: pkgJson.description,
-    VERSION: pkgJson.version
+    DESCRIPTION: pkgJson.description ?? '',
+    VERSION: pkgJson.version ?? ''
   }));
 
   if (argv.mode === 'development') {
-    // config.plugins.push(new FriendlyErrorsWebpackPlugin());
+    config.plugins.push(new FriendlyErrorsWebpackPlugin());
   }
 
   if (argv.mode === 'production') {
