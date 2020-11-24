@@ -1,8 +1,12 @@
 {
   "extends": "@darkobits/ts/config/tsconfig-base.json",
   "compilerOptions": {
-    "jsx": "react",
-    "lib": ["DOM", "es2020"],
+    "jsx": "react-jsx",
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "esnext"
+    ],
     "plugins": [
       {"name": "typescript-styled-plugin"}
     ]
