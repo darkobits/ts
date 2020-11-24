@@ -2,4 +2,4 @@
 
 import { requireBin } from '@darkobits/ts/lib/utils';
 
-export default requireBin('webpack-cli', 'webpack');
+export default requireBin('webpack');
