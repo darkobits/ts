@@ -1,32 +1,34 @@
-import merge from 'deepmerge';
-// @ts-expect-erro - No type defs exist for this package.
-// import * as npsUtils from 'nps-utils';
-
 import { getUserScripts } from '@darkobits/ts/lib/utils';
+import merge from 'deepmerge';
 
 
 /**
- * Our default export is a function that can accept nothing, an NPS
- * scripts/options object, or a function that returns an NPS scripts/options
- * object.
+ * Our default export is a function that can accept an optional NPS
+ * configuration or an NPS configuration factory.
  */
 export default (userArgument: any) => {
   const scripts: any = {};
   const userScripts: any = getUserScripts(userArgument);
 
+  // Remove the 'compile' scripts from 'ts' which build projects using the Babel
+  // CLI.
+  scripts.compile = undefined;
+
   scripts.build = {
     description: 'Build the project with Webpack.',
-    script: 'unified.webpack --mode=production',
+    script: 'tsx.webpack --mode=production',
+    // Remove the build.watch script that we inherit from 'ts'; use 'start'
+    // below instead.
     watch: undefined
   };
 
   scripts.start = {
     description: 'Start Webpack dev server.',
-    script: 'unified.webpack-dev-server --mode=development'
+    script: 'tsx.webpack-dev-server --mode=development'
   };
 
   return merge.all([
-    // Base scripts from ts.
+    // Base scripts from 'ts'.
     require('@darkobits/ts').nps(),
     // Local overrides.
     { scripts },
