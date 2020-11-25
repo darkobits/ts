@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.1.0-beta.11](https://github.com/darkobits/tsx/compare/v0.1.0-beta.10...v0.1.0-beta.11) (2020-11-25)
+
+
+### Bug Fixes
+
+* Explicitly add ts-transform-paths plugin. ([2c4a8ad](https://github.com/darkobits/tsx/commit/2c4a8addd29baf7c6cbaf07521f83473a8ae08db))
+
 ## [0.1.0-beta.10](https://github.com/darkobits/tsx/compare/v0.1.0-beta.9...v0.1.0-beta.10) (2020-11-25)
 
 
