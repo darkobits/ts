@@ -4,7 +4,7 @@ node_js: 12
 install: npm ci --ignore-scripts
 script:
   - npx nps build
-  - npx nps test
+  # - npx nps test
 # after_success:
 #   - npx codacy-coverage -v < ./coverage/lcov.info
 cache: npm
