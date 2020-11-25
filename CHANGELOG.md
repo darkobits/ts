@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.1.0-beta.7](https://github.com/darkobits/tsx/compare/v0.1.0-beta.6...v0.1.0-beta.7) (2020-11-25)
+
+
+### Bug Fixes
+
+* Disable tests in Travis. ([c2380e8](https://github.com/darkobits/tsx/commit/c2380e8aab5f6a092d3e1b32008e8832f0928620))
+
 ## [0.1.0-beta.6](https://github.com/darkobits/tsx/compare/v0.1.0-beta.5...v0.1.0-beta.6) (2020-11-24)
 
 ## [0.1.0-beta.5](https://github.com/darkobits/tsx/compare/v0.1.0-beta.4...v0.1.0-beta.5) (2020-11-24)
