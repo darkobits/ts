@@ -1,5 +1,4 @@
 import merge from 'deepmerge';
-// @ts-expect-error - No type defs exist for this package.
 import * as npsUtils from 'nps-utils';
 
 import {
@@ -18,9 +17,9 @@ import {
  * scripts/options object, or a function that returns an NPS scripts/options
  * object.
  */
-export default (userArgument: any) => {
-  const scripts: any = {};
-  const userScripts: any = getUserScripts(userArgument);
+export default userArgument => {
+  const scripts = {};
+  const userScripts = getUserScripts(userArgument);
 
 
   // ----- Dependency Management -----------------------------------------------
@@ -39,7 +38,8 @@ export default (userArgument: any) => {
     prefixBin('eslint'),
     'src',
     '--ext',
-    '.ts,.tsx,.js,.jsx',
+    // '.ts,.tsx,.js,.jsx',
+    EXTENSIONS_WITH_DOT.join(','),
     `--format=${require.resolve('eslint-codeframe-formatter')}`
   ].join(' ');
 

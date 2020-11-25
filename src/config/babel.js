@@ -1,3 +1,7 @@
+// We cannot use custom module resolution here because this file configures the
+// tool that provides it.
+const EXTENSIONS_WITH_DOT = require('../etc/constants').EXTENSIONS_WITH_DOT;
+
 // N.B. This file _must not_ use any language features that need to be
 // transpiled by Babel (ex: import/export) or require any files that also use
 // such features.
@@ -8,8 +12,7 @@ module.exports = {
         'node 12'
       ]
     }],
-    '@babel/preset-typescript',
-    '@babel/preset-react'
+    '@babel/preset-typescript'
   ],
   plugins: [
     // This plugin must come before @babel/plugin-proposal-class-properties.
@@ -22,13 +25,7 @@ module.exports = {
     ['babel-plugin-module-resolver', {
       cwd: 'packagejson',
       root: ['./src'],
-      extensions: [
-        '.ts',
-        '.tsx',
-        '.js',
-        '.jsx',
-        '.json'
-      ]
+      extensions: EXTENSIONS_WITH_DOT
     }]
   ],
   // N.B. This is set to `false` to prevent Babel from stripping-out Webpack

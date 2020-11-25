@@ -15,11 +15,11 @@ export default (userConfig = {}) => merge({
   testPathIgnorePatterns: ALWAYS_IGNORE,
   clearMocks: true,
   collectCoverageFrom: [
-    `<rootDir>/${SRC_DIR}/**/*.{${EXTENSIONS.join(',')}}`,
+    `<rootDir>/${SRC_DIR}/**/*.{${[...EXTENSIONS, 'node'].join(',')}}`,
     '!**/node_modules/**'
   ],
   coveragePathIgnorePatterns: ALWAYS_IGNORE,
-  moduleFileExtensions: [...EXTENSIONS, 'json'],
+  moduleFileExtensions: EXTENSIONS,
   coverageThreshold: {
     global: {
       statements: 80,
