@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.1.0-beta.9](https://github.com/darkobits/tsx/compare/v0.1.0-beta.8...v0.1.0-beta.9) (2020-11-25)
+
+
+### Bug Fixes
+
+* Export correct NPS configuration. ([49e209a](https://github.com/darkobits/tsx/commit/49e209ae178a5c2d20bc7fe0a0d1ada296fbbf78))
+
 ## [0.1.0-beta.8](https://github.com/darkobits/tsx/compare/v0.1.0-beta.7...v0.1.0-beta.8) (2020-11-25)
 
 ## [0.1.0-beta.7](https://github.com/darkobits/tsx/compare/v0.1.0-beta.6...v0.1.0-beta.7) (2020-11-25)
