@@ -76,6 +76,6 @@
     "typescript": "^4.0.5"
   },
   "devDependencies": {
-    "@darkobits/re-pack": "^0.1.3"
+    "@darkobits/re-pack": "^0.1.4"
   }
 }
