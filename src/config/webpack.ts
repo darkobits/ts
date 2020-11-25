@@ -12,84 +12,25 @@ import webpack from 'webpack';
 import merge from 'webpack-merge';
 
 import log from 'lib/log';
-
-
-// ----- Types -----------------------------------------------------------------
-
-/**
- * Webpack configuration's "modules" key where the "rules" array is required
- * rather than optional.
- */
-export interface WebpackModuleConfiguration extends webpack.Module {
-  rules: Array<webpack.RuleSetRule>;
-}
-
-
-/**
- * Webpack configuration object where module.rules and plugins are required
- * rather than optional.
- */
-export interface WebpackConfiguration extends webpack.Configuration {
-  module: WebpackModuleConfiguration;
-  plugins: Array<webpack.Plugin>;
-}
-
-
-/**
- * First parameter passed to standard Webpack configuration factories.
- */
-type Env = Parameters<webpack.ConfigurationFactory>[0];
-
-
-/**
- * Second parameter passed to standard Webpack configuration factories.
- */
-type Argv = Parameters<webpack.ConfigurationFactory>[1];
-
-
-/**
- * Object passed to custom Webpack configuration factories.
- */
-export interface WebpackConfigurationFactoryOptions {
-  env: Env;
-  argv: Argv;
-  pkgJson: ReturnType<typeof getPackageInfo>['packageJson'];
-  pkgRoot: string;
-  config: WebpackConfiguration;
-}
-
-
-/**
- * Signature of a custom Webpack configuration factory.
- */
-export type WebpackConfigurationFactory = (opts: WebpackConfigurationFactoryOptions) => webpack.Configuration;
-
-
-// ----- Utilities -------------------------------------------------------------
-
-/**
- * Utility that generates a base Webpack configuration object with certain
- * keys/properties pre-defined, reducing the amount of boilerplate the user has
- * to write.
- */
-function generateBaseWebpackConfiguration() {
-  const config: any = {};
-  config.module = {rules: []};
-  config.plugins = [];
-  return config as WebpackConfiguration;
-}
+import { generateWebpackConfigurationScaffold } from 'lib/utils';
+import { WebpackConfigurationFactory } from 'etc/types';
 
 
 // ----- Base Configuration ----------------------------------------------------
 
-const baseWebpackConfigFactory: WebpackConfigurationFactory = ({ argv, config, pkgJson, pkgRoot }) => {
+const baseConfiguration: WebpackConfigurationFactory = ({ argv, config, pkgJson, pkgRoot }) => {
+  // Resolve the path to this package's node_modules folder, which may be nested
+  // in the host package's node_modules tree. We will need to add this to
+  // Webpack's module resolution configuration so that any dependencies that NPM
+  // decides to nest in this folder (ie: React) can still be imported by the
+  // host package.
   const OUR_NODE_MODULES = findUp.sync('node_modules', {
     cwd: __dirname,
     type: 'directory'
   });
 
   if (!OUR_NODE_MODULES) {
-    throw new Error('[webpack] Unable to find a node_modules directory for "tsx".');
+    throw new Error(`${log.prefix('webpack')} Unable to resolve the ${log.chalk.green('node_modules')} directory for "tsx".`);
   }
 
 
@@ -296,32 +237,45 @@ const baseWebpackConfigFactory: WebpackConfigurationFactory = ({ argv, config, p
 
 // ----- Configuration Merger --------------------------------------------------
 
-export default (userWebpackConfigFactory: WebpackConfigurationFactory) => {
-  // Return a function that conforms to the standard Webpack configuration
+/**
+ * Function that accepts a 'tsx' Webpack configuration factory and returns a
+ * 'standard' Webpack configuration factory that will be passed to Webpack.
+ *
+ * The standard factory will invoke the user-provided configuration factory,
+ * merge the resulting configuration with the 'tsx' base configuration, and
+ * return the merged configuration object to Webpack.
+ */
+export default (userConfiguration: WebpackConfigurationFactory) => {
+  // Return a function that conforms to the 'standard' Webpack configuration
   // factory signature.
-  return (env: Env, argv: Argv) => {
-    const pkgInfo = getPackageInfo();
-    const pkgJson = pkgInfo.packageJson;
-    const pkgRoot = path.dirname(pkgInfo.path);
-    log.info(log.prefix('webpack'), `Using package root: ${log.chalk.green(pkgRoot)}`);
+  const standardConfigurationFactory: webpack.ConfigurationFactory = (env, argv) => {
+    // Get host package metadata.
+    const pkg = getPackageInfo();
+    const pkgJson = pkg.json;
+    const pkgRoot = pkg.rootDir;
+
+    log.verbose(log.prefix('webpack'), `Using package root: ${log.chalk.green(pkgRoot)}`);
 
     // Return the result of merging the configuration objects returned by the
-    // base configuration factory and the user-provided configuration factory.
+    // base configuration factory and the user's configuration factory using
+    // webpack-merge.
     return merge(
-      baseWebpackConfigFactory({
+      baseConfiguration({
         env,
         argv,
         pkgJson,
         pkgRoot,
-        config: generateBaseWebpackConfiguration()
+        config: generateWebpackConfigurationScaffold()
       }),
-      userWebpackConfigFactory({
+      userConfiguration({
         env,
         argv,
         pkgJson,
         pkgRoot,
-        config: generateBaseWebpackConfiguration()
+        config: generateWebpackConfigurationScaffold()
       })
     );
   };
+
+  return standardConfigurationFactory;
 };
