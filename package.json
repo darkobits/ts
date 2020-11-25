@@ -16,8 +16,8 @@
     "dist"
   ],
   "bin": {
-    "unified.webpack": "dist/bin/webpack.js",
-    "unified.webpack-dev-server": "dist/bin/webpack-dev-server.js"
+    "tsx.webpack": "dist/bin/webpack.js",
+    "tsx.webpack-dev-server": "dist/bin/webpack-dev-server.js"
   },
   "main": "dist/index.js",
   "scripts": {
@@ -31,8 +31,9 @@
     "help": "nps --scripts"
   },
   "dependencies": {
+    "@babel/preset-react": "^7.10.4",
     "@darkobits/log": "^2.0.0-beta.15",
-    "@darkobits/ts": "^0.1.0-beta.17",
+    "@darkobits/ts": "0.1.0-beta.18",
     "@hot-loader/react-dom": "^16.14.0",
     "@svgr/webpack": "^5.5.0",
     "@types/bytes": "^3.1.0",
@@ -51,6 +52,8 @@
     "core-js": "^3.7.0",
     "css-loader": "^5.0.1",
     "eslint-loader": "^4.0.2",
+    "eslint-plugin-react": "^7.20.5",
+    "eslint-plugin-react-hooks": "^4.0.8",
     "favicons-webpack-plugin": "^4.2.0",
     "file-loader": "^6.1.0",
     "find-up": "^5.0.0",
