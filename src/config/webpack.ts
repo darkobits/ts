@@ -2,17 +2,23 @@ import path from 'path';
 
 import { getPackageInfo } from '@darkobits/ts/lib/utils';
 import bytes from 'bytes';
-import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import findUp from 'find-up';
+import webpack from 'webpack';
+import merge from 'webpack-merge';
+
+// Plugins
+import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import FriendlyErrorsWebpackPlugin from 'friendly-errors-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import webpack from 'webpack';
-import merge from 'webpack-merge';
 
 import log from 'lib/log';
-import { generateWebpackConfigurationScaffold } from 'lib/utils';
+import {
+  ensureIndexEntrypoint,
+  ensureIndexHtml,
+  generateWebpackConfigurationScaffold
+} from 'lib/utils';
 import { WebpackConfigurationFactory } from 'etc/types';
 
 
@@ -24,10 +30,7 @@ const baseConfiguration: WebpackConfigurationFactory = ({ argv, config, pkgJson,
   // Webpack's module resolution configuration so that any dependencies that NPM
   // decides to nest in this folder (ie: React) can still be imported by the
   // host package.
-  const OUR_NODE_MODULES = findUp.sync('node_modules', {
-    cwd: __dirname,
-    type: 'directory'
-  });
+  const OUR_NODE_MODULES = findUp.sync('node_modules', { cwd: __dirname, type: 'directory' });
 
   if (!OUR_NODE_MODULES) {
     throw new Error(`${log.prefix('webpack')} Unable to resolve the ${log.chalk.green('node_modules')} directory for "tsx".`);
@@ -37,12 +40,12 @@ const baseConfiguration: WebpackConfigurationFactory = ({ argv, config, pkgJson,
   // ----- Entry / Output ------------------------------------------------------
 
   config.entry = {
-    app: [
+    support: [
       'core-js/stable',
       'regenerator-runtime/runtime',
-      'react-hot-loader/patch',
-      path.resolve(pkgRoot, 'src', 'index.tsx')
-    ]
+      'react-hot-loader/patch'
+    ],
+    index: ensureIndexEntrypoint(pkgRoot)
   };
 
   config.output = {
@@ -150,10 +153,9 @@ const baseConfiguration: WebpackConfigurationFactory = ({ argv, config, pkgJson,
 
   config.plugins.push(new HtmlWebpackPlugin({
     filename: 'index.html',
-    template: path.resolve(pkgRoot, 'src', 'index.html'),
+    template: ensureIndexHtml(pkgRoot),
     inject: true,
-    // TODO: Replace this.
-    title: pkgJson.displayName ?? 'App'
+    title: pkgJson.displayName ?? ''
   }));
 
   config.plugins.push(new MiniCssExtractPlugin({
@@ -170,7 +172,7 @@ const baseConfiguration: WebpackConfigurationFactory = ({ argv, config, pkgJson,
     VERSION: pkgJson.version ?? ''
   }));
 
-  if (argv.mode === 'development') {
+  if (argv.mode === 'development' && !log.isLevelAtLeast('verbose')) {
     config.plugins.push(new FriendlyErrorsWebpackPlugin());
   }
 
@@ -253,8 +255,6 @@ export default (userConfiguration: WebpackConfigurationFactory) => {
     const pkg = getPackageInfo();
     const pkgJson = pkg.json;
     const pkgRoot = pkg.rootDir;
-
-    log.verbose(log.prefix('webpack'), `Using package root: ${log.chalk.green(pkgRoot)}`);
 
     // Return the result of merging the configuration objects returned by the
     // base configuration factory and the user's configuration factory using
