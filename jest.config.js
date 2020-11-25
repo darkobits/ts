@@ -4,13 +4,15 @@ module.exports = require('./src/config/jest')({
   coveragePathIgnorePatterns: [
     '<rootDir>/src/bin',
     '<rootDir>/src/config',
-    '<rootDir>/src/etc'
+    '<rootDir>/src/etc',
+    '<rootDir>/src/index'
   ],
   coverageThreshold: {
     global: {
-      statements: 80,
-      branches: 70,
-      lines: 80
+      statements: 60,
+      branches: 60,
+      functions: 60,
+      lines: 60
     }
   }
 });
