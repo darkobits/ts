@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.1.0-beta.10](https://github.com/darkobits/tsx/compare/v0.1.0-beta.9...v0.1.0-beta.10) (2020-11-25)
+
+
+### Features
+
+* Create template entrypoint files as needed. ([c90c451](https://github.com/darkobits/tsx/commit/c90c4512f75c1806d665a60bb3d945589e95b393))
+
 ## [0.1.0-beta.9](https://github.com/darkobits/tsx/compare/v0.1.0-beta.8...v0.1.0-beta.9) (2020-11-25)
 
 
