@@ -8,7 +8,8 @@
       "esnext"
     ],
     "plugins": [
-      {"name": "typescript-styled-plugin"}
+      {"name": "typescript-styled-plugin"},
+      {"transform": "@zerollup/ts-transform-paths"}
     ]
   }
 }
