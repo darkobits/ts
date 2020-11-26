@@ -1,10 +1,8 @@
 os: linux
+dist: groovy
 language: node_js
-node_js: 12
+node_js:
+  - 12
+  - 14
 install: npm ci --ignore-scripts
-script:
-  - npx nps build
-  # - npx nps test
-# after_success:
-#   - npx codacy-coverage -v < ./coverage/lcov.info
-cache: npm
+script: npx nps prepare
