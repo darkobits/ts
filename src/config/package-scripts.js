@@ -176,13 +176,18 @@ export default userArgument => {
 
   // ----- Versioning ----------------------------------------------------------
 
+  // N.B. We do not use prefixBin here because we want to use _our_ copy of
+  // standard-version which uses customized configuration applied at the CLI
+  // entrypoint (see bin/standard-version). We rely on the link-bins script
+  // (see etc/link-bins) to make it possible for us to invoke ts.-prefixed
+  // binaries in this way.
   scripts.bump = {
     default: {
       description: 'Generates a change log and tagged commit for a release.',
       script: npsUtils.series(...[
         userScripts?.scripts?.prebump ? 'nps prebump' : undefined,
         'nps prepare',
-        prefixBin('standard-version'),
+        'ts.standard-version',
         userScripts?.scripts?.postbump ? 'nps postbump' : undefined
       ].filter(Boolean))
     },
@@ -191,7 +196,7 @@ export default userArgument => {
       script: npsUtils.series(...[
         userScripts?.scripts?.prebump ? 'nps prebump' : undefined,
         'nps prepare',
-        `${prefixBin('standard-version')} --prerelease=beta`,
+        'ts.standard-version --prerelease=beta',
         userScripts?.scripts?.postbump ? 'nps postbump' : undefined
       ].filter(Boolean))
     },
@@ -200,7 +205,7 @@ export default userArgument => {
       script: npsUtils.series(...[
         userScripts?.scripts?.prebump ? 'nps prebump' : undefined,
         'nps prepare',
-        `${prefixBin('standard-version')} --first-release`,
+        'ts.standard-version --first-release',
         userScripts?.scripts?.postbump ? 'nps postbump' : undefined
       ].filter(Boolean))
     }
