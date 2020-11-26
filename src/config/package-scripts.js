@@ -38,7 +38,6 @@ export default userArgument => {
     prefixBin('eslint'),
     'src',
     '--ext',
-    // '.ts,.tsx,.js,.jsx',
     EXTENSIONS_WITH_DOT.join(','),
     `--format=${require.resolve('eslint-codeframe-formatter')}`
   ].join(' ');
@@ -211,7 +210,7 @@ export default userArgument => {
   // ----- Life Cycles ---------------------------------------------------------
 
   scripts.prepare = {
-    description: 'Runs after "npm install" to ensure the package compiles correctly.',
+    description: 'Runs after "npm install" to ensure the package builds correctly and tests are passing.',
     // This ensures that "nps prepare" will run a user-defined build script if
     // they have set one.
     script: npsUtils.series.nps(
