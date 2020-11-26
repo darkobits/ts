@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.1.0](https://github.com/darkobits/tsx/compare/v0.1.0-beta.11...v0.1.0) (2020-11-26)
+
+
+### 🏗 Chores
+
+* **deps:** Update dependencies. ([d408a06](https://github.com/darkobits/tsx/commit/d408a066fad684cd2b4e03dd14ead3422448ed99))
+* Update Travis config. ([8b298fd](https://github.com/darkobits/tsx/commit/8b298fd23e6c4450162981c437410f37bcf58513))
+
 ## [0.1.0-beta.11](https://github.com/darkobits/tsx/compare/v0.1.0-beta.10...v0.1.0-beta.11) (2020-11-25)
 
 
