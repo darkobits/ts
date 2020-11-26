@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.1.0](https://github.com/darkobits/ts/compare/v0.1.0-beta.20...v0.1.0) (2020-11-26)
+
+
+### 🛠 Refactoring
+
+* **utils:** Simply bin resolution logic. ([1e2a8fd](https://github.com/darkobits/ts/commit/1e2a8fd81f621cc3d4f7475467ad7b3451962102))
+
+
+### 🏗 Chores
+
+* Add link-bins script. ([559dcec](https://github.com/darkobits/ts/commit/559dcec7bbb92f2acdf7e997ce95f194277e790a))
+* Update dependencies. ([45c96cf](https://github.com/darkobits/ts/commit/45c96cf180102d5872d22ae10c26c9f52fe79a9b))
+* Update Travis configuration. ([ef18138](https://github.com/darkobits/ts/commit/ef1813845b2af1ff3bb4cb122099a625392c7c29))
+
+
+### 📖 Documentation
+
+* Add README. ([e30afd1](https://github.com/darkobits/ts/commit/e30afd149e1ba34814416bce9bff62155cf26536))
+
 ## [0.1.0-beta.20](https://github.com/darkobits/ts/compare/v0.1.0-beta.19...v0.1.0-beta.20) (2020-11-26)
 
 
