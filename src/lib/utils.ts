@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
+import { getBinPathSync } from 'get-bin-path';
 // @ts-expect-error - No type defs exist for this package.
 import * as npsUtils from 'nps-utils';
 import readPkgUp from 'read-pkg-up';
@@ -29,54 +30,29 @@ export function getPackageInfo(cwd?: string) {
 
 
 /**
- * Resolves the absolute path to the binary of a given package. Some packages
- * export multiple binaries, or binaries that do not match the package's name.
- * In such cases, a second argument may be provided to indicate the name of the
- * binary to look up.
- */
-export function resolveBin(pkgName: string, binName?: string) {
-  // Resolve the absolute path to the desired package, starting from our current
-  // directory, thereby ensuring that any nested node_modules folders between
-  // us and the host package are included in the search.
-  const rootDir = resolvePkg(pkgName, { cwd: __dirname });
-
-  if (!rootDir) {
-    throw new Error(`${log.prefix('resolveBin')} Unable to resolve path to package "${pkgName}".`);
-  }
-
-  // Load the package.json for the package.
-  const pkg = getPackageInfo(rootDir);
-
-  if (!pkg) {
-    throw new Error(`${log.prefix('resolveBin')} Unable to find a package.json for package "${pkgName}".`);
-  }
-
-  if (!pkg.json.bin) {
-    throw new Error(`${log.prefix('resolveBin')} Package "${pkgName}" does not export any binaries.`);
-  }
-
-  // Get the relative path to the indicated binary.
-  const relativeBinPath = binName ? pkg.json.bin[binName] : pkg.json.bin[pkgName];
-
-  if (!relativeBinPath) {
-    throw new Error(`${log.prefix('resolveBin')} Package "${pkgName}" does not export a binary named "${binName ?? pkgName}".`);
-  }
-
-  // Return the absolute path to the indicated binary.
-  return {
-    path: path.resolve(rootDir, relativeBinPath),
-    version: pkg.json.version
-  };
-}
-
-
-/**
- * Provided a package name and optional binary name, loads the binary.
+ * Provided a package name and optional binary name, resolves the path to the
+ * binary from this package (ensuring nested node_modules are traversed) then
+ * require()s the module.
  */
 export function requireBin(pkgName: string, binName?: string) {
-  const binInfo = resolveBin(pkgName, binName);
-  log.verbose(log.prefix('bin'), `Using ${log.chalk.bold(`${binName ?? pkgName}`)} version ${log.chalk.green(binInfo.version)}.`);
-  require(binInfo.path);
+  const name = binName ?? pkgName;
+
+  const cwd = resolvePkg(pkgName, { cwd: __dirname });
+  const binPath = getBinPathSync({ cwd, name });
+  const pkg = getPackageInfo(cwd);
+
+  if (!binPath) {
+    if (binName) {
+      throw new Error(`${log.prefix('requireBin')} Unable to resolve path to binary ${log.chalk.green(binName)} from package ${log.chalk.green(pkgName)}`);
+    }
+
+    throw new Error(`${log.prefix('requireBin')} Unable to resolve path to binary: ${log.chalk.green(pkgName)}`);
+  }
+
+  log.verbose(log.prefix(name), `Using ${log.chalk.yellow.bold(`${pkg.json.name}@${pkg.json.version}`)}.`);
+  log.verbose(log.prefix(name), `${log.chalk.gray('=>')} ${log.chalk.green(binPath)}`);
+
+  require(binPath);
 }
 
 
@@ -97,8 +73,8 @@ export function findTsConfig() {
     if (err.code === 'ENOENT') {
       log.warn(log.prefix('ts'), [
         'Attempted to automatically set ESLint\'s parserOptions.project to',
-        `${log.chalk.green(tsConfigPath)}, but the file does not exist. You may need to set`,
-        'parserOptions.project manually.'
+        `${log.chalk.green(tsConfigPath)}.but the file does not exist. You will`,
+        'need to create a tsconfig.json or set parserOptions.project manually.'
       ].join(' '));
     }
 
@@ -110,19 +86,22 @@ export function findTsConfig() {
 
 
 /**
- * Because 'ts' shares the below scripts with its own dependents, we need
- * to differentiate when a binary is being invoked by us and when it is being
- * invoked by a dependent, because during out install/prepare phase, NPM will
- * not have linked the "bin" entries from our package.json yet, and those
+ * Because this package shares many package scripts and tooling with its own
+ * dependents, we need to differentiate between when a binary is being invoked
+ * by this package and when it is being invoked by a dependent package.
+ *
+ * This is necessary because during this package's install/prepare phase, NPM
+ * will not have linked the "bin" entries from our package.json yet, and those
  * entries point to files in our "dist" folder, which will not have been created
  * yet.
  *
- * So, when used by us, a script needs to use the canonical/standard bin name,
- * and when used by a dependent, a script needs to use the prefixed bin name.
+ * So, when used by us, a package script needs to use the canonical/standard
+ * binary name, and when used by a dependent package, a script needs to use the
+ * prefixed bin name.
  *
- * This function checks the name of the closest package.json file (walking up
- * the directory tree from process.cwd) and compares it to our package name to
- * determine if prefixing should occur.
+ * This function makes this determination by checking the "name" field of the
+ * closest package.json file (walking up the directory tree from process.cwd)
+ * and compares it to our package name.
  */
 export function prefixBin(binName: string) {
   const pkg = getPackageInfo();
