@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.1.0-beta.20](https://github.com/darkobits/ts/compare/v0.1.0-beta.19...v0.1.0-beta.20) (2020-11-26)
+
+
+### 🏗 Chores
+
+* Update dependencies. ([999ac80](https://github.com/darkobits/ts/commit/999ac806cb6cefaf3d63e0ea6156ebcbe34307f6))
+* Update Travis config. ([5ea670d](https://github.com/darkobits/ts/commit/5ea670d587e2a75285dfe309be4d466a7bb2ccdd))
+
+
+### ✨ Features
+
+* Add custom CHANGELOG headings. ([b702804](https://github.com/darkobits/ts/commit/b70280421f64f9e703f84197ed1285b3fbd584a5))
+
 ## [0.1.0-beta.19](https://github.com/darkobits/ts/compare/v0.1.0-beta.18...v0.1.0-beta.19) (2020-11-25)
 
 ## [0.1.0-beta.18](https://github.com/darkobits/ts/compare/v0.1.0-beta.17...v0.1.0-beta.18) (2020-11-25)
