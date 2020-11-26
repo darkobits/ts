@@ -5,7 +5,6 @@ module.exports = {
     './src/config/eslint'
   ],
   rules: {
-    'unicorn/no-reduce': 'off',
     '@typescript-eslint/no-var-requires': 'off'
   }
-}
+};
