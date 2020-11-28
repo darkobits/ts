@@ -25,7 +25,7 @@ module.exports = {
     ['babel-plugin-module-resolver', {
       cwd: 'packagejson',
       root: ['./src'],
-      extensions: EXTENSIONS_WITH_DOT
+      extensions: [...EXTENSIONS_WITH_DOT, '.json']
     }]
   ],
   // N.B. This is set to `false` to prevent Babel from stripping-out Webpack
