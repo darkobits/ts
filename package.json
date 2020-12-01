@@ -45,8 +45,8 @@
     "@darkobits/log": "^2.0.0-beta.15",
     "@types/jest": "^26.0.8",
     "@types/node": "^14.14.10",
-    "@typescript-eslint/eslint-plugin": "^4.8.2",
-    "@typescript-eslint/parser": "^4.8.2",
+    "@typescript-eslint/eslint-plugin": "^4.9.0",
+    "@typescript-eslint/parser": "^4.9.0",
     "@zerollup/ts-transform-paths": "^1.7.18",
     "babel-eslint": "^10.1.0",
     "babel-jest": "^26.2.2",
@@ -74,7 +74,7 @@
   },
   "devDependencies": {
     "@darkobits/chex": "^0.1.8",
-    "@darkobits/re-pack": "^0.1.4",
+    "@darkobits/re-pack": "^0.1.5",
     "@types/fs-extra": "^9.0.4",
     "@types/ramda": "^0.27.32",
     "fs-extra": "^9.0.1"
