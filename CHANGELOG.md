@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.2](https://github.com/darkobits/tsx/compare/v0.1.1...v0.1.2) (2020-12-01)
+
+
+### 🐞 Bug Fixes
+
+* Allow for env & argv to be undefined. ([5d93607](https://github.com/darkobits/tsx/commit/5d936070245f9b4bd1103ee3f5810ba595d79cd2))
+
 ### [0.1.1](https://github.com/darkobits/tsx/compare/v0.1.0...v0.1.1) (2020-12-01)
 
 
