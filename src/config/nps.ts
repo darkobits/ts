@@ -59,13 +59,11 @@ export default (arg0?: NPSConfiguration | NPSConfigurationFactory) => {
   // ----- Linting -------------------------------------------------------------
 
   const ESLINT_COMMAND = [
-    // prefixBin('eslint'),
-    'ts.eslint',
+    prefixBin('eslint'),
     'src',
     '--ext',
     EXTENSIONS_WITH_DOT.join(','),
     `--format=${require.resolve('eslint-codeframe-formatter')}`
-    // '--config=.eslintrc.config.babel.ts'
   ].join(' ');
 
   scripts.lint = {
@@ -80,27 +78,22 @@ export default (arg0?: NPSConfiguration | NPSConfigurationFactory) => {
 
   // ----- Testing -------------------------------------------------------------
 
-  const JEST_COMMAND = [
-    prefixBin('jest')
-    // '--config=jest.config.ts'
-  ].join(' ');
-
   scripts.test = {
     default: {
       description: 'Run unit tests.',
-      script: JEST_COMMAND
+      script: prefixBin('jest')
     },
     watch: {
       description: 'Run unit tests in watch mode.',
-      script: `${JEST_COMMAND} --watch`
+      script: `${prefixBin('jest')} --watch`
     },
     coverage: {
       description: 'Run unit tests and generate a coverage report.',
-      script: `${JEST_COMMAND} --coverage`
+      script: `${prefixBin('jest')} --coverage`
     },
     passWithNoTests: {
       description: 'Run unit tests, but do not fail if no tests exist.',
-      script: `${JEST_COMMAND} --passWithNoTests`
+      script: `${prefixBin('jest')} --passWithNoTests`
     }
   };
 
@@ -124,16 +117,13 @@ export default (arg0?: NPSConfiguration | NPSConfigurationFactory) => {
   scripts.compile = {
     default: {
       description: 'Compile the project with Babel.',
-      script: [
+      script: npsUtils.series(
         BABEL_COMMAND,
-        '&&',
         // Babel's --ignore argument doesn't work as explained in the docs,
         // especially with multiple patterns. It is easier to just go through
         // the output folder and remove what we don't want.
-        prefixBin('del'),
-        `"${OUT_DIR}/**/*.spec.*"`,
-        `"${OUT_DIR}/**/*.test.*"`
-      ].join(' ')
+        `${prefixBin('del')} "${OUT_DIR}/**/*.spec.*" "${OUT_DIR}/**/*.test.*"`
+      )
     },
     watch: {
       description: 'Continuously compile the project with Babel.',
