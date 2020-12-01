@@ -1,10 +1,21 @@
 // -----------------------------------------------------------------------------
-// ----- ESLint Rules (TypeScript) ---------------------------------------------
+// ----- ESLint Configuration --------------------------------------------------
 // -----------------------------------------------------------------------------
 
-// N.B. This file must _not_ use any TypeScript features, as they will not be
-// properly transpiled, even if we require @babel/register in our root .eslintrc
-// file.
+/**
+ * Uses 'extends': Yes
+ * Non-CJS config: No¹²
+ * Babel config:   No¹
+ *
+ * ¹The ESLint team does not seem interested in supporting configuration file
+ *  transpilation at this time:
+ *  - https://github.com/eslint/eslint/issues/12078
+ *  - https://github.com/eslint/rfcs/pull/50
+ *
+ * ²We can, however, support non-CJS base configuration files in this repository
+ * provided our own root configuration file requires @babel/register. Consumers
+ * will not have to do this because they will be loading transpiled CJS.
+ */
 
 import { findTsConfig } from 'lib/utils';
 
@@ -780,8 +791,8 @@ const javaScriptRules = Object.entries(config.rules).reduce((rules, [rule, ruleC
     rules[rule] = 'off';
 
     // Compute the name of the non-TypeScript variant of the rule by stripping
-    // the prefix. This relies on the fact that @typescript-eslint rules always
-    // use the same rule name as their non-TypeScript variant.
+    // its '@typescript-eslint/' prefix. This assumes that @typescript-eslint
+    // rules always use the same rule name as their non-TypeScript variant.
     const jsRuleName = rule.replace('@typescript-eslint/', '');
 
     // If we have explicitly disabled the non-TypeScript variant of the rule,

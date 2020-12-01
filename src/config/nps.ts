@@ -1,4 +1,24 @@
+// -----------------------------------------------------------------------------
+// ----- NPS Configuration -----------------------------------------------------
+// -----------------------------------------------------------------------------
+
+/**
+ * Uses 'extends': No¹
+ * Non-CJS Config: No²
+ * Babel Config:   No
+ *
+ * ¹We can, however, support non-CJS base configuration files in this repository
+ * provided our own root configuration files require @babel/register. Consumers
+ * will not have to do this because they will be loading transpiled CJS.
+ *
+ * ²This can be achieved using a custom entrypoint for NPS, but would require
+ * that the user not use a globally-installed version of NPS _and_ that we
+ * overwrite the "nps" bin symlink. Alternatively, the user could create an
+ * .npsrc configuration file. Both of these solutions seem overly burdensome.
+ */
+
 import merge from 'deepmerge';
+// @ts-expect-error: Package does not have type defs.
 import * as npsUtils from 'nps-utils';
 
 import {
@@ -6,6 +26,10 @@ import {
   SRC_DIR,
   OUT_DIR
 } from 'etc/constants';
+import {
+  NPSConfiguration,
+  NPSConfigurationFactory
+} from 'etc/types';
 import {
   getUserScripts,
   prefixBin
@@ -17,9 +41,9 @@ import {
  * scripts/options object, or a function that returns an NPS scripts/options
  * object.
  */
-export default userArgument => {
-  const scripts = {};
-  const userScripts = getUserScripts(userArgument);
+export default (arg0?: NPSConfiguration | NPSConfigurationFactory) => {
+  const scripts: NPSConfiguration['scripts'] = {};
+  const userScripts = getUserScripts(arg0);
 
 
   // ----- Dependency Management -----------------------------------------------
@@ -35,11 +59,13 @@ export default userArgument => {
   // ----- Linting -------------------------------------------------------------
 
   const ESLINT_COMMAND = [
-    prefixBin('eslint'),
+    // prefixBin('eslint'),
+    'ts.eslint',
     'src',
     '--ext',
     EXTENSIONS_WITH_DOT.join(','),
     `--format=${require.resolve('eslint-codeframe-formatter')}`
+    // '--config=.eslintrc.config.babel.ts'
   ].join(' ');
 
   scripts.lint = {
@@ -54,22 +80,27 @@ export default userArgument => {
 
   // ----- Testing -------------------------------------------------------------
 
+  const JEST_COMMAND = [
+    prefixBin('jest')
+    // '--config=jest.config.ts'
+  ].join(' ');
+
   scripts.test = {
     default: {
       description: 'Run unit tests.',
-      script: prefixBin('jest')
+      script: JEST_COMMAND
     },
     watch: {
       description: 'Run unit tests in watch mode.',
-      script: `${prefixBin('jest')} --watch`
+      script: `${JEST_COMMAND} --watch`
     },
     coverage: {
       description: 'Run unit tests and generate a coverage report.',
-      script: `${prefixBin('jest')} --coverage`
+      script: `${JEST_COMMAND} --coverage`
     },
     passWithNoTests: {
       description: 'Run unit tests, but do not fail if no tests exist.',
-      script: `${prefixBin('jest')} --passWithNoTests`
+      script: `${JEST_COMMAND} --passWithNoTests`
     }
   };
 
@@ -137,7 +168,7 @@ export default userArgument => {
       script: npsUtils.series(...[
         // If there is a user-defined script named 'prebuild', run it.
         // Otherwise, run the default prebuild routine.
-        userScripts?.scripts?.prebuild ? 'nps prebuild' : undefined,
+        userScripts?.scripts?.prebuild ? `${prefixBin('nps')} prebuild` : undefined,
         // Then, build the project by concurrently running Babel and generating
         // type definitions. N.B. This will implicitly type-check the project.
         npsUtils.concurrent({
@@ -151,14 +182,14 @@ export default userArgument => {
           }
         }),
         // Finally, if there is a user-defined script named 'postbuild', run it.
-        userScripts?.scripts?.postbuild ? 'nps postbuild' : undefined
+        userScripts?.scripts?.postbuild ? `${prefixBin('nps')} postbuild` : undefined
       ].filter(Boolean))
     },
     watch: {
       description: 'Continuously build the project',
       script: npsUtils.series(...[
         // If there is a user-defined script named 'prebuild', run it.
-        userScripts?.scripts?.prebuild ? 'nps prebuild' : undefined,
+        userScripts?.scripts?.prebuild ? `${prefixBin('nps')} prebuild` : undefined,
         npsUtils.concurrent({
           babel: {
             script: scripts.compile.watch.script,
@@ -185,28 +216,28 @@ export default userArgument => {
     default: {
       description: 'Generates a change log and tagged commit for a release.',
       script: npsUtils.series(...[
-        userScripts?.scripts?.prebump ? 'nps prebump' : undefined,
-        'nps prepare',
-        'ts.standard-version',
-        userScripts?.scripts?.postbump ? 'nps postbump' : undefined
+        userScripts?.scripts?.prebump ? `${prefixBin('nps')} prebump` : undefined,
+        `${prefixBin('nps')} prepare`,
+        prefixBin('standard-version'),
+        userScripts?.scripts?.postbump ? `${prefixBin('nps')} postbump` : undefined
       ].filter(Boolean))
     },
     beta: {
       description: 'Generates a change log and tagged commit for a beta release.',
       script: npsUtils.series(...[
-        userScripts?.scripts?.prebump ? 'nps prebump' : undefined,
-        'nps prepare',
-        'ts.standard-version --prerelease=beta',
-        userScripts?.scripts?.postbump ? 'nps postbump' : undefined
+        userScripts?.scripts?.prebump ? `${prefixBin('nps')} prebump` : undefined,
+        `${prefixBin('nps')} prepare`,
+        `${prefixBin('standard-version')} --prerelease=beta`,
+        userScripts?.scripts?.postbump ? `${prefixBin('nps')} postbump` : undefined
       ].filter(Boolean))
     },
     first: {
       description: 'Generates a changelog and tagged commit for a project\'s first release.',
       script: npsUtils.series(...[
-        userScripts?.scripts?.prebump ? 'nps prebump' : undefined,
-        'nps prepare',
-        'ts.standard-version --first-release',
-        userScripts?.scripts?.postbump ? 'nps postbump' : undefined
+        userScripts?.scripts?.prebump ? `${prefixBin('nps')} prebump` : undefined,
+        `${prefixBin('nps')} prepare`,
+        `${prefixBin('standard-version')} --first-release`,
+        userScripts?.scripts?.postbump ? `${prefixBin('nps')} postbump` : undefined
       ].filter(Boolean))
     }
   };

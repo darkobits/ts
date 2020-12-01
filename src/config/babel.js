@@ -1,10 +1,18 @@
-// We cannot use custom module resolution here because this file configures the
-// tool that provides it.
-const EXTENSIONS_WITH_DOT = require('../etc/constants').EXTENSIONS_WITH_DOT;
+// -----------------------------------------------------------------------------
+// ----- Babel Configuration ---------------------------------------------------
+// -----------------------------------------------------------------------------
 
-// N.B. This file _must not_ use any language features that need to be
-// transpiled by Babel (ex: import/export) or require any files that also use
-// such features.
+/**
+ * Uses 'extends': Yes
+ * Non-CJS config: No
+ * Babel Config:   N/A
+ *
+ * Additionally, require() must use relative paths because this file configures
+ * Babel, which is responsible for re-writing path aliases.
+ */
+const { EXTENSIONS_WITH_DOT } = require('../etc/constants');
+
+
 module.exports = {
   presets: [
     ['@babel/preset-env', {
@@ -27,8 +35,5 @@ module.exports = {
       root: ['./src'],
       extensions: [...EXTENSIONS_WITH_DOT, '.json']
     }]
-  ],
-  // N.B. This is set to `false` to prevent Babel from stripping-out Webpack
-  // 'magic' comments before Webpack can parse them.
-  comments: false
+  ]
 };

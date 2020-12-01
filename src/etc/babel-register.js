@@ -1,4 +1,7 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+// We cannot use custom module resolution here because this file configures the
+// tool that provides it.
+const { EXTENSIONS_WITH_DOT } = require('../etc/constants');
+
 require('@babel/register')({
-  extensions: ['.ts', '.tsx', '.js', '.jsx', '.es', '.es6', '.mjs', '.json']
+  extensions: [...EXTENSIONS_WITH_DOT, '.json']
 });

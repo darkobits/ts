@@ -1,7 +1,6 @@
 require('./src/etc/babel-register');
 
-
-module.exports = require('./src/config/package-scripts')(({ npsUtils }) => ({
+module.exports = require('./src').nps(({ npsUtils }) => ({
   scripts: {
     prepare: npsUtils.series(
       npsUtils.series.nps('lint', 'build', 'test.passWithNoTests'),

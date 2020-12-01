@@ -1,6 +1,6 @@
 require('./src/etc/babel-register');
 
-module.exports = require('./src/config/jest')({
+module.exports = require('./src').jest({
   coveragePathIgnorePatterns: [
     '<rootDir>/src/bin',
     '<rootDir>/src/config',

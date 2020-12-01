@@ -2,11 +2,15 @@ import fs from 'fs';
 import path from 'path';
 
 import { getBinPathSync } from 'get-bin-path';
-// @ts-expect-error - No type defs exist for this package.
+// @ts-expect-error: Package does not have type defs.
 import * as npsUtils from 'nps-utils';
 import readPkgUp from 'read-pkg-up';
 import resolvePkg from 'resolve-pkg';
 
+import {
+  NPSConfiguration,
+  NPSConfigurationFactory
+} from 'etc/types';
 import log from 'lib/log';
 
 
@@ -120,8 +124,8 @@ export function prefixBin(binName: string) {
  * object was provided, returns it. If no argument was provided, returns a
  * configuration scaffold object.
  */
-export function getUserScripts(userArgument?: any) {
-  let userScripts = {
+export function getUserScripts(userArgument?: NPSConfiguration | NPSConfigurationFactory) {
+  let userScripts: NPSConfiguration = {
     scripts: {},
     options: {}
   };

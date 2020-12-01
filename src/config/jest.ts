@@ -1,3 +1,12 @@
+// -----------------------------------------------------------------------------
+// ----- Jest Configuration ----------------------------------------------------
+// -----------------------------------------------------------------------------
+
+/**
+ * Uses 'extends': Yes
+ * Non-CJS config: Yes
+ * Babel Config:   Yes (.babel.(js|ts))
+ */
 import merge from 'deepmerge';
 import { EXTENSIONS, SRC_DIR, OUT_DIR } from 'etc/constants';
 
@@ -7,7 +16,6 @@ const ALWAYS_IGNORE = [
   '/node_modules/',
   `<rootDir>/${OUT_DIR}`
 ];
-
 
 export default (userConfig = {}) => merge({
   testEnvironment: 'node',

@@ -23,15 +23,14 @@ manage. The two principal features of `ts` are:
   plugins are always in sync, letting you spend more time focusing on your
   project and less time dealing with tooling, configuration, and compatibility
   issues.
-* **Configuration:** Base configuration with sane defaults is provided for each
-  tool managed by `ts`. However, configurations can always be extended and
-  customized to suit your project's needs.
+* **Configuration:** Base configurations with sane defaults are provided for
+  each tool managed by `ts`.
 
 For developers that manage a large number of projects, using a consolidated
 toolchain like `ts` can save a tremendous amount of time and promote consistency
 from project to project. While `ts` is "opinionated", it aims to be highly
-flexible as well, allowing developers extend the base configurations provided by
-`ts` to suit their project's needs without having to ["eject"](https://create-react-app.dev/docs/available-scripts/#npm-run-eject).
+flexible as well, allowing developers extend base configurations to suit their
+project's needs without having to ["eject"](https://create-react-app.dev/docs/available-scripts/#npm-run-eject).
 
 # Features
 
@@ -54,11 +53,12 @@ npm install --save-dev @darkobits/ts
 
 # Conventions
 
-Projects that use `ts` should adhere to the following conventions:
+Projects that use `ts` should adhere to / assume the following conventions:
 
 * Source files should be contained in a root directory named `src`.
-* Source files will be transpiled to a root directory named `dist`.
-* Changelogs will be written to a root file named `CHANGELOG.md`.
+* Source files will be transpiled to a root directory named `dist`. (This
+  directory should be added to `.gitignore`.)
+* Change logs will be written to a root file named `CHANGELOG.md`.
 * Path mapping is set up such that `src` is treated as a root. For example, to
   import a file at `src/lib/utils.ts` from anywhere in your project, you would
   write:
@@ -85,19 +85,20 @@ provided by `ts` comes in one of two variants depending on whether the
 underlying tool's configuration supports an `extends` option:
 
 * For tools that support an `extends` option, `ts` will provide a string literal
-  pointing to its base configuration. Simply provide this value as the `extends`
-  option in the tool's configuration file.
+  pointing to its base configuration file. Simply provide this value as the
+  `extends` option in the tool's configuration file.
 * For tools that do not support `extends`, `ts` will provide a function that
-  accepts a configuration object for the underlying tool. `ts` will then merge
-  this object with its base configuration.
+  accepts a configuration object for the underlying tool. `ts` will perform a
+  recursive merge of this object with the base configuration and return the
+  merged configuration to the tool.
 
 ## NPS
 
-NPS is used to manage and coordinate tasks, keeping your "scripts" section terse
-while still giving the developer the flexibility to write custom scripts using
-the full power of JavaScript. To configure NPS, create `package-scripts.js` in
-your project root. To use the base package scripts from `ts`, call the `nps`
-configuration function:
+NPS is used to manage and coordinate tasks, keeping your `package.json`
+"scripts" section terse while still giving the developer the flexibility to
+write custom scripts using the full power of JavaScript. To configure NPS,
+create `package-scripts.ts` in your project root. To use the base package
+scripts from `ts`, call the `nps` configuration function:
 
 > `package-scripts.js`
 
@@ -121,6 +122,28 @@ module.exports = require('@darkobits/ts').nps({
 });
 ```
 
+#### Advanced Usage
+
+In addition to passing an object literal to `nps`, you may also pass a function
+that returns an object literal. This function is passed an object with a single
+key, `npsUtils`, which is a reference to the `nps-utils` utility library. For
+a full list of functions provided, refer to the [documentation](https://github.com/kentcdodds/nps-utils).
+The two most useful utilities provided by `nps-utils` are `series` and
+`concurrent`, which allow you to compose complex scripts.
+
+```js
+module.exports = require('@darkobits/ts').nps(({ npsUtils }) => ({
+  scripts: {
+    // Create a package script "foo" which runs the commands "bar" and "baz" in
+    // parallel.
+    foo: npsUtils.concurrent({
+      bar: 'bar',
+      baz: 'baz'
+    })
+  }
+}));
+```
+
 Once you have created this file, you can get a list of all package scripts by
 running:
 
@@ -138,12 +161,6 @@ NPM will then run as a lifecycle phase after `npm install`:
   "prepare": "nps prepare"
 }
 ```
-
-**💁🏻‍♀️ PROTIP:** To save yourself a few keystrokes, you can install the NPS CLI
-globally (`npm i -g nps`) which will allow you to run package scripts without
-having to use the `npx` prefix (or `npm run ...` if you've aliased a script in
-`package.json`). Even better, you can [add `./node_modules/.bin` to your `$PATH`](https://www.youtube.com/watch?v=2WZ5iS_3Jgs&feature=youtu.be)
-and avoid having to install NPS globally.
 
 **💁🏻‍♀️ PROTIP:** NPS supports partial string matching for script names. For
 example, to run the script `build.watch`, you only need to type `nps b.w`. ✨
@@ -175,11 +192,11 @@ fields are `compilerOptions.baseUrl`, `compilerOptions.outDir`, and
 
 ```jsonc
 {
-  "extends": "@darkobits/ts/config/tsconfig-base.json",
+  "extends": "@darkobits/ts/config/tsconfig.json",
+  "include": ["src"],
   "compilerOptions": {
     "baseUrl": "src",
-    "outDir": "dist",
-    "paths": {"*": ["*", "src/*"]}
+    "outDir": "dist"
   }
 }
 ```
@@ -196,13 +213,11 @@ function from `ts`.
 module.exports = require('@darkobits/ts').jest();
 ```
 
-Tp provide additional/custom configuration:
+To provide additional/custom configuration:
 
 ```js
 module.exports = require('@darkobits/ts').jest({
-  collectCoverageFrom: [
-    '<rootDir>/my-custom-path'
-  ]
+  // Add your custom Jest configuration here.
 });
 ```
 
@@ -222,7 +237,7 @@ module.exports = {
 
 # Running Scripts
 
-The primary way you will interact with tooling is via "package scripts" using
+The primary way you will interact with tooling is via package scripts using
 NPS. `ts` provides a robust set of default package scripts for most common
 tasks, and you are able to add your own (or even overwrite the defaults) in your
 `package-scripts.js` file.
@@ -251,9 +266,9 @@ Note that the `npx` prefix is not required here because NPM will automatically
 look for the NPS binary in your local `node_modules` folder.
 
 This rest of this section will go over the most common scripts used to manage a
-project. It assumes the user has not installed NPS globally nor added
-`./node_modules/.bin` to their `$PATH`, so each example will use the long form
-notation with `npx`.
+project. It assumes the user has not installed NPS globally (not recommended)
+nor added [`./node_modules/.bin` to their `$PATH`](#advanced), so each example
+will use the long form notation with `npx`.
 
 ## Building
 
@@ -341,3 +356,10 @@ create an alias in `package.json`:
   "prepare": "nps prepare"
 }
 ```
+
+# Advanced
+
+**💁🏻‍♀️ PROTIP:** To save yourself a few keystrokes, you can [add `./node_modules/.bin` to your `$PATH`](https://www.youtube.com/watch?v=2WZ5iS_3Jgs)
+which will allow you to run locally-installed versions of NPM packages from the
+command line without needing to alias the script in `package.json`, use the
+`npx` prefix, or install the tool globally.

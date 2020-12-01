@@ -1,9 +1,11 @@
 {
-  "extends": "./src/config/tsconfig-base.json",
-  "include": ["."],
+  "extends": "./src/config/tsconfig.json",
+  "include": ["src"],
   "compilerOptions": {
+    // Allows us to import JavaScript files from TypeScript files without
+    // generating a TS7016 error.
+    "allowJs": true,
     "baseUrl": "src",
-    "outDir": "dist",
-    "paths": {"*": ["*", "src/*"]}
+    "outDir": "dist"
   }
 }
