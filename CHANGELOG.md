@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.2](https://github.com/darkobits/ts/compare/v0.1.1...v0.1.2) (2020-12-01)
+
+
+### Bug Fixes
+
+* Fix un-prefixed bin in package-scripts. ([590f136](https://github.com/darkobits/ts/commit/590f1368dd3bf23daf1c8a62a457864f8044510b))
+
 ### [0.1.1](https://github.com/darkobits/ts/compare/v0.1.0...v0.1.1) (2020-12-01)
 
 ## [0.1.0](https://github.com/darkobits/ts/compare/v0.1.0-beta.20...v0.1.0) (2020-11-26)
