@@ -1,5 +1,5 @@
 {
-  "extends": "./src/config/tsconfig.json",
+  "extends": "./src/config/tsconfig-base.json",
   "include": ["src"],
   "compilerOptions": {
     // Allows us to import JavaScript files from TypeScript files without

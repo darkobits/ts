@@ -192,7 +192,7 @@ fields are `compilerOptions.baseUrl`, `compilerOptions.outDir`, and
 
 ```jsonc
 {
-  "extends": "@darkobits/ts/config/tsconfig.json",
+  "extends": "@darkobits/ts/tsconfig.json",
   "include": ["src"],
   "compilerOptions": {
     "baseUrl": "src",
