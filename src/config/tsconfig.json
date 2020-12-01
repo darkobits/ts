@@ -6,11 +6,17 @@
       {"transform": "@zerollup/ts-transform-paths"}
     ],
 
+    // Specify ECMAScript target version. Since we use Babel to transpile code,
+    // this mostly impacts lib checks and helps suppress various errors.
+    "target": "ESNext",
+
     // Specify a list of built-in API groups to include in the project.
     "lib": [
-      "esnext",
-      "es2015"
+      "ESNext"
     ],
+
+    // Use Node's module resolution strategy.
+    "moduleResolution": "node",
 
     // Allow default imports from modules with no default export. This does not
     // effect code emit, just type-checking.
