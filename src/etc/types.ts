@@ -1,4 +1,6 @@
 import type webpack from 'webpack';
+import type bytes from 'bytes';
+import type ms from 'ms';
 import type { getPackageInfo } from '@darkobits/ts/lib/utils';
 
 
@@ -58,6 +60,34 @@ export interface WebpackConfigurationFactoryOptions {
    * modify and return.
    */
   config: WebpackConfiguration;
+
+  /**
+   * Utility to parse a human readable string (ex: '512kb') to bytes (524288)
+   * and vice-versa. Useful for specifying configuration options that expect
+   * a number in bytes.
+   *
+   * See: https://github.com/visionmedia/bytes.js
+   */
+  bytes: typeof bytes;
+
+  /**
+   * Utility for converting a human readable string (ex: '2h') to milliseconds
+   * (7200000). Useful for specifying configuration options that expect an
+   * amount of time in milliseconds.
+   *
+   * See: https://github.com/vercel/ms
+   */
+  ms: typeof ms;
+
+  /**
+   * True if argv.mode equals 'production'.
+   */
+  isProduction: boolean;
+
+  /**
+   * True if argv.mode equals 'development';
+   */
+  isDevelopment: boolean;
 }
 
 

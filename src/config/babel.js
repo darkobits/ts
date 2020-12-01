@@ -1,3 +1,7 @@
+// -----------------------------------------------------------------------------
+// ----- Babel Configuration ---------------------------------------------------
+// -----------------------------------------------------------------------------
+
 module.exports = {
   extends: require('@darkobits/ts').babel,
   presets: [
@@ -10,5 +14,8 @@ module.exports = {
   ],
   plugins: [
     require.resolve('react-hot-loader/babel')
-  ]
+  ],
+  // N.B. This is set to `false` to prevent Babel from stripping-out Webpack
+  // 'magic' comments before Webpack can parse them.
+  comments: false
 };

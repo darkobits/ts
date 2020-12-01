@@ -1,8 +1,13 @@
+// -----------------------------------------------------------------------------
+// ----- Webpack Configuration -------------------------------------------------
+// -----------------------------------------------------------------------------
+
 import path from 'path';
 
 import { getPackageInfo } from '@darkobits/ts/lib/utils';
 import bytes from 'bytes';
 import findUp from 'find-up';
+import ms from 'ms';
 import webpack from 'webpack';
 import merge from 'webpack-merge';
 
@@ -24,12 +29,11 @@ import { WebpackConfigurationFactory } from 'etc/types';
 
 // ----- Base Configuration ----------------------------------------------------
 
-const baseConfiguration: WebpackConfigurationFactory = ({ argv, config, pkgJson, pkgRoot }) => {
+const baseConfiguration: WebpackConfigurationFactory = ({ argv, config, pkgJson, pkgRoot, isProduction, isDevelopment }) => {
   // Resolve the path to this package's node_modules folder, which may be nested
   // in the host package's node_modules tree. We will need to add this to
   // Webpack's module resolution configuration so that any dependencies that NPM
-  // decides to nest in this folder (ie: React) can still be imported by the
-  // host package.
+  // decides to nest in this folder can still be resolved by the host package.
   const OUR_NODE_MODULES = findUp.sync('node_modules', { cwd: __dirname, type: 'directory' });
 
   if (!OUR_NODE_MODULES) {
@@ -50,7 +54,7 @@ const baseConfiguration: WebpackConfigurationFactory = ({ argv, config, pkgJson,
 
   config.output = {
     path: path.resolve(pkgRoot, 'dist'),
-    filename: argv.mode === 'production' ? '[name]-[chunkhash].js' : '[name].js',
+    filename: isDevelopment ? '[name].js' : '[name]-[chunkhash].js',
     chunkFilename: '[name]-[chunkhash].js'
   };
 
@@ -69,8 +73,8 @@ const baseConfiguration: WebpackConfigurationFactory = ({ argv, config, pkgJson,
     }, {
       loader: require.resolve('linaria/loader'),
       options: {
-        sourceMap: argv.mode === 'development',
-        displayName: argv.mode === 'development'
+        sourceMap: isDevelopment,
+        displayName: isDevelopment
       }
     }]
   });
@@ -83,7 +87,7 @@ const baseConfiguration: WebpackConfigurationFactory = ({ argv, config, pkgJson,
     }, {
       loader: require.resolve('css-loader'),
       options: {
-        sourceMap: argv.mode === 'development'
+        sourceMap: isDevelopment
       }
     }]
   });
@@ -103,7 +107,7 @@ const baseConfiguration: WebpackConfigurationFactory = ({ argv, config, pkgJson,
       loader: require.resolve('url-loader'),
       options: {
         limit: bytes('10kb'),
-        name: 'assets/[name].[hash].[ext]'
+        name: '[name].[hash].[ext]'
       }
     }]
   });
@@ -134,7 +138,7 @@ const baseConfiguration: WebpackConfigurationFactory = ({ argv, config, pkgJson,
     alias: {
       // Use the @hot-loader variant of react-dom in development to avoid this
       // issue: https://github.com/gatsbyjs/gatsby/issues/11934#issuecomment-469046186
-      'react-dom': argv.mode === 'production' ? 'react-dom' : '@hot-loader/react-dom'
+      'react-dom': isDevelopment ? '@hot-loader/react-dom': 'react-dom'
     },
     extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
     modules: [
@@ -159,11 +163,11 @@ const baseConfiguration: WebpackConfigurationFactory = ({ argv, config, pkgJson,
   }));
 
   config.plugins.push(new MiniCssExtractPlugin({
-    filename: argv.mode === 'production' ? 'styles-[contenthash].css' : 'styles.css'
+    filename: isDevelopment ? 'styles.css' : 'styles-[contenthash].css'
   }));
 
   config.plugins.push(new webpack.LoaderOptionsPlugin({
-    minimize: argv.mode === 'production'
+    minimize: isProduction
   }));
 
   config.plugins.push(new webpack.EnvironmentPlugin({
@@ -172,11 +176,11 @@ const baseConfiguration: WebpackConfigurationFactory = ({ argv, config, pkgJson,
     VERSION: pkgJson.version ?? ''
   }));
 
-  if (argv.mode === 'development' && !log.isLevelAtLeast('verbose')) {
+  if (isDevelopment && !log.isLevelAtLeast('verbose')) {
     config.plugins.push(new FriendlyErrorsWebpackPlugin());
   }
 
-  if (argv.mode === 'production') {
+  if (isProduction) {
     // Delete the build output directory before production builds.
     config.plugins.push(new CleanWebpackPlugin());
 
@@ -200,7 +204,7 @@ const baseConfiguration: WebpackConfigurationFactory = ({ argv, config, pkgJson,
 
   // ----- Dev Server ----------------------------------------------------------
 
-  if (argv.mode === 'development') {
+  if (isDevelopment) {
     config.devServer = {
       port: 8080,
       compress: true,
@@ -217,7 +221,7 @@ const baseConfiguration: WebpackConfigurationFactory = ({ argv, config, pkgJson,
 
   // ----- Misc ----------------------------------------------------------------
 
-  config.devtool = argv.mode === 'development' ? '#eval-source-map' : '#source-map';
+  config.devtool = isDevelopment ? '#eval-source-map' : '#source-map';
 
   config.performance = {
     maxAssetSize: bytes('550kb'),
@@ -225,7 +229,7 @@ const baseConfiguration: WebpackConfigurationFactory = ({ argv, config, pkgJson,
   };
 
   config.optimization = {
-    minimize: argv.mode === 'production',
+    minimize: isProduction,
     splitChunks: {
       chunks: 'all'
     }
@@ -256,6 +260,9 @@ export default (userConfiguration: WebpackConfigurationFactory) => {
     const pkgJson = pkg.json;
     const pkgRoot = pkg.rootDir;
 
+    const isProduction = argv.mode === 'production';
+    const isDevelopment = argv.mode === 'development';
+
     // Return the result of merging the configuration objects returned by the
     // base configuration factory and the user's configuration factory using
     // webpack-merge.
@@ -265,14 +272,22 @@ export default (userConfiguration: WebpackConfigurationFactory) => {
         argv,
         pkgJson,
         pkgRoot,
-        config: generateWebpackConfigurationScaffold()
+        config: generateWebpackConfigurationScaffold(),
+        bytes,
+        ms,
+        isProduction,
+        isDevelopment
       }),
       userConfiguration({
         env,
         argv,
         pkgJson,
         pkgRoot,
-        config: generateWebpackConfigurationScaffold()
+        config: generateWebpackConfigurationScaffold(),
+        bytes,
+        ms,
+        isProduction,
+        isDevelopment
       })
     );
   };
