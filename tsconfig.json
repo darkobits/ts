@@ -1,10 +1,8 @@
 {
-  "extends": "./src/config/tsconfig-base.json",
-  "include": ["."],
+  "extends": "./src/config/tsconfig.json",
+  "include": ["src"],
   "compilerOptions": {
     "baseUrl": "src",
-    "outDir": "dist",
-    "paths": {"*": ["*", "src/*"]},
-    "skipLibCheck": true
+    "outDir": "dist"
   }
 }

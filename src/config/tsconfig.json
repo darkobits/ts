@@ -1,5 +1,5 @@
 {
-  "extends": "@darkobits/ts/config/tsconfig-base.json",
+  "extends": "@darkobits/ts/config/tsconfig.json",
   "compilerOptions": {
     "jsx": "react",
     "lib": [
