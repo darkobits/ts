@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.1](https://github.com/darkobits/tsx/compare/v0.1.0...v0.1.1) (2020-12-01)
+
+
+### 🏗 Chores
+
+* Update dependencies. ([edc6826](https://github.com/darkobits/tsx/commit/edc6826f2cb426b2f0142c55e9ea7307deeec6ec))
+
+
+### 📖 Documentation
+
+* Add README. ([9066ae7](https://github.com/darkobits/tsx/commit/9066ae78006a9ff3b8f5c7c2f17d7cbe8a2b5a11))
+
+
+### 🛠 Refactoring
+
+* Hoist TypeScript base configuration to package root. ([0ae9b4e](https://github.com/darkobits/tsx/commit/0ae9b4e3656eb7842ea00edb42b5356be7d1ec23))
+* Update various base configurations. ([507508b](https://github.com/darkobits/tsx/commit/507508bc56dc96528156334135b2f173b13125cd))
+
 ## [0.1.0](https://github.com/darkobits/tsx/compare/v0.1.0-beta.11...v0.1.0) (2020-11-26)
 
 
