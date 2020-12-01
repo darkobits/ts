@@ -171,7 +171,7 @@ const baseConfiguration: WebpackConfigurationFactory = ({ argv, config, pkgJson,
   }));
 
   config.plugins.push(new webpack.EnvironmentPlugin({
-    NODE_ENV: argv.mode,
+    NODE_ENV: argv?.mode,
     DESCRIPTION: pkgJson.description ?? '',
     VERSION: pkgJson.version ?? ''
   }));
@@ -255,13 +255,17 @@ export default (userConfiguration: WebpackConfigurationFactory) => {
   // Return a function that conforms to the 'standard' Webpack configuration
   // factory signature.
   const standardConfigurationFactory: webpack.ConfigurationFactory = (env, argv) => {
+    if (env === undefined && argv === undefined) {
+      log.warn(log.prefix('webpack'), 'Configuration factory invoked with no arguments; unable to determine "mode".');
+    }
+
     // Get host package metadata.
     const pkg = getPackageInfo();
     const pkgJson = pkg.json;
     const pkgRoot = pkg.rootDir;
 
-    const isProduction = argv.mode === 'production';
-    const isDevelopment = argv.mode === 'development';
+    const isProduction = argv?.mode === 'production';
+    const isDevelopment = argv?.mode === 'development';
 
     // Return the result of merging the configuration objects returned by the
     // base configuration factory and the user's configuration factory using
