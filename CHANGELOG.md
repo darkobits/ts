@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.4](https://github.com/darkobits/tsx/compare/v0.1.3...v0.1.4) (2020-12-02)
+
+
+### ✨ Features
+
+* Update React to 17.0.0. ([f247225](https://github.com/darkobits/tsx/commit/f2472251a11e06551f0418bfd0d3daa05079a7ac))
+
 ### [0.1.3](https://github.com/darkobits/tsx/compare/v0.1.2...v0.1.3) (2020-12-02)
 
 
