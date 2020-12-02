@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.3](https://github.com/darkobits/tsx/compare/v0.1.2...v0.1.3) (2020-12-02)
+
+
+### ✨ Features
+
+* Add DISPLAY_NAME environment variable. ([347927b](https://github.com/darkobits/tsx/commit/347927be82821aabc38b6b83e8c73faa7ea9f69a))
+
+
+### 🐞 Bug Fixes
+
+* **tsconfig:** Add "module": "ESNext". ([2e51b62](https://github.com/darkobits/tsx/commit/2e51b62c30ae462ba3d4c52d52e24b285fc4654a))
+
+
+### 🛠 Refactoring
+
+* Configuration factories may be async, do not need to return a value. ([7913d21](https://github.com/darkobits/tsx/commit/7913d213ba79b845ea5cac2b759207dc9f8f14aa))
+
 ### [0.1.2](https://github.com/darkobits/tsx/compare/v0.1.1...v0.1.2) (2020-12-01)
 
 
