@@ -44,6 +44,9 @@ const baseConfigFactory: WebpackConfigurationFactory = ({ argv, config, pkgJson,
   // ----- Entry / Output ------------------------------------------------------
 
   config.entry = {
+    // As of version 7.4.0, @babel/polyfill is deprecated in favor of including
+    // core-js and regenerator-runtime directly.
+    // See: https://babeljs.io/docs/en/babel-polyfill
     support: [
       'core-js/stable',
       'regenerator-runtime/runtime',
