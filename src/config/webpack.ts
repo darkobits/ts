@@ -171,7 +171,8 @@ const baseConfiguration: WebpackConfigurationFactory = ({ argv, config, pkgJson,
   }));
 
   config.plugins.push(new webpack.EnvironmentPlugin({
-    NODE_ENV: argv?.mode,
+    NODE_ENV: argv.mode,
+    DISPLAY_NAME: pkgJson.displayName ?? '',
     DESCRIPTION: pkgJson.description ?? '',
     VERSION: pkgJson.version ?? ''
   }));
