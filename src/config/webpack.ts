@@ -29,7 +29,7 @@ import { WebpackConfigurationFactory } from 'etc/types';
 
 // ----- Base Configuration ----------------------------------------------------
 
-const baseConfiguration: WebpackConfigurationFactory = ({ argv, config, pkgJson, pkgRoot, isProduction, isDevelopment }) => {
+const baseConfigFactory: WebpackConfigurationFactory = ({ argv, config, pkgJson, pkgRoot, isProduction, isDevelopment }) => {
   // Resolve the path to this package's node_modules folder, which may be nested
   // in the host package's node_modules tree. We will need to add this to
   // Webpack's module resolution configuration so that any dependencies that NPM
@@ -237,8 +237,6 @@ const baseConfiguration: WebpackConfigurationFactory = ({ argv, config, pkgJson,
   };
 
   config.stats = 'minimal';
-
-  return config;
 };
 
 
@@ -252,50 +250,48 @@ const baseConfiguration: WebpackConfigurationFactory = ({ argv, config, pkgJson,
  * merge the resulting configuration with the 'tsx' base configuration, and
  * return the merged configuration object to Webpack.
  */
-export default (userConfiguration: WebpackConfigurationFactory) => {
-  // Return a function that conforms to the 'standard' Webpack configuration
-  // factory signature.
-  const standardConfigurationFactory: webpack.ConfigurationFactory = (env, argv) => {
-    if (env === undefined && argv === undefined) {
-      log.warn(log.prefix('webpack'), 'Configuration factory invoked with no arguments; unable to determine "mode".');
-    }
+export default (userConfigFactory: WebpackConfigurationFactory): webpack.ConfigurationFactory => async (env, argv = {}) => {
+  // Get host package metadata.
+  const pkg = getPackageInfo();
+  const pkgJson = pkg.json;
+  const pkgRoot = pkg.rootDir;
 
-    // Get host package metadata.
-    const pkg = getPackageInfo();
-    const pkgJson = pkg.json;
-    const pkgRoot = pkg.rootDir;
+  const isProduction = argv.mode === 'production';
+  const isDevelopment = argv.mode === 'development';
 
-    const isProduction = argv?.mode === 'production';
-    const isDevelopment = argv?.mode === 'development';
-
-    // Return the result of merging the configuration objects returned by the
-    // base configuration factory and the user's configuration factory using
-    // webpack-merge.
-    return merge(
-      baseConfiguration({
-        env,
-        argv,
-        pkgJson,
-        pkgRoot,
-        config: generateWebpackConfigurationScaffold(),
-        bytes,
-        ms,
-        isProduction,
-        isDevelopment
-      }),
-      userConfiguration({
-        env,
-        argv,
-        pkgJson,
-        pkgRoot,
-        config: generateWebpackConfigurationScaffold(),
-        bytes,
-        ms,
-        isProduction,
-        isDevelopment
-      })
-    );
+  const context = {
+    env,
+    argv,
+    pkgJson,
+    pkgRoot,
+    bytes,
+    ms,
+    isProduction,
+    isDevelopment
   };
 
-  return standardConfigurationFactory;
+  const baseConfig = generateWebpackConfigurationScaffold();
+  const userConfig = generateWebpackConfigurationScaffold();
+
+  const [
+    returnedBaseConfig,
+    returnedUserConfig
+  ] = await Promise.all([
+    baseConfigFactory({
+      ...context,
+      config: baseConfig
+    }),
+    userConfigFactory({
+      ...context,
+      config: userConfig
+    })
+  ]);
+
+  // If a configuration factory did not return a value, use the configuration
+  // object we passed-in that it modified in-place. Otherwise, prefer the
+  // return value.
+  return merge(
+    returnedBaseConfig ? returnedBaseConfig : baseConfig,
+    returnedUserConfig ? returnedUserConfig : userConfig
+  );
 };

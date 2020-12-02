@@ -38,7 +38,7 @@ type Argv = Parameters<webpack.ConfigurationFactory>[1];
 /**
  * Object passed to 'tsx' Webpack configuration factories.
  */
-export interface WebpackConfigurationFactoryOptions {
+export interface WebpackConfigurationFactoryContext {
   env: Env;
   argv: Argv;
 
@@ -94,4 +94,6 @@ export interface WebpackConfigurationFactoryOptions {
 /**
  * Signature of a 'tsx' Webpack configuration factory.
  */
-export type WebpackConfigurationFactory = (opts: WebpackConfigurationFactoryOptions) => webpack.Configuration;
+export type WebpackConfigurationFactory = (
+  opts: WebpackConfigurationFactoryContext
+) => void | webpack.Configuration | Promise<void | webpack.Configuration>;
