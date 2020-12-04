@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.5](https://github.com/darkobits/tsx/compare/v0.1.4...v0.1.5) (2020-12-04)
+
+
+### 🛠 Refactoring
+
+* Add logging for compilation start / end. ([15b0fdd](https://github.com/darkobits/tsx/commit/15b0fdd95f9c28b25005194459d8f37e090665b0))
+
+
+### ✨ Features
+
+* Add gitDescribe utility. ([6d857d9](https://github.com/darkobits/tsx/commit/6d857d92ac53593b63561d7dc8a1e8a940adbe4c))
+* Add readDotenvUp utility. ([fe142fe](https://github.com/darkobits/tsx/commit/fe142fef1bcbdbcd14d27a587ca7cbbf692558b8))
+
 ### [0.1.4](https://github.com/darkobits/tsx/compare/v0.1.3...v0.1.4) (2020-12-02)
 
 
