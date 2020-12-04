@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.7](https://github.com/darkobits/tsx/compare/v0.1.6...v0.1.7) (2020-12-04)
+
+
+### ✨ Features
+
+* Add Serverless Webpack configuration preset. ([a17671c](https://github.com/darkobits/tsx/commit/a17671c215dfc8cc08729fe932add66451942001))
+
 ### [0.1.6](https://github.com/darkobits/tsx/compare/v0.1.5...v0.1.6) (2020-12-04)
 
 
