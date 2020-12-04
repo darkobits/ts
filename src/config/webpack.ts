@@ -23,7 +23,7 @@ import {
   ensureIndexEntrypoint,
   ensureIndexHtml,
   generateWebpackConfigurationScaffold
-} from 'lib/utils';
+} from 'lib/webpack';
 import { WebpackConfigurationFactory } from 'etc/types';
 
 
