@@ -34,6 +34,8 @@ export function getPackageInfo(cwd?: string) {
 
 
 /**
+ * @private
+ *
  * Provided a package name and optional binary name, resolves the path to the
  * binary from this package (ensuring nested node_modules are traversed) then
  * require()s the module.
@@ -61,6 +63,8 @@ export function requireBin(pkgName: string, binName?: string) {
 
 
 /**
+ * @private
+ *
  * Used by our ESLint configuration.
  *
  * Returns the path to the host package's tsconfig.json file. If a tsconfig.json
@@ -90,6 +94,8 @@ export function findTsConfig() {
 
 
 /**
+ * @private
+ *
  * Because this package shares many package scripts and tooling with its own
  * dependents, we need to differentiate between when a binary is being invoked
  * by this package and when it is being invoked by a dependent package.
@@ -119,6 +125,8 @@ export function prefixBin(binName: string) {
 
 
 /**
+ * @private
+ *
  * Introspects the argument passed to our NPS configuration function. If a
  * configuration factory was provided, invokes it and returns the result. If an
  * object was provided, returns it. If no argument was provided, returns a

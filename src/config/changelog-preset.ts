@@ -1,5 +1,5 @@
 // -----------------------------------------------------------------------------
-// ----- Standard Version Configuration ----------------------------------------
+// ----- Standard Version Changelog Preset -------------------------------------
 // -----------------------------------------------------------------------------
 
 /**
@@ -7,11 +7,13 @@
  * Non-CJS Config: N/A
  * Babel Config:   N/A
  *
- * Custom configuration for standard-version's CHANGELOG generation. This is
- * loaded via custom logic in our standard-version entrypoint rather than a
- * user-provided configuration file.
+ * Custom preset for standard-version's CHANGELOG generation.
  */
-export default {
+// @ts-expect-error: Package does not have type defs.
+import config from 'conventional-changelog-conventionalcommits';
+
+
+export default config({
   types: [
     {type: 'feat', section: '✨ Features'},
     {type: 'fix', section: '🐞 Bug Fixes'},
@@ -22,4 +24,4 @@ export default {
     {type: 'test', section: '🚦 Tests'}
   ],
   releaseCommitMessageFormat: '🚀 chore(release): {{currentTag}}'
-};
+});

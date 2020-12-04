@@ -197,6 +197,11 @@ export default (arg0?: NPSConfiguration | NPSConfigurationFactory) => {
 
   // ----- Versioning ----------------------------------------------------------
 
+  const STANDARD_VERSION_COMMAND = [
+    prefixBin('standard-version'),
+    `--preset=${require.resolve('config/changelog-preset')}`
+  ].join(' ');
+
   // N.B. We do not use prefixBin here because we want to use _our_ copy of
   // standard-version which uses customized configuration applied at the CLI
   // entrypoint (see bin/standard-version). We rely on the link-bins script
@@ -208,7 +213,7 @@ export default (arg0?: NPSConfiguration | NPSConfigurationFactory) => {
       script: npsUtils.series(...[
         userScripts?.scripts?.prebump ? `${prefixBin('nps')} prebump` : undefined,
         `${prefixBin('nps')} prepare`,
-        prefixBin('standard-version'),
+        STANDARD_VERSION_COMMAND,
         userScripts?.scripts?.postbump ? `${prefixBin('nps')} postbump` : undefined
       ].filter(Boolean))
     },
@@ -217,7 +222,7 @@ export default (arg0?: NPSConfiguration | NPSConfigurationFactory) => {
       script: npsUtils.series(...[
         userScripts?.scripts?.prebump ? `${prefixBin('nps')} prebump` : undefined,
         `${prefixBin('nps')} prepare`,
-        `${prefixBin('standard-version')} --prerelease=beta`,
+        `${STANDARD_VERSION_COMMAND} --prerelease=beta`,
         userScripts?.scripts?.postbump ? `${prefixBin('nps')} postbump` : undefined
       ].filter(Boolean))
     },
@@ -226,7 +231,7 @@ export default (arg0?: NPSConfiguration | NPSConfigurationFactory) => {
       script: npsUtils.series(...[
         userScripts?.scripts?.prebump ? `${prefixBin('nps')} prebump` : undefined,
         `${prefixBin('nps')} prepare`,
-        `${prefixBin('standard-version')} --first-release`,
+        `${STANDARD_VERSION_COMMAND} --first-release`,
         userScripts?.scripts?.postbump ? `${prefixBin('nps')} postbump` : undefined
       ].filter(Boolean))
     }
