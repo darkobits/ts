@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.8](https://github.com/darkobits/tsx/compare/v0.1.7...v0.1.8) (2020-12-04)
+
+
+### 🐞 Bug Fixes
+
+* Do not generate source maps for serverless builds. ([34f82d2](https://github.com/darkobits/tsx/commit/34f82d217d06e1f9055d11562c50fafff9df034f))
+
 ### [0.1.7](https://github.com/darkobits/tsx/compare/v0.1.6...v0.1.7) (2020-12-04)
 
 
