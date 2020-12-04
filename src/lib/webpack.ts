@@ -1,8 +1,13 @@
 import path from 'path';
 
+import { getPackageInfo } from '@darkobits/ts/lib/utils';
+import bytes from 'bytes';
 import fs from 'fs-extra';
+import ms from 'ms';
+import webpack from 'webpack';
+import merge from 'webpack-merge';
 
-import { WebpackConfiguration } from 'etc/types';
+import { WebpackConfiguration, WebpackConfigurationFactory } from 'etc/types';
 import log from 'lib/log';
 
 
@@ -79,4 +84,76 @@ export function ensureIndexHtml(pkgRoot: string) {
     log.error(log.prefix('webpack'), `Error creating index.html at ${log.chalk.green(indexHtml)}: ${err.message}`);
     throw err;
   }
+}
+
+
+/**
+ * Function that accepts a "base" 'tsx' Webpack configuration factory and
+ * returns a function that accepts a user-provided 'tsx' Webpack configuration
+ * factory, then returns a 'standard' Webpack configuration factory that will be
+ * passed to Webpack.
+ */
+export function createWebpackConfigurationPreset(baseConfigFactory: WebpackConfigurationFactory) {
+  return (userConfigFactory: WebpackConfigurationFactory): webpack.ConfigurationFactory => async (env, argv = {}) => {
+    // ----- Build Context -----------------------------------------------------
+
+    // Get host package metadata.
+    const pkg = getPackageInfo();
+
+    const context = {
+      env,
+      argv,
+      pkgJson: pkg.json,
+      pkgRoot: pkg.rootDir,
+      bytes,
+      ms,
+      isProduction: argv.mode === 'production',
+      isDevelopment: argv.mode === 'development'
+    };
+
+
+    // ----- Generate Base Configuration ---------------------------------------
+
+    const baseConfigScaffold = generateWebpackConfigurationScaffold();
+
+    const returnedBaseConfig = await baseConfigFactory({
+      ...context,
+      config: baseConfigScaffold
+    });
+
+    // If the factory did not return a value, defer to the config object we
+    // passed-in.
+    const baseConfig = returnedBaseConfig || baseConfigScaffold;
+
+
+    // ----- Update Mode -------------------------------------------------------
+
+    // In certain cases, argv.mode may not be set, so if the base configuration
+    // set config.mode, set argv.mode to the same value and update predicates in
+    // our context object. This will ensure things "just work" in the user's
+    // configuration factory.
+    if (argv.mode === undefined && baseConfig.mode) {
+      // eslint-disable-next-line require-atomic-updates
+      argv.mode = baseConfig.mode;
+      context.isProduction = argv.mode === 'production';
+      context.isDevelopment = argv.mode === 'development';
+      log.silly(log.prefix('webpack'), `Set ${log.chalk.bold('argv.mode')} to ${log.chalk.bold('config.mode')} from base configuration: ${baseConfig.mode}`);
+    }
+
+
+    // ----- Generate User Configuration ---------------------------------------
+
+    const userConfigScaffold = generateWebpackConfigurationScaffold();
+
+    const returnedUserConfig = await userConfigFactory({
+      ...context,
+      config: userConfigScaffold
+    });
+
+    const userConfig = returnedUserConfig || userConfigScaffold;
+
+
+    // Merge and return the two configurations.
+    return merge(baseConfig, userConfig);
+  };
 }

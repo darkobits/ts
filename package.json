@@ -68,6 +68,7 @@
     "react-dom": "^17.0.0",
     "react-hot-loader": "^4.12.21",
     "regenerator-runtime": "^0.13.7",
+    "resolve-pkg": "^2.0.0",
     "typescript-styled-plugin": "^0.15.0",
     "url-loader": "^4.1.0",
     "webpack": "^4.44.2",

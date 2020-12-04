@@ -1,15 +1,11 @@
 // -----------------------------------------------------------------------------
-// ----- Webpack Configuration -------------------------------------------------
+// ----- Webpack Configuration (React) -----------------------------------------
 // -----------------------------------------------------------------------------
 
 import path from 'path';
 
-import { getPackageInfo } from '@darkobits/ts/lib/utils';
-import bytes from 'bytes';
 import findUp from 'find-up';
-import ms from 'ms';
 import webpack from 'webpack';
-import merge from 'webpack-merge';
 
 // Plugins
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
@@ -22,17 +18,23 @@ import log from 'lib/log';
 import {
   ensureIndexEntrypoint,
   ensureIndexHtml,
-  generateWebpackConfigurationScaffold
+  createWebpackConfigurationPreset
 } from 'lib/webpack';
-import { WebpackConfigurationFactory } from 'etc/types';
 
+
+// ----- React Configuration ---------------------------------------------------
 
 const compileTime = log.createTimer();
 
-
-// ----- Base Configuration ----------------------------------------------------
-
-const baseConfigFactory: WebpackConfigurationFactory = ({ argv, config, pkgJson, pkgRoot, isProduction, isDevelopment }) => {
+export default createWebpackConfigurationPreset(({
+  argv,
+  bytes,
+  config,
+  isDevelopment,
+  isProduction,
+  pkgJson,
+  pkgRoot
+}) => {
   // Resolve the path to this package's node_modules folder, which may be nested
   // in the host package's node_modules tree. We will need to add this to
   // Webpack's module resolution configuration so that any dependencies that NPM
@@ -253,61 +255,4 @@ const baseConfigFactory: WebpackConfigurationFactory = ({ argv, config, pkgJson,
   };
 
   config.stats = 'minimal';
-};
-
-
-// ----- Configuration Merger --------------------------------------------------
-
-/**
- * Function that accepts a 'tsx' Webpack configuration factory and returns a
- * 'standard' Webpack configuration factory that will be passed to Webpack.
- *
- * The standard factory will invoke the user-provided configuration factory,
- * merge the resulting configuration with the 'tsx' base configuration, and
- * return the merged configuration object to Webpack.
- */
-export default (userConfigFactory: WebpackConfigurationFactory): webpack.ConfigurationFactory => async (env, argv = {}) => {
-  // Get host package metadata.
-  const pkg = getPackageInfo();
-  const pkgJson = pkg.json;
-  const pkgRoot = pkg.rootDir;
-
-  const isProduction = argv.mode === 'production';
-  const isDevelopment = argv.mode === 'development';
-
-  const context = {
-    env,
-    argv,
-    pkgJson,
-    pkgRoot,
-    bytes,
-    ms,
-    isProduction,
-    isDevelopment
-  };
-
-  const baseConfig = generateWebpackConfigurationScaffold();
-  const userConfig = generateWebpackConfigurationScaffold();
-
-  const [
-    returnedBaseConfig,
-    returnedUserConfig
-  ] = await Promise.all([
-    baseConfigFactory({
-      ...context,
-      config: baseConfig
-    }),
-    userConfigFactory({
-      ...context,
-      config: userConfig
-    })
-  ]);
-
-  // If a configuration factory did not return a value, use the configuration
-  // object we passed-in that it modified in-place. Otherwise, prefer the
-  // return value.
-  return merge(
-    returnedBaseConfig ? returnedBaseConfig : baseConfig,
-    returnedUserConfig ? returnedUserConfig : userConfig
-  );
-};
+});
