@@ -51,6 +51,7 @@ export default createWebpackConfigurationPreset(({
   // ----- Entry / Output ------------------------------------------------------
 
   config.entry = serverlessWebpack.lib.entries;
+  log.verbose(log.prefix('webpack'), 'Using entries:', config.entry);
 
   config.target = 'node';
 
@@ -136,18 +137,16 @@ export default createWebpackConfigurationPreset(({
 
   // ----- Misc ----------------------------------------------------------------
 
-  config.devtool = config.mode === 'production' ? '#source-map': '#eval-source-map';
+  config.devtool = config.mode === 'production' ? false : '#eval-source-map';
 
   config.performance = {
-    maxAssetSize: bytes('550kb'),
-    maxEntrypointSize: bytes('550kb')
+    maxAssetSize: bytes('1mb'),
+    maxEntrypointSize: bytes('1mb')
   };
 
   config.optimization = {
     minimize: config.mode === 'production',
-    splitChunks: {
-      chunks: 'all'
-    }
+    splitChunks: false
   };
 
   config.stats = 'minimal';
