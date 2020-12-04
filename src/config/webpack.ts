@@ -27,6 +27,9 @@ import {
 import { WebpackConfigurationFactory } from 'etc/types';
 
 
+const compileTime = log.createTimer();
+
+
 // ----- Base Configuration ----------------------------------------------------
 
 const baseConfigFactory: WebpackConfigurationFactory = ({ argv, config, pkgJson, pkgRoot, isProduction, isDevelopment }) => {
@@ -178,6 +181,16 @@ const baseConfigFactory: WebpackConfigurationFactory = ({ argv, config, pkgJson,
     DISPLAY_NAME: pkgJson.displayName ?? '',
     DESCRIPTION: pkgJson.description ?? '',
     VERSION: pkgJson.version ?? ''
+  }));
+
+  config.plugins.push(new webpack.ProgressPlugin(progress => {
+    if (progress === 0) {
+      log.verbose(log.prefix('webpack'), `Bundling with Webpack v${webpack.version}.`);
+    }
+
+    if (progress === 1) {
+      log.verbose(log.prefix('webpack'), `Done in ${log.chalk.bold(compileTime)}.`);
+    }
   }));
 
   if (isDevelopment && !log.isLevelAtLeast('verbose')) {
