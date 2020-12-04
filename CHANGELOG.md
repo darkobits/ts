@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.4](https://github.com/darkobits/ts/compare/v0.1.3...v0.1.4) (2020-12-04)
+
+
+### 🛠 Refactoring
+
+* Use babel-node when loading local bins. ([18c8e4d](https://github.com/darkobits/ts/commit/18c8e4dd55747b8c27e5ebba6c1e604de6c9afbf))
+* Use changelog preset to configure standard-version. ([24642e9](https://github.com/darkobits/ts/commit/24642e953b57cc484acf157697f315613c0bc6d1))
+
 ### [0.1.3](https://github.com/darkobits/ts/compare/v0.1.2...v0.1.3) (2020-12-01)
 
 ### [0.1.2](https://github.com/darkobits/ts/compare/v0.1.1...v0.1.2) (2020-12-01)
