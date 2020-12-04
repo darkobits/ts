@@ -9,7 +9,6 @@
  *
  * Custom preset for standard-version's CHANGELOG generation.
  */
-// @ts-expect-error: Package does not have type defs.
 import config from 'conventional-changelog-conventionalcommits';
 
 
