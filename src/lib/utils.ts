@@ -1,6 +1,10 @@
 import path from 'path';
 
+import chex from '@darkobits/chex';
+import dotenv from 'dotenv';
+import findUp from 'find-up';
 import fs from 'fs-extra';
+import IS_CI from 'is-ci';
 
 import { WebpackConfiguration } from 'etc/types';
 import log from 'lib/log';
@@ -100,3 +104,29 @@ export function gitDescribe() {
   return result;
 }
 
+
+/**
+ * Searches for and loads the nearest .env file by crawling up the directory
+ * tree starting at `cwd`, process.cwd() if none was provided.
+ *
+ * Note: IS_CI is used here to bail rather than argv.mode so that users can
+ * run production builds locally for testing/debugging.
+ */
+export function readDotenvUp(cwd?: string) {
+  if (IS_CI) {
+    log.warn(log.prefix('readDotenvUp'), 'Not loading .env because a CI environment has been detected.');
+    return;
+  }
+
+  const envFilePath = findUp.sync('.env', { cwd });
+  const result = dotenv.config({ path: envFilePath });
+
+  if (result.error) {
+    log.warn(log.prefix('readDotenvUp'), `Error loading .env file: ${result.error.message}`);
+    return {};
+  }
+
+  log.verbose(log.prefix('readDotenvUp'), `Loaded ${log.chalk.yellow(Object.keys(result.parsed ?? {}).length)} variables from ${log.chalk.green(envFilePath)}.`);
+
+  return result.parsed;
+}
