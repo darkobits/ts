@@ -99,7 +99,7 @@ export function ensureIndexHtml(pkgRoot: string) {
  */
 export function gitDescribe() {
   const git = chex.sync('git');
-  const result = git(['describe', '--tags']).stdout;
+  const result = git.sync(['describe', '--tags']).stdout;
   log.verbose(log.prefix('gitDescribe'), `Current Git description: ${log.chalk.green(result)}`);
   return result;
 }
