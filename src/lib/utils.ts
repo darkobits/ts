@@ -111,7 +111,7 @@ export function prefixBin(binName: string) {
   const pkg = getPackageInfo();
 
   if (pkg && pkg.json.name === '@darkobits/ts') {
-    return binName;
+    return `babel-node $(npm bin)/${binName}`;
   }
 
   return `ts.${binName}`;
