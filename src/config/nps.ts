@@ -162,11 +162,15 @@ export default (arg0?: NPSConfiguration | NPSConfigurationFactory) => {
         // Then, build the project by concurrently running Babel and generating
         // type definitions. N.B. This will implicitly type-check the project.
         npsUtils.concurrent({
-          babel: {
+          'ESLint': {
+            script: scripts.lint.script,
+            color: 'bgMagenta.white'
+          },
+          'Babel': {
             script: scripts.compile.default.script,
             color: 'bgYellow.black'
           },
-          ts: {
+          'TSC': {
             script: scripts.ts.default.script,
             color: 'bgBlue.white'
           }
@@ -181,11 +185,11 @@ export default (arg0?: NPSConfiguration | NPSConfigurationFactory) => {
         // If there is a user-defined script named 'prebuild', run it.
         userScripts?.scripts?.prebuild ? `${prefixBin('nps')} prebuild` : undefined,
         npsUtils.concurrent({
-          babel: {
+          'Babel': {
             script: scripts.compile.watch.script,
             color: 'bgYellow.black'
           },
-          tsc: {
+          'TSC': {
             script: scripts.ts.watch.script,
             color: 'bgBlue.white'
           }
@@ -195,18 +199,13 @@ export default (arg0?: NPSConfiguration | NPSConfigurationFactory) => {
   };
 
 
-  // ----- Versioning ----------------------------------------------------------
+  // ----- Releasing -----------------------------------------------------------
 
   const STANDARD_VERSION_COMMAND = [
     prefixBin('standard-version'),
     `--preset=${require.resolve('config/changelog-preset')}`
   ].join(' ');
 
-  // N.B. We do not use prefixBin here because we want to use _our_ copy of
-  // standard-version which uses customized configuration applied at the CLI
-  // entrypoint (see bin/standard-version). We rely on the link-bins script
-  // (see etc/link-bins) to make it possible for us to invoke ts.-prefixed
-  // binaries in this way.
   scripts.bump = {
     default: {
       description: 'Generates a change log and tagged commit for a release.',
@@ -245,7 +244,6 @@ export default (arg0?: NPSConfiguration | NPSConfigurationFactory) => {
     // This ensures that "nps prepare" will run a user-defined build script if
     // they have set one.
     script: npsUtils.series.nps(
-      'lint',
       'build',
       'test.passWithNoTests'
     )

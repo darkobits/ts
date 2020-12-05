@@ -17,6 +17,12 @@ module.exports = require('./src').nps(({ npsUtils }) => ({
         description: 'Link and continuously re-pack the package.',
         script: 're-pack --link --watch'
       }
+    },
+    docs: {
+      serve: {
+        description: 'Start a local server for documentation.',
+        script: 'docsify serve ./docs'
+      }
     }
   }
 }));
