@@ -15,7 +15,8 @@ module.exports = {
   plugins: [
     require.resolve('react-hot-loader/babel')
   ],
-  // N.B. This is set to `false` to prevent Babel from stripping-out Webpack
-  // 'magic' comments before Webpack can parse them.
-  comments: false
+  // This is set to `true`, inverting the default setting from 'ts') to prevent
+  // Babel from stripping-out Webpack 'magic' comments before Webpack can parse
+  // them. Comments will then be removed by Webpack's minifier.
+  comments: true
 };

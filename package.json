@@ -28,7 +28,7 @@
     "@babel/preset-react": "^7.10.4",
     "@darkobits/chex": "^0.1.8",
     "@darkobits/log": "^2.0.0-beta.15",
-    "@darkobits/ts": "^0.1.5",
+    "@darkobits/ts": "^0.1.6",
     "@hot-loader/react-dom": "^17.0.1",
     "@svgr/webpack": "^5.5.0",
     "@types/bytes": "^3.1.0",
