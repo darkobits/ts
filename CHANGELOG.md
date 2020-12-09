@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.9](https://github.com/darkobits/tsx/compare/v0.1.8...v0.1.9) (2020-12-09)
+
+
+### 🐞 Bug Fixes
+
+* **tsconfig:** Remove "module" configuration option. ([a93a1a2](https://github.com/darkobits/tsx/commit/a93a1a210e48fcfbac91e97d6f2b1bffae0bc7d6))
+
+
+### 🏗 Chores
+
+* Update dependencies. ([4044d4d](https://github.com/darkobits/tsx/commit/4044d4dd72bb6a59cf6d9ca98aa31c8effd0a2d9))
+* Update dependencies. ([769bc2f](https://github.com/darkobits/tsx/commit/769bc2f7c9d339e0c6dd58b37af5f6b977833c56))
+
 ### [0.1.8](https://github.com/darkobits/tsx/compare/v0.1.7...v0.1.8) (2020-12-04)
 
 
