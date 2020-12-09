@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.6](https://github.com/darkobits/ts/compare/v0.1.5...v0.1.6) (2020-12-09)
+
+
+### 🛠 Refactoring
+
+* **Babel:** Strip comments from transpiled code. ([1300709](https://github.com/darkobits/ts/commit/130070943e887201f27fdf2228ffaa491d684ec3))
+
 ### [0.1.5](https://github.com/darkobits/ts/compare/v0.1.4...v0.1.5) (2020-12-09)
 
 
