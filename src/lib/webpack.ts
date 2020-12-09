@@ -94,7 +94,7 @@ export function ensureIndexHtml(pkgRoot: string) {
  * passed to Webpack.
  */
 export function createWebpackConfigurationPreset(baseConfigFactory: WebpackConfigurationFactory) {
-  return (userConfigFactory: WebpackConfigurationFactory): webpack.ConfigurationFactory => async (env, argv = {}) => {
+  return (userConfigFactory?: WebpackConfigurationFactory): webpack.ConfigurationFactory => async (env, argv = {}) => {
     // ----- Build Context -----------------------------------------------------
 
     // Get host package metadata.
@@ -143,6 +143,12 @@ export function createWebpackConfigurationPreset(baseConfigFactory: WebpackConfi
 
     // ----- Generate User Configuration ---------------------------------------
 
+    // N.B. The user may invoke the configuration generator with no argument if
+    // they do not need to modify the base configuration.
+    if (!userConfigFactory) {
+      return baseConfig;
+    }
+
     const userConfigScaffold = generateWebpackConfigurationScaffold();
 
     const returnedUserConfig = await userConfigFactory({
@@ -151,7 +157,6 @@ export function createWebpackConfigurationPreset(baseConfigFactory: WebpackConfi
     });
 
     const userConfig = returnedUserConfig || userConfigScaffold;
-
 
     // Merge and return the two configurations.
     return merge(baseConfig, userConfig);
