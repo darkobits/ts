@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.5](https://github.com/darkobits/ts/compare/v0.1.4...v0.1.5) (2020-12-09)
+
+
+### 📖 Documentation
+
+* Add Docsify documentation. ([28a07c3](https://github.com/darkobits/ts/commit/28a07c3047b413c6673c4f657b382b9d1289ae2e))
+
+
+### 🏗 Chores
+
+* Update dependencies. ([3764b8c](https://github.com/darkobits/ts/commit/3764b8c223d358790c1d9bbb0cb4c91dc4b6a881))
+
 ### [0.1.4](https://github.com/darkobits/ts/compare/v0.1.3...v0.1.4) (2020-12-04)
 
 ### 🛠 Refactoring
