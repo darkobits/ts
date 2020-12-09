@@ -35,5 +35,7 @@ module.exports = {
       root: ['./src'],
       extensions: [...EXTENSIONS_WITH_DOT, '.json']
     }]
-  ]
+  ],
+  // Strip comments from transpiled code.
+  comments: false
 };
