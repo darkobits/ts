@@ -154,16 +154,27 @@ export function createWebpackConfigurationPreset(baseConfigFactory: WebpackConfi
       return baseConfig;
     }
 
-    const userConfigScaffold = generateWebpackConfigurationScaffold();
-
     const returnedUserConfig = await userConfigFactory({
       ...context,
-      config: userConfigScaffold
+      config: baseConfig
     });
 
-    const userConfig = returnedUserConfig || userConfigScaffold;
+    const userConfig = returnedUserConfig || baseConfig;
 
     // Merge and return the two configurations.
-    return merge(baseConfig, userConfig);
+    const finalConfig = merge(baseConfig, userConfig);
+
+
+    // ----- Issue Warnings ----------------------------------------------------
+
+    // Warn if config.entry.index does not exist.
+    await ensureIndexEntrypoint(finalConfig);
+
+    // Warn if HtmlWebpackPlugin was configured with a "template" that does not
+    // exist.
+    await ensureIndexHtml(finalConfig);
+
+
+    return finalConfig;
   };
 }
