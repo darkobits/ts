@@ -1,7 +1,6 @@
 import { getPackageInfo } from '@darkobits/ts/lib/utils';
 import bytes from 'bytes';
 import fs from 'fs-extra';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
 import ms from 'ms';
 import webpack from 'webpack';
 import merge from 'webpack-merge';
@@ -24,11 +23,15 @@ import log from 'lib/log';
  * For example, when adding a loader, the user need not initialize 'module' and
  * 'rules', they can simply write config.module.rules.push(<loader config>).
  */
-function generateWebpackConfigurationScaffold() {
-  const config: any = {};
-  config.module = {rules: []};
-  config.plugins = [];
-  return config as WebpackConfiguration;
+function generateWebpackConfigurationScaffold(): WebpackConfiguration {
+  return {
+    entry: {},
+    output: {},
+    module: {
+      rules: []
+    },
+    plugins: []
+  };
 }
 
 
@@ -73,7 +76,7 @@ async function ensureIndexEntrypoint(config: webpack.Configuration) {
  */
 async function ensureIndexHtml(config: webpack.Configuration) {
   const htmlWebpackPluginInstance = config.plugins?.find(p => {
-    return p instanceof HtmlWebpackPlugin;
+    return p?.constructor?.name === 'HtmlWebpackPlugin';
   });
 
   if (!htmlWebpackPluginInstance) {
@@ -98,6 +101,30 @@ async function ensureIndexHtml(config: webpack.Configuration) {
 
 
 /**
+ * @private
+ *
+ * Provided a Webpack configuration object, returns a function that accepts a
+ * plugin name and configuration object. The function then finds the plugin and
+ * merges the provided configuration object with the plugin's existing
+ * configuration.
+ */
+function reconfigurePlugin(config: webpack.Configuration) {
+  return (pluginName: string, pluginConfig: any) => {
+    const pluginInstance: any = config.plugins?.find(p => {
+      return p?.constructor?.name === pluginName;
+    });
+
+    if (!pluginInstance) {
+      throw new Error(`${log.prefix('reconfigurePlugin')} Configuration does not contain an instance of plugin ${log.chalk.yellow(pluginName)}.`);
+    }
+
+    pluginInstance.options = merge(pluginInstance.options, pluginConfig);
+    log.verbose(log.prefix('reconfigurePlugin'), `Reconfigured ${log.chalk.yellow(pluginName)}:`, pluginInstance.options);
+  };
+}
+
+
+/**
  * Function that accepts a "base" 'tsx' Webpack configuration factory and
  * returns a function that accepts a user-provided 'tsx' Webpack configuration
  * factory, then returns a 'standard' Webpack configuration factory that will be
@@ -110,7 +137,7 @@ export function createWebpackConfigurationPreset(baseConfigFactory: WebpackConfi
     // Get host package metadata.
     const pkg = getPackageInfo();
 
-    const context: Omit<WebpackConfigurationFactoryContext, 'config'> = {
+    const context: Omit<WebpackConfigurationFactoryContext, 'config' | 'reconfigurePlugin'> = {
       env,
       argv,
       pkgJson: pkg.json,
@@ -129,7 +156,8 @@ export function createWebpackConfigurationPreset(baseConfigFactory: WebpackConfi
 
     const returnedBaseConfig = await baseConfigFactory({
       ...context,
-      config: baseConfigScaffold
+      config: baseConfigScaffold,
+      reconfigurePlugin: reconfigurePlugin(baseConfigScaffold)
     });
 
     // If the factory did not return a value, defer to the config object we
@@ -162,7 +190,8 @@ export function createWebpackConfigurationPreset(baseConfigFactory: WebpackConfi
 
     const returnedUserConfig = await userConfigFactory({
       ...context,
-      config: baseConfig
+      config: baseConfig,
+      reconfigurePlugin: reconfigurePlugin(baseConfig)
     });
 
     // If the factory did not return a value, use the baseConfig object we

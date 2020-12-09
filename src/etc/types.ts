@@ -96,6 +96,22 @@ export interface WebpackConfigurationFactoryContext {
    * True if argv.mode equals 'development';
    */
   isDevelopment: boolean;
+
+  /**
+   * Provides a declarative way to look-up and re-configure existing plugins.
+   *
+   * Provided a plugin name (according to its constructor.name property) and a
+   * configuration object, merges the provided configuration with the plugin's
+   * base configuration.
+   *
+   * @example
+   *
+   * // Change the default path to the application's index.html template.
+   * reconfigurePlugin('HtmlWebpackPlugin', {
+   *   template: path.resolve('foo', 'bar', 'template.html')
+   * })
+   */
+  reconfigurePlugin: (pluginName: string, pluginConfiguration: any) => void;
 }
 
 
