@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.11-beta.0](https://github.com/darkobits/tsx/compare/v0.1.10...v0.1.11-beta.0) (2020-12-09)
+
+
+### 📖 Documentation
+
+* Update README. ([3d7310b](https://github.com/darkobits/tsx/commit/3d7310bc6d02ba5301a1b6faafdb647aa34b3d09))
+
+
+### 🛠 Refactoring
+
+* Issue warnings for missing files rather than creating them. ([39bdff8](https://github.com/darkobits/tsx/commit/39bdff8fce42bf3eb4df93fd839603bb6cd23094))
+* Pass base configuration to user configuration factories. ([64b6024](https://github.com/darkobits/tsx/commit/64b60248aa68aaa3c50b3abb70ee9930a57248a0))
+
 ### [0.1.10](https://github.com/darkobits/tsx/compare/v0.1.9...v0.1.10) (2020-12-09)
 
 
