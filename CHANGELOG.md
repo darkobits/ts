@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.11-beta.1](https://github.com/darkobits/tsx/compare/v0.1.11-beta.0...v0.1.11-beta.1) (2020-12-09)
+
+
+### 🛠 Refactoring
+
+* Use modify-in-place strategy for Webpack configuration. ([54b485b](https://github.com/darkobits/tsx/commit/54b485b014e2c21f7249c14f40a459bbba0c03bb))
+
 ### [0.1.11-beta.0](https://github.com/darkobits/tsx/compare/v0.1.10...v0.1.11-beta.0) (2020-12-09)
 
 
