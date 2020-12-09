@@ -15,11 +15,7 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 
 import log from 'lib/log';
-import {
-  ensureIndexEntrypoint,
-  ensureIndexHtml,
-  createWebpackConfigurationPreset
-} from 'lib/webpack';
+import { createWebpackConfigurationPreset } from 'lib/webpack';
 
 
 // ----- React Configuration ---------------------------------------------------
@@ -57,7 +53,7 @@ export default createWebpackConfigurationPreset(({
       'regenerator-runtime/runtime',
       'react-hot-loader/patch'
     ],
-    index: ensureIndexEntrypoint(pkgRoot)
+    index: path.resolve(pkgRoot, 'src', 'index.tsx')
   };
 
   config.output = {
@@ -165,8 +161,12 @@ export default createWebpackConfigurationPreset(({
 
   config.plugins.push(new HtmlWebpackPlugin({
     filename: 'index.html',
-    template: ensureIndexHtml(pkgRoot),
+    template: path.resolve(pkgRoot, 'src', 'index.html'),
     inject: true,
+    /**
+     * Set the document title to "displayName" from package.json using:
+     * <title><%= htmlWebpackPlugin.options.title %></title>
+     */
     title: pkgJson.displayName ?? ''
   }));
 

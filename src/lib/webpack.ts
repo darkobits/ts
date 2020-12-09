@@ -1,13 +1,15 @@
-import path from 'path';
-
 import { getPackageInfo } from '@darkobits/ts/lib/utils';
 import bytes from 'bytes';
 import fs from 'fs-extra';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
 import ms from 'ms';
 import webpack from 'webpack';
 import merge from 'webpack-merge';
 
-import { WebpackConfiguration, WebpackConfigurationFactory } from 'etc/types';
+import {
+  WebpackConfiguration,
+  WebpackConfigurationFactory
+} from 'etc/types';
 import log from 'lib/log';
 
 
@@ -28,61 +30,64 @@ export function generateWebpackConfigurationScaffold() {
 
 
 /**
+ * @private
+ *
  * Ensures there is an index.tsx file at the expected path. Creates one if it
  * doesn't exist.
  */
-export function ensureIndexEntrypoint(pkgRoot: string) {
-  const indexEntrypoint = path.resolve(pkgRoot, 'src', 'index.tsx');
+async function ensureIndexEntrypoint(config: webpack.Configuration) {
+  if (typeof config.entry !== 'object') {
+    log.verbose(log.prefix('ensureIndexEntrypoint'), 'Configuration path "entry" is not an object.');
+    return;
+  }
 
-  try {
-    fs.accessSync(indexEntrypoint);
-    log.verbose(`Using entrypoint: ${log.chalk.green(indexEntrypoint)}`);
-    return indexEntrypoint;
-  } catch (err) {
-    if (err.code !== 'ENOENT') {
-      throw err;
-    }
+  // @ts-expect-error
+  const entryPath = config.entry.index;
+
+  if (typeof entryPath !== 'string') {
+    log.verbose(log.prefix('ensureIndexEntrypoint'), 'Configuration path "entry.index" is not a string.');
+    return;
   }
 
   try {
-    const indexEntrypointTemplate = require.resolve('etc/index-template.txt');
-    fs.ensureDirSync(path.dirname(indexEntrypoint));
-    fs.copyFileSync(indexEntrypointTemplate, indexEntrypoint);
-    log.info(log.prefix('webpack'), `Created entrypoint at: ${log.chalk.green(indexEntrypoint)}`);
-    return indexEntrypoint;
+    await fs.access(entryPath);
+    log.verbose(log.prefix('ensureIndexEntrypoint'), `Using index entrypoint at: ${log.chalk.green(entryPath)}`);
   } catch (err) {
-    log.error(log.prefix('webpack'), `Error creating entrypoint at ${log.chalk.green(indexEntrypoint)}: ${err.message}`);
-    throw err;
+    if (err.code !== 'ENOENT') {
+      log.warn(log.prefix('ensureIndexEntrypoint'), `Index entrypoint ${log.chalk.green(entryPath)} does not exist.`);
+      throw err;
+    }
   }
 }
 
 
 /**
- * Ensures there is an index.html file at the expected path. Creates one if it
- * doesn't exist.
+ * @private
+ *
+ * If the provided Webpack configuration uses HtmlWebpackPlugin, ensures that
+ * the "template" option points to a file that exists.
  */
-export function ensureIndexHtml(pkgRoot: string) {
-  const indexHtml = path.resolve(pkgRoot, 'src', 'index.html');
+async function ensureIndexHtml(config: webpack.Configuration) {
+  const htmlWebpackPluginInstance = config.plugins?.find(plugin => {
+    return plugin instanceof HtmlWebpackPlugin;
+  });
 
-  try {
-    fs.accessSync(indexHtml);
-    log.verbose(`Using index.html at: ${log.chalk.green(indexHtml)}`);
-    return indexHtml;
-  } catch (err) {
-    if (err.code !== 'ENOENT') {
-      throw err;
-    }
+  if (!htmlWebpackPluginInstance) {
+    log.verbose(log.prefix('ensureIndexHtml'), 'Configuration does not use HtmlWebpackPlugin.');
+    return;
   }
 
+  // @ts-expect-error: 'options' is not typed.
+  const templatePath = htmlWebpackPluginInstance.options.template;
+
   try {
-    const indexHtmlTemplate = require.resolve('etc/index-template.html');
-    fs.ensureDirSync(path.dirname(indexHtml));
-    fs.copyFileSync(indexHtmlTemplate, indexHtml);
-    log.info(log.prefix('webpack'), `Created index.html at: ${log.chalk.green(indexHtml)}`);
-    return indexHtml;
+    await fs.access(templatePath);
+    log.verbose(log.prefix('ensureIndexHtml'), `Using template at: ${log.chalk.green(templatePath)}`);
   } catch (err) {
-    log.error(log.prefix('webpack'), `Error creating index.html at ${log.chalk.green(indexHtml)}: ${err.message}`);
-    throw err;
+    if (err.code !== 'ENOENT') {
+      log.warn(log.prefix('ensureIndexHtml'), `Index template ${log.chalk.green(templatePath)} does not exist.`);
+      throw err;
+    }
   }
 }
 

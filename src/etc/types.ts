@@ -96,4 +96,4 @@ export interface WebpackConfigurationFactoryContext {
  */
 export type WebpackConfigurationFactory = (
   opts: WebpackConfigurationFactoryContext
-) => void | webpack.Configuration | Promise<void | webpack.Configuration>;
+) => void | WebpackConfiguration | Promise<void | WebpackConfiguration>;
