@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.2.0](https://github.com/darkobits/tsx/compare/v0.1.10...v0.2.0) (2020-12-09)
+
+
+### 📖 Documentation
+
+* Update README. ([3d7310b](https://github.com/darkobits/tsx/commit/3d7310bc6d02ba5301a1b6faafdb647aa34b3d09))
+
+
+### ✨ Features
+
+* **webpack:** Add `reconfigurePlugin` to context. ([6a9c4e5](https://github.com/darkobits/tsx/commit/6a9c4e5dde4d9e52a15b7e6181fc03a2f2f5ead9))
+
+
+### 🛠 Refactoring
+
+* Add 'vanilla' preset. ([64fbb91](https://github.com/darkobits/tsx/commit/64fbb9182aab5ab8d237d72883f3961fb137e9e2))
+* Issue warnings for missing files rather than creating them. ([39bdff8](https://github.com/darkobits/tsx/commit/39bdff8fce42bf3eb4df93fd839603bb6cd23094))
+* Pass base configuration to user configuration factories. ([64b6024](https://github.com/darkobits/tsx/commit/64b60248aa68aaa3c50b3abb70ee9930a57248a0))
+* Use modify-in-place strategy for Webpack configuration. ([e0a158e](https://github.com/darkobits/tsx/commit/e0a158e270b326a73b93d07952dc19f0ede5cc56))
+
+
+### 🏗 Chores
+
+* Update dependencies. ([c02b315](https://github.com/darkobits/tsx/commit/c02b31581831e48ac4b40b4a968d1dfff27b81c3))
+
 ### [0.1.10](https://github.com/darkobits/tsx/compare/v0.1.9...v0.1.10) (2020-12-09)
 
 
