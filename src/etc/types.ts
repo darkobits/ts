@@ -1,7 +1,8 @@
-import type webpack from 'webpack';
+import type { getPackageInfo } from '@darkobits/ts/lib/utils';
 import type bytes from 'bytes';
 import type ms from 'ms';
-import type { getPackageInfo } from '@darkobits/ts/lib/utils';
+import type webpack from 'webpack';
+import type merge from 'webpack-merge';
 
 
 /**
@@ -78,6 +79,13 @@ export interface WebpackConfigurationFactoryContext {
    * See: https://github.com/vercel/ms
    */
   ms: typeof ms;
+
+  /**
+   * Utility for recursively merging objects.
+   *
+   * See: https://github.com/survivejs/webpack-merge
+   */
+  merge: typeof merge;
 
   /**
    * True if argv.mode equals 'production'.

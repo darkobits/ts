@@ -8,12 +8,15 @@ import merge from 'webpack-merge';
 
 import {
   WebpackConfiguration,
-  WebpackConfigurationFactory
+  WebpackConfigurationFactory,
+  WebpackConfigurationFactoryContext
 } from 'etc/types';
 import log from 'lib/log';
 
 
 /**
+ * @private
+ *
  * Utility that generates a base Webpack configuration scaffold with certain
  * common keys/paths pre-defined (and typed as such), reducing the amount of
  * boilerplate the user has to write.
@@ -21,7 +24,7 @@ import log from 'lib/log';
  * For example, when adding a loader, the user need not initialize 'module' and
  * 'rules', they can simply write config.module.rules.push(<loader config>).
  */
-export function generateWebpackConfigurationScaffold() {
+function generateWebpackConfigurationScaffold() {
   const config: any = {};
   config.module = {rules: []};
   config.plugins = [];
@@ -53,10 +56,11 @@ async function ensureIndexEntrypoint(config: webpack.Configuration) {
     await fs.access(entryPath);
     log.verbose(log.prefix('ensureIndexEntrypoint'), `Using index entrypoint at: ${log.chalk.green(entryPath)}`);
   } catch (err) {
-    if (err.code !== 'ENOENT') {
+    if (err.code === 'ENOENT') {
       log.warn(log.prefix('ensureIndexEntrypoint'), `Index entrypoint ${log.chalk.green(entryPath)} does not exist.`);
-      throw err;
     }
+
+    throw err;
   }
 }
 
@@ -68,8 +72,8 @@ async function ensureIndexEntrypoint(config: webpack.Configuration) {
  * the "template" option points to a file that exists.
  */
 async function ensureIndexHtml(config: webpack.Configuration) {
-  const htmlWebpackPluginInstance = config.plugins?.find(plugin => {
-    return plugin instanceof HtmlWebpackPlugin;
+  const htmlWebpackPluginInstance = config.plugins?.find(p => {
+    return p instanceof HtmlWebpackPlugin;
   });
 
   if (!htmlWebpackPluginInstance) {
@@ -84,10 +88,11 @@ async function ensureIndexHtml(config: webpack.Configuration) {
     await fs.access(templatePath);
     log.verbose(log.prefix('ensureIndexHtml'), `Using template at: ${log.chalk.green(templatePath)}`);
   } catch (err) {
-    if (err.code !== 'ENOENT') {
+    if (err.code === 'ENOENT') {
       log.warn(log.prefix('ensureIndexHtml'), `Index template ${log.chalk.green(templatePath)} does not exist.`);
-      throw err;
     }
+
+    throw err;
   }
 }
 
@@ -105,7 +110,7 @@ export function createWebpackConfigurationPreset(baseConfigFactory: WebpackConfi
     // Get host package metadata.
     const pkg = getPackageInfo();
 
-    const context = {
+    const context: Omit<WebpackConfigurationFactoryContext, 'config'> = {
       env,
       argv,
       pkgJson: pkg.json,
@@ -113,7 +118,8 @@ export function createWebpackConfigurationPreset(baseConfigFactory: WebpackConfi
       bytes,
       ms,
       isProduction: argv.mode === 'production',
-      isDevelopment: argv.mode === 'development'
+      isDevelopment: argv.mode === 'development',
+      merge
     };
 
 
@@ -127,7 +133,7 @@ export function createWebpackConfigurationPreset(baseConfigFactory: WebpackConfi
     });
 
     // If the factory did not return a value, defer to the config object we
-    // passed-in.
+    // passed-in and modified in-place.
     const baseConfig = returnedBaseConfig || baseConfigScaffold;
 
 
@@ -159,10 +165,9 @@ export function createWebpackConfigurationPreset(baseConfigFactory: WebpackConfi
       config: baseConfig
     });
 
-    const userConfig = returnedUserConfig || baseConfig;
-
-    // Merge and return the two configurations.
-    const finalConfig = merge(baseConfig, userConfig);
+    // If the factory did not return a value, use the baseConfig object we
+    // passed-in and modified in-place.
+    const finalConfig = returnedUserConfig || baseConfig;
 
 
     // ----- Issue Warnings ----------------------------------------------------
