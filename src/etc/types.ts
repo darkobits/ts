@@ -19,7 +19,21 @@ export interface WebpackModuleConfiguration extends webpack.Module {
  * rather than optional.
  */
 export interface WebpackConfiguration extends webpack.Configuration {
+  /**
+   * Base Webpack entry configurations in 'tsx' use the object form.
+   */
+  entry: webpack.Entry;
+
+  output: webpack.Output;
+
+  /**
+   * Pre-initialized 'module' object.
+   */
   module: WebpackModuleConfiguration;
+
+  /**
+   * Pre-initialized 'plugins' array.
+   */
   plugins: Array<webpack.Plugin>;
 }
 
