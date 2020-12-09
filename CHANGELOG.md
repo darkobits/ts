@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.10](https://github.com/darkobits/tsx/compare/v0.1.9...v0.1.10) (2020-12-09)
+
+
+### 🐞 Bug Fixes
+
+* **webpack:** Passing a user configuration factory is optional. ([e515416](https://github.com/darkobits/tsx/commit/e51541654a21757d2a157edff81f45c36e2f9b25))
+
 ### [0.1.9](https://github.com/darkobits/tsx/compare/v0.1.8...v0.1.9) (2020-12-09)
 
 
