@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.2.0](https://github.com/darkobits/ts/compare/v0.1.6...v0.2.0) (2020-12-16)
+
+
+### ✨ Features
+
+* **nps:** Add major, minor, patch bump scripts. ([5e39ceb](https://github.com/darkobits/ts/commit/5e39ceb973931919f5c8227e128e1b67014804c6))
+
 ### [0.1.6](https://github.com/darkobits/ts/compare/v0.1.5...v0.1.6) (2020-12-09)
 
 
