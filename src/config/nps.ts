@@ -233,6 +233,33 @@ export default (arg0?: NPSConfiguration | NPSConfigurationFactory) => {
         `${STANDARD_VERSION_COMMAND} --first-release`,
         userScripts?.scripts?.postbump ? `${prefixBin('nps')} postbump` : undefined
       ].filter(Boolean))
+    },
+    major: {
+      description: 'Generates a changelog and tagged commit, forcing a major version bump.',
+      script: npsUtils.series(...[
+        userScripts?.scripts?.prebump ? `${prefixBin('nps')} prebump` : undefined,
+        `${prefixBin('nps')} prepare`,
+        `${STANDARD_VERSION_COMMAND} --release-as=major`,
+        userScripts?.scripts?.postbump ? `${prefixBin('nps')} postbump` : undefined
+      ].filter(Boolean))
+    },
+    minor: {
+      description: 'Generates a changelog and tagged commit, forcing a minor version bump.',
+      script: npsUtils.series(...[
+        userScripts?.scripts?.prebump ? `${prefixBin('nps')} prebump` : undefined,
+        `${prefixBin('nps')} prepare`,
+        `${STANDARD_VERSION_COMMAND} --release-as=minor`,
+        userScripts?.scripts?.postbump ? `${prefixBin('nps')} postbump` : undefined
+      ].filter(Boolean))
+    },
+    patch: {
+      description: 'Generates a changelog and tagged commit, forcing a patch version bump.',
+      script: npsUtils.series(...[
+        userScripts?.scripts?.prebump ? `${prefixBin('nps')} prebump` : undefined,
+        `${prefixBin('nps')} prepare`,
+        `${STANDARD_VERSION_COMMAND} --release-as=patch`,
+        userScripts?.scripts?.postbump ? `${prefixBin('nps')} postbump` : undefined
+      ].filter(Boolean))
     }
   };
 
