@@ -137,7 +137,7 @@ export default (arg0?: NPSConfiguration | NPSConfigurationFactory) => {
   scripts.ts = {
     default: {
       description: 'Emit declarations for the project.',
-      script: `${prefixBin('ttsc')} --pretty --pretty --emitDeclarationOnly`
+      script: `${prefixBin('ttsc')} --pretty --emitDeclarationOnly`
     },
     watch: {
       description: 'Continuously type-check and emit declarations for the project.',
