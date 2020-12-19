@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.1](https://github.com/darkobits/ts/compare/v0.2.0...v0.2.1) (2020-12-19)
+
+
+### 🐞 Bug Fixes
+
+* Remove @babel/plugin-transform-runtime. ([d5433ec](https://github.com/darkobits/ts/commit/d5433ec60f387882331d92bc5fcf50d29d9b5247))
+* **nps:** Remove duplicate --pretty flag. ([be9f4a6](https://github.com/darkobits/ts/commit/be9f4a63e25893faa9b0430095b6df29d629408d))
+
 ## [0.2.0](https://github.com/darkobits/ts/compare/v0.1.6...v0.2.0) (2020-12-16)
 
 
