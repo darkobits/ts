@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.2](https://github.com/darkobits/ts/compare/v0.2.1...v0.2.2) (2020-12-21)
+
+
+### 🛠 Refactoring
+
+* Remove test declaration files from build directory. ([874a1ed](https://github.com/darkobits/ts/commit/874a1ed7a2511cd59d99fd19eca61a4ad154be97))
+
 ### [0.2.1](https://github.com/darkobits/ts/compare/v0.2.0...v0.2.1) (2020-12-19)
 
 
