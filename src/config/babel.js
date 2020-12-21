@@ -13,6 +13,7 @@ module.exports = {
     require.resolve('@babel/preset-react')
   ],
   plugins: [
+    require.resolve('@babel/plugin-transform-runtime'),
     require.resolve('react-hot-loader/babel')
   ],
   // This is set to `true`, inverting the default setting from 'ts') to prevent
