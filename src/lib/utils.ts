@@ -9,11 +9,12 @@ import log from 'lib/log';
 /**
  * Returns a short description of the current Git commit using 'git describe'.
  *
- * Example: "v0.12.7-17-g9d2f0dc"
+ * Example: "v0.12.7-17-9d2f0dc"
  */
 export function gitDescribe() {
   const git = chex.sync('git');
-  const result = git.sync(['describe', '--tags']).stdout;
+  // Remove the 'g' that immediately precedes the commit SHA.
+  const result = git.sync(['describe', '--tags']).stdout.replace(/-g(\w{7,})$/g, '-$1');
   log.verbose(log.prefix('gitDescribe'), `Current Git description: ${log.chalk.green(result)}`);
   return result;
 }
