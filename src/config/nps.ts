@@ -117,13 +117,7 @@ export default (arg0?: NPSConfiguration | NPSConfigurationFactory) => {
   scripts.compile = {
     default: {
       description: 'Compile the project with Babel.',
-      script: npsUtils.series(
-        BABEL_COMMAND,
-        // Babel's --ignore argument doesn't work as explained in the docs,
-        // especially with multiple patterns. It is easier to just go through
-        // the output folder and remove what we don't want.
-        `${prefixBin('del')} "${OUT_DIR}/**/*.spec.*" "${OUT_DIR}/**/*.test.*"`
-      )
+      script: BABEL_COMMAND
     },
     watch: {
       description: 'Continuously compile the project with Babel.',
@@ -175,6 +169,9 @@ export default (arg0?: NPSConfiguration | NPSConfigurationFactory) => {
             color: 'bgBlue.white'
           }
         }),
+        // Remove test files produced by Babel and test declaration files
+        // produced by TypeScript from the build directory.
+        `${prefixBin('del')} "${OUT_DIR}/**/*.spec.*" "${OUT_DIR}/**/*.test.*"`,
         // Finally, if there is a user-defined script named 'postbuild', run it.
         userScripts?.scripts?.postbuild ? `${prefixBin('nps')} postbuild` : undefined
       ].filter(Boolean))
