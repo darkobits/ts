@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.1](https://github.com/darkobits/tsx/compare/v0.2.0...v0.2.1) (2020-12-21)
+
+
+### 🏗 Chores
+
+* Update dependencies. ([190f3cd](https://github.com/darkobits/tsx/commit/190f3cdeaba3af09040e22ee1677ad465d6a160d))
+
+
+### 🛠 Refactoring
+
+* Add plugin-transform-runtime. ([ee9b706](https://github.com/darkobits/tsx/commit/ee9b7062aa6f550ba3782b40f91956aaf84d2614))
+
 ## [0.2.0](https://github.com/darkobits/tsx/compare/v0.1.10...v0.2.0) (2020-12-09)
 
 
