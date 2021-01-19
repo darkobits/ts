@@ -160,7 +160,7 @@ export default (arg0?: NPSConfiguration | NPSConfigurationFactory) => {
         npsUtils.concurrent({
           'ESLint': {
             script: scripts.lint.script,
-            color: 'bgMagenta.white'
+            color: 'bgMagenta.whiteBright'
           },
           'Babel': {
             script: scripts.compile.default.script,
@@ -168,7 +168,7 @@ export default (arg0?: NPSConfiguration | NPSConfigurationFactory) => {
           },
           'TSC': {
             script: scripts.ts.default.script,
-            color: 'bgBlue.white'
+            color: 'bgBlue.whiteBright'
           }
         }),
         // Remove test files produced by Babel and test declaration files
