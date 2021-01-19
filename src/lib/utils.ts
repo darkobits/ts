@@ -1,15 +1,19 @@
 import fs from 'fs';
 import path from 'path';
 
+import env from '@darkobits/env';
 import { getBinPathSync } from 'get-bin-path';
+import IS_CI from 'is-ci';
 // @ts-expect-error: Package does not have type defs.
 import * as npsUtils from 'nps-utils';
 import readPkgUp from 'read-pkg-up';
 import resolvePkg from 'resolve-pkg';
 
 import {
+  NpmConfigArgv,
   NPSConfiguration,
-  NPSConfigurationFactory
+  NPSConfigurationFactory,
+  SkipWarningPayload
 } from 'etc/types';
 import log from 'lib/log';
 
@@ -34,8 +38,6 @@ export function getPackageInfo(cwd?: string) {
 
 
 /**
- * @private
- *
  * Provided a package name and optional binary name, resolves the path to the
  * binary from this package (ensuring nested node_modules are traversed) then
  * require()s the module.
@@ -63,8 +65,6 @@ export function requireBin(pkgName: string, binName?: string) {
 
 
 /**
- * @private
- *
  * Used by our ESLint configuration.
  *
  * Returns the path to the host package's tsconfig.json file. If a tsconfig.json
@@ -94,8 +94,6 @@ export function findTsConfig() {
 
 
 /**
- * @private
- *
  * Because this package shares many package scripts and tooling with its own
  * dependents, we need to differentiate between when a binary is being invoked
  * by this package and when it is being invoked by a dependent package.
@@ -125,8 +123,6 @@ export function prefixBin(binName: string) {
 
 
 /**
- * @private
- *
  * Introspects the argument passed to our NPS configuration function. If a
  * configuration factory was provided, invokes it and returns the result. If an
  * object was provided, returns it. If no argument was provided, returns a
@@ -139,7 +135,10 @@ export function getUserScripts(userArgument?: NPSConfiguration | NPSConfiguratio
   };
 
   if (typeof userArgument === 'function') {
-    userScripts = userArgument({ npsUtils });
+    userScripts = userArgument({
+      npsUtils,
+      IS_CI
+    });
   }
 
   if (typeof userArgument === 'object') {
@@ -151,4 +150,74 @@ export function getUserScripts(userArgument?: NPSConfiguration | NPSConfiguratio
   }
 
   return userScripts;
+}
+
+
+/**
+ * @private
+ *
+ * Extracts an NPS script name from the value of a key/value pair in the
+ * "scripts" object in package.json.
+ */
+function getRootNpsScriptName(npmScriptValue = '') {
+  const npsScriptNameMatches = /^nps (.*)+$/g.exec(npmScriptValue);
+
+  if (npsScriptNameMatches) {
+    return npsScriptNameMatches[1];
+  }
+}
+
+
+/**
+ * Provided a string representing a command or set of scripts to run, checks to
+ * ensure that (1) we are not in a CI environment and (2) we are not being run
+ * as part of an NPM lifecycle. If both of these conditions are met, the
+ * provided scripts will be returned (presumably to NPS) for execution.
+ * Otherwise, an empty string will be returned, causing NPS to no-op.
+ *
+ * Rationale:
+ *
+ * Recommended configuration for TS is to alias the "prepare" NPM lifecycle
+ * script in package.json to the NPS "prepare" script. This ensures that when a
+ * developer clones a repo based on TS and invokes "npm install", the project
+ * will lint, build, and test, giving the developer confidence that they are
+ * starting with working code. However, in a CI context, it may be preferable to
+ * separate these tasks into explicit commands/invocations so that (1) anyone
+ * reading the CI script can discern exactly what's going on (just seeing "npm
+ * ci" or "npm install" does not make it clear that this will perform all of the
+ * above tasks) and (2) it gives the developer the ability to run alternate
+ * build/test scripts in CI. For example, a developer may want to run the
+ * "test.coverage" script to generate a coverage report as opposed to the
+ * standard "test" script.
+ *
+ * Without this helper, the developer would have to either (1) invoke their
+ * install script with the "--ignore-scripts" option or (2) let the CI job run
+ * build/test tasks twice, neither of which are desirable.
+ */
+export function skipIfCiNpmLifecycle(npsScriptName: string, npsScripts: string) {
+  const npmConfigArgv = env<NpmConfigArgv>('npm_config_argv');
+  const npmCommand = `npm ${npmConfigArgv?.original.join(' ')}`;
+  const npmScriptName = env('npm_lifecycle_event');
+  const npmScriptValue = env('npm_lifecycle_script');
+
+  const isNpmInstall = npmConfigArgv?.original.includes('install');
+  const isNpmCi = npmConfigArgv?.original.includes('ci');
+
+  const rootNpsScriptName = getRootNpsScriptName(npmScriptValue) ?? '';
+
+  const data: SkipWarningPayload = {
+    npmCommand,
+    npmScriptName,
+    npmScriptValue,
+    rootNpsScriptName,
+    localNpsScriptName: npsScriptName
+  };
+
+  const encodedData = Buffer.from(JSON.stringify(data)).toString('base64');
+
+  if (IS_CI && (isNpmInstall || isNpmCi)) {
+    return `node --require ${require.resolve('etc/babel-register')} ${require.resolve('etc/skip-warning')} "${encodedData}"`;
+  }
+
+  return npsScripts;
 }

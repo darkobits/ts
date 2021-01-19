@@ -32,7 +32,8 @@ import {
 } from 'etc/types';
 import {
   getUserScripts,
-  prefixBin
+  prefixBin,
+  skipIfCiNpmLifecycle
 } from 'lib/utils';
 
 
@@ -48,6 +49,7 @@ export default (arg0?: NPSConfiguration | NPSConfigurationFactory) => {
 
   // ----- Dependency Management -----------------------------------------------
 
+  // @ts-expect-error - We don't have a root-level 'deps' script.
   scripts.deps = {
     check: {
       description: 'Check for newer versions of installed dependencies.',
@@ -183,10 +185,18 @@ export default (arg0?: NPSConfiguration | NPSConfigurationFactory) => {
         userScripts?.scripts?.prebuild ? `${prefixBin('nps')} prebuild` : undefined,
         npsUtils.concurrent({
           'Babel': {
+            // @ts-expect-error - Even though the value at 'watch' is typed as a
+            // union type and we have _clearly_ defined this value above using
+            // the 'verbose' form, TypeScript insists that 'watch.script' here
+            // is of type 'string', ignoring the other types in the union. 🎉
             script: scripts.compile.watch.script,
             color: 'bgYellow.black'
           },
           'TSC': {
+            // @ts-expect-error - Even though the value at 'watch' is typed as a
+            // union type and we have _clearly_ defined this value above using
+            // the 'verbose' form, TypeScript insists that 'watch.script' here
+            // is of type 'string', ignoring the other types in the union. 🎉
             script: scripts.ts.watch.script,
             color: 'bgBlue.white'
           }
@@ -261,16 +271,18 @@ export default (arg0?: NPSConfiguration | NPSConfigurationFactory) => {
   };
 
 
-  // ----- Life Cycles ---------------------------------------------------------
+  // ----- Lifecycles ----------------------------------------------------------
 
   scripts.prepare = {
     description: 'Runs after "npm install" to ensure the package builds correctly and tests are passing.',
-    // This ensures that "nps prepare" will run a user-defined build script if
-    // they have set one.
-    script: npsUtils.series.nps(
+    // This wrapper function will cause a no-op if (1) we are in a CI
+    // environment and (2) we are being run as part of an NPM lifecycle.
+    script: skipIfCiNpmLifecycle('prepare', npsUtils.series.nps(
+      // This ensures that "nps prepare" will run a user-defined build script if
+      // they have set one.
       'build',
       'test.passWithNoTests'
-    )
+    ))
   };
 
 

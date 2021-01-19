@@ -1,11 +1,17 @@
 require('./src/etc/babel-register');
+const { skipIfCiNpmLifecycle } = require('./src/lib/utils');
+
 
 module.exports = require('./src').nps(({ npsUtils }) => ({
   scripts: {
-    prepare: npsUtils.series(
-      npsUtils.series.nps('lint', 'build', 'test.passWithNoTests'),
-      './dist/etc/link-bins.js'
-    ),
+    prepare: skipIfCiNpmLifecycle('prepare', npsUtils.series(
+      npsUtils.series.nps(
+        'lint',
+        'build',
+        'test.passWithNoTests'
+      ),
+      `node --require ${require.resolve('./src/etc/babel-register')} ${require.resolve('./src/etc/link-bins')}`
+    )),
     publish: {
       description: 'Re-pack and publish the package.',
       script: 're-pack publish'
