@@ -4,7 +4,15 @@ import readPkgUp from 'read-pkg-up';
 import { doUpdateNotification } from 'lib/utils';
 
 
-async function main() {
+/**
+ * This standalone script is linked to a binary defined by this package that can
+ * then be invoked via NPS. The function that handles most of the actual
+ * notification logic is located in utils.ts so that related packages such as
+ * @darkobits/tsx can easily re-use it.
+ *
+ * See: utils.ts / doUpdateNotification
+ */
+async function updateNotifier() {
   // Start from the directory of this file rather than process.cwd(), or we will
   // wind up reading the host project's package.json, not our own.
   const pkg = await readPkgUp({ cwd: __dirname });
@@ -17,4 +25,4 @@ async function main() {
 }
 
 
-void main();
+void updateNotifier();
