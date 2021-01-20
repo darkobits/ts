@@ -43,7 +43,7 @@ async function linkBins() {
       }
     }));
 
-    log.verbose(log.prefix('link-bins'), `Done. ${log.chalk.gray(`(${runTime})`)}`);
+    log.info(log.prefix('link-bins'), `Linked ${log.chalk.yellow(Object.entries(pkg.json?.bin).length)} package binaries. ${log.chalk.gray(`(${runTime})`)}`);
   } catch (err) {
     log.error(err);
     process.exit(1);
