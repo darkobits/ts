@@ -4,10 +4,12 @@ import path from 'path';
 import env from '@darkobits/env';
 import { getBinPathSync } from 'get-bin-path';
 import IS_CI from 'is-ci';
+import ms from 'ms';
 // @ts-expect-error: Package does not have type defs.
 import * as npsUtils from 'nps-utils';
 import readPkgUp from 'read-pkg-up';
 import resolvePkg from 'resolve-pkg';
+import updateNotifier from 'update-notifier';
 
 import {
   NpmConfigArgv,
@@ -220,4 +222,47 @@ export function skipIfCiNpmLifecycle(npsScriptName: string, npsScripts: string) 
   }
 
   return npsScripts;
+}
+
+
+/**
+ * Provided a normalized package.json object, renders an update notification in
+ * the terminal.
+ */
+export function doUpdateNotification(pkg: readPkgUp.NormalizedPackageJson) {
+  const getStyledUpdateType = (updateType?: string) => {
+    switch (updateType) {
+      case 'major':
+        return log.chalk.yellowBright.bold(updateType);
+      case 'minor':
+        return log.chalk.green.bold(updateType);
+      case 'patch':
+        return log.chalk.cyanBright(updateType);
+      case 'alpha':
+      case 'beta':
+      default:
+        return log.chalk.magentaBright(updateType);
+    }
+  };
+
+  // TODO: Remove once this is working reliably.
+  log.silly('Running update notifier.');
+
+  const notifier = updateNotifier({
+    pkg,
+    updateCheckInterval: ms('1 second'),
+    shouldNotifyInNpmScript: true,
+    distTag: 'beta'
+  });
+
+  const styledUpdateType = getStyledUpdateType(notifier.update?.type);
+
+  notifier.notify({
+    defer: false,
+    isGlobal: false,
+    message: [
+      `Bonjour! 👋 A new ${styledUpdateType} version of ${log.chalk.rgb(14, 97, 212)(pkg.name)} is available!`,
+      `Run ${log.chalk.bold('{updateCommand}')} to update from ${log.chalk.gray('{currentVersion}')} ➤ ${log.chalk.green('{latestVersion}')}. ✨`
+    ].join('\n')
+  });
 }
