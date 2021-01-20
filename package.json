@@ -28,7 +28,7 @@
   },
   "main": "dist/index.js",
   "scripts": {
-    "prepare": "nps prepareLocal",
+    "prepare": "nps prepare",
     "prepublishOnly": "re-pack guard",
     "help": "nps --scripts"
   },

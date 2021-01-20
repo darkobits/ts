@@ -2,7 +2,7 @@ require('./src/etc/babel-register');
 
 module.exports = require('./src').nps(() => ({
   scripts: {
-    prepareLocal: {
+    prepare: {
       script: [
         'nps build',
         'nps test.passWithNoTests',
