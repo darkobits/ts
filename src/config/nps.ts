@@ -277,12 +277,21 @@ export default (arg0?: NPSConfiguration | NPSConfigurationFactory) => {
     description: 'Runs after "npm install" to ensure the package builds correctly and tests are passing.',
     // This wrapper function will cause a no-op if (1) we are in a CI
     // environment and (2) we are being run as part of an NPM lifecycle.
-    script: skipIfCiNpmLifecycle('prepare', npsUtils.series.nps(
-      // This ensures that "nps prepare" will run a user-defined build script if
-      // they have set one.
-      'build',
-      'test.passWithNoTests'
-    ))
+    script: skipIfCiNpmLifecycle(
+      'prepare',
+      npsUtils.series(
+        npsUtils.series.nps(
+          // This ensures that "nps prepare" will run a user-defined build script if
+          // they have set one.
+          'build',
+          'test.passWithNoTests'
+        ),
+        // N.B. Normally, we should not have to provide a full relative path to
+        // these modules. But because this file is outside of our "src" directory
+        // and is not compiled by Babel, we do not get path rewriting here.
+        `node --require ${require.resolve('etc/babel-register')} ${require.resolve('etc/link-bins')}`
+      )
+    )
   };
 
 
