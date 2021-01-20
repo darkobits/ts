@@ -218,7 +218,7 @@ export function skipIfCiNpmLifecycle(npsScriptName: string, npsScripts: string) 
   const encodedData = Buffer.from(JSON.stringify(data)).toString('base64');
 
   if (IS_CI && (isNpmInstall || isNpmCi)) {
-    return `node --require ${require.resolve('etc/babel-register')} ${require.resolve('etc/skip-warning')} "${encodedData}"`;
+    return `node --require ${require.resolve('etc/babel-register')} ${require.resolve('bin/scripts/skip-warning')} "${encodedData}"`;
   }
 
   return npsScripts;
