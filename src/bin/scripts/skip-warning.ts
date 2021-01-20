@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+
 import log from 'lib/log';
 import type { SkipWarningPayload } from 'etc/types';
 

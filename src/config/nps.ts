@@ -289,7 +289,8 @@ export default (arg0?: NPSConfiguration | NPSConfigurationFactory) => {
         // N.B. Normally, we should not have to provide a full relative path to
         // these modules. But because this file is outside of our "src" directory
         // and is not compiled by Babel, we do not get path rewriting here.
-        `node --require ${require.resolve('etc/babel-register')} ${require.resolve('etc/link-bins')}`
+        'npx ts.scripts.link-bins',
+        'npx ts.scripts.update-notifier'
       )
     )
   };
