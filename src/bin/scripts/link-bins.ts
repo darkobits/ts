@@ -1,26 +1,26 @@
 #!/usr/bin/env node
 
 import path from 'path';
-
 import chex from '@darkobits/chex';
 import fs from 'fs-extra';
-
 import log from 'lib/log';
 import { getPackageInfo } from 'lib/utils';
 
 
 /**
- * Creates symlinks for this package's declared binaries in its local
- * node_modules/.bin directory so that this package can invoke them in the same
- * way a dependent package would.
+ * Creates symlinks for the host package's declared binaries in its local
+ * ./node_modules/.bin/ directory so that they can be invoked via the command
+ * line as long as ./node_modules/.bin/ is in PATH.
  */
 async function linkBins() {
   try {
     const runTime = log.createTimer();
-    const pkg = getPackageInfo(__dirname);
+    const pkg = getPackageInfo();
 
+    // If the host package does not declare any binaries, bail.
     if (!pkg.json.bin) {
-      throw new Error(`${log.prefix('link-bins')} Local package.json does not have a "bin" field.`);
+      log.verbose(log.prefix('link-bins'), 'Local package.json does not have a "bin" field.');
+      return;
     }
 
     const npm = await chex('npm ^6.0.0');
@@ -43,7 +43,7 @@ async function linkBins() {
       }
     }));
 
-    log.info(log.prefix('link-bins'), `Linked ${log.chalk.yellow(Object.entries(pkg.json?.bin).length)} package binaries. ${log.chalk.gray(`(${runTime})`)}`);
+    log.verbose(log.prefix('link-bins'), `Linked ${log.chalk.yellow(Object.entries(pkg.json?.bin).length)} package binaries. ${log.chalk.gray(`(${runTime})`)}`);
   } catch (err) {
     log.error(err);
     process.exit(1);
@@ -51,4 +51,4 @@ async function linkBins() {
 }
 
 
-export default linkBins();
+void linkBins();

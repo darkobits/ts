@@ -4,7 +4,23 @@ import log from 'lib/log';
 import type { SkipWarningPayload } from 'etc/types';
 
 
-function main() {
+/**
+ * When in a CI environment, this package will skip running its 'prepare' NPS
+ * script as part of any NPM lifecycle script (ex: "postinstall", "prepare").
+ * This is done because our prepare script lints, builds, and tests the host
+ * project. However, if dependency caches are used, the CI job may skip invoking
+ * "npm install" / "npm ci" entirely, resulting in the project not being built.
+ * Making the developer explicitly invoke package scripts also results in a more
+ * readable and less "magical" CI configuration file.
+ *
+ * This function is responsible for issuing a warning when one of these scripts
+ * will not execute. Because all NPS scripts must resolve to strings, it is
+ * necessary to implement this logging logic as a standalone script. We pass
+ * relevant contextual data to it via a single base-64 encoded string argument.
+ *
+ * See: utils.ts / skipIfCiNpmLifecycle
+ */
+function issueSkipWarning() {
   const {
     npmCommand,
     npmScriptName,
@@ -13,7 +29,6 @@ function main() {
     localNpsScriptName
   }: SkipWarningPayload = JSON.parse(Buffer.from(process.argv[2], 'base64').toString('ascii'));
 
-  // Issue warning.
   process.stderr.write('\n');
 
   log.warn(log.chalk.dim.bold([
@@ -35,4 +50,4 @@ function main() {
 }
 
 
-void main();
+void issueSkipWarning();
