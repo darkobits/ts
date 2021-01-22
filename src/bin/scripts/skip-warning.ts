@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 
-import log from 'lib/log';
 import type { SkipWarningPayload } from 'etc/types';
+import log from 'lib/log';
+import { fromBase64 } from 'lib/utils';
 
 
 /**
@@ -27,7 +28,7 @@ function issueSkipWarning() {
     npmScriptValue,
     rootNpsScriptName,
     localNpsScriptName
-  }: SkipWarningPayload = JSON.parse(Buffer.from(process.argv[2], 'base64').toString('ascii'));
+  } = fromBase64<SkipWarningPayload>(process.argv[2]);
 
   process.stderr.write('\n');
 

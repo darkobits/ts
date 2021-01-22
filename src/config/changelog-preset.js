@@ -1,18 +1,10 @@
-// -----------------------------------------------------------------------------
-// ----- Standard Version Changelog Preset -------------------------------------
-// -----------------------------------------------------------------------------
+const config = require('conventional-changelog-conventionalcommits');
+
 
 /**
- * Uses 'extends': N/A
- * Non-CJS Config: N/A
- * Babel Config:   N/A
- *
- * Custom preset for standard-version's CHANGELOG generation.
+ * Custom CHANGELOG preset based on conventional-changelog.
  */
-import config from 'conventional-changelog-conventionalcommits';
-
-
-export default config({
+module.exports = config({
   types: [
     {type: 'feat', section: '✨ Features'},
     {type: 'fix', section: '🐞 Bug Fixes'},

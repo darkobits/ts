@@ -1,11 +1,7 @@
-// -----------------------------------------------------------------------------
-// ----- Babel Configuration ---------------------------------------------------
-// -----------------------------------------------------------------------------
-
 /**
- * Uses 'extends': Yes
- * Non-CJS config: No
- * Babel Config:   N/A
+ * Tool Uses 'extends': Yes
+ * Tool Supports Non-CJS Config: No
+ * Tool Supports .babel Config: N/A
  *
  * Additionally, require() must use relative paths because this file configures
  * Babel, which is responsible for re-writing path aliases.
