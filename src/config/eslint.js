@@ -1,11 +1,7 @@
-// -----------------------------------------------------------------------------
-// ----- ESLint Configuration --------------------------------------------------
-// -----------------------------------------------------------------------------
-
 /**
- * Uses 'extends': Yes
- * Non-CJS config: No¹²
- * Babel config:   No¹
+ * Tool Uses 'extends': Yes
+ * Tool Supports Non-CJS Config: No¹²
+ * Tool Supports .babel Config: No¹
  *
  * ¹The ESLint team does not seem interested in supporting configuration file
  *  transpilation at this time:
@@ -13,11 +9,11 @@
  *  - https://github.com/eslint/rfcs/pull/50
  *
  * ²We can, however, support non-CJS base configuration files in this repository
- * provided our own root configuration file requires @babel/register. Consumers
- * will not have to do this because they will be loading transpiled CJS.
+ *  provided our own root configuration file requires @babel/register. Consumers
+ *  will not have to do this because they will be loading transpiled CJS.
  */
-
-import { findTsConfig } from 'lib/utils';
+const R = require('ramda');
+const  { findTsConfig } = require('lib/utils');
 
 
 const config = {
@@ -786,7 +782,7 @@ config.overrides.push({
 /**
  * Disable all @typescript-eslint rules for JavaScript files.
  */
-const javaScriptRules = Object.entries(config.rules).reduce((rules, [rule, ruleConfig]) => { // eslint-disable-line unicorn/no-reduce
+const javaScriptRules = R.reduce((rules, [rule, ruleConfig]) => {
   if (rule.startsWith('@typescript-eslint/')) {
     rules[rule] = 'off';
 
@@ -805,7 +801,7 @@ const javaScriptRules = Object.entries(config.rules).reduce((rules, [rule, ruleC
   }
 
   return rules;
-}, {});
+}, {}, Object.entries(config.rules));
 
 config.overrides.push({
   files: ['*.js'],
@@ -814,4 +810,4 @@ config.overrides.push({
 });
 
 
-export default config;
+module.exports = config;

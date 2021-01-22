@@ -3,18 +3,18 @@
 // -----------------------------------------------------------------------------
 
 /**
- * Uses 'extends': No¹
- * Non-CJS Config: No²
- * Babel Config:   No
+ * Tool Uses 'extends': No¹
+ * Tool Supports Non-CJS Config: No²
+ * Tool Supports Babel Config: No
  *
  * ¹We can, however, support non-CJS base configuration files in this repository
- * provided our own root configuration files require @babel/register. Consumers
- * will not have to do this because they will be loading transpiled CJS.
+ *  provided our own root configuration files require @babel/register. Consumers
+ *  will not have to do this because they will be loading transpiled CJS.
  *
  * ²This can be achieved using a custom entrypoint for NPS, but would require
- * that the user not use a globally-installed version of NPS _and_ that we
- * overwrite the "nps" bin symlink. Alternatively, the user could create an
- * .npsrc configuration file. Both of these solutions seem overly burdensome.
+ *  that the user not use a globally-installed version of NPS _and_ that we
+ *  overwrite the "nps" bin symlink. Alternatively, the user could create an
+ *  .npsrc configuration file. Both of these solutions seem overly burdensome.
  */
 
 import merge from 'deepmerge';
@@ -174,6 +174,10 @@ export default (arg0?: NPSConfiguration | NPSConfigurationFactory) => {
         // Remove test files produced by Babel and test declaration files
         // produced by TypeScript from the build directory.
         `${prefixBin('del')} "${OUT_DIR}/**/*.spec.*" "${OUT_DIR}/**/*.test.*"`,
+        // Link any bins declared in the host project's package.json into its
+        // local node_modules/.bin/ folder, allowing the developer to invoke the
+        // host package's bins in the same manner as any dependency's bins.
+        prefixBin('scripts.link-bins'),
         // Finally, if there is a user-defined script named 'postbuild', run it.
         userScripts?.scripts?.postbuild ? `${prefixBin('nps')} postbuild` : undefined
       ].filter(Boolean))
@@ -213,61 +217,27 @@ export default (arg0?: NPSConfiguration | NPSConfigurationFactory) => {
     `--preset=${require.resolve('config/changelog-preset')}`
   ].join(' ');
 
+  const createReleaseScript = (name?: string, standardVersionArgs?: string) => ({
+    description: [
+      'Generates a change log and tagged commit for a',
+      name,
+      'release.'
+    ].filter(Boolean).join(' '),
+    script: npsUtils.series(...[
+      userScripts?.scripts?.prebump ? `${prefixBin('nps')} prebump` : undefined,
+      `${prefixBin('nps')} prepare`,
+      `${STANDARD_VERSION_COMMAND} ${standardVersionArgs}`,
+      userScripts?.scripts?.postbump ? `${prefixBin('nps')} postbump` : undefined
+    ].filter(Boolean))
+  });
+
   scripts.bump = {
-    default: {
-      description: 'Generates a change log and tagged commit for a release.',
-      script: npsUtils.series(...[
-        userScripts?.scripts?.prebump ? `${prefixBin('nps')} prebump` : undefined,
-        `${prefixBin('nps')} prepare`,
-        STANDARD_VERSION_COMMAND,
-        userScripts?.scripts?.postbump ? `${prefixBin('nps')} postbump` : undefined
-      ].filter(Boolean))
-    },
-    beta: {
-      description: 'Generates a change log and tagged commit for a beta release.',
-      script: npsUtils.series(...[
-        userScripts?.scripts?.prebump ? `${prefixBin('nps')} prebump` : undefined,
-        `${prefixBin('nps')} prepare`,
-        `${STANDARD_VERSION_COMMAND} --prerelease=beta`,
-        userScripts?.scripts?.postbump ? `${prefixBin('nps')} postbump` : undefined
-      ].filter(Boolean))
-    },
-    first: {
-      description: 'Generates a changelog and tagged commit for a project\'s first release.',
-      script: npsUtils.series(...[
-        userScripts?.scripts?.prebump ? `${prefixBin('nps')} prebump` : undefined,
-        `${prefixBin('nps')} prepare`,
-        `${STANDARD_VERSION_COMMAND} --first-release`,
-        userScripts?.scripts?.postbump ? `${prefixBin('nps')} postbump` : undefined
-      ].filter(Boolean))
-    },
-    major: {
-      description: 'Generates a changelog and tagged commit, forcing a major version bump.',
-      script: npsUtils.series(...[
-        userScripts?.scripts?.prebump ? `${prefixBin('nps')} prebump` : undefined,
-        `${prefixBin('nps')} prepare`,
-        `${STANDARD_VERSION_COMMAND} --release-as=major`,
-        userScripts?.scripts?.postbump ? `${prefixBin('nps')} postbump` : undefined
-      ].filter(Boolean))
-    },
-    minor: {
-      description: 'Generates a changelog and tagged commit, forcing a minor version bump.',
-      script: npsUtils.series(...[
-        userScripts?.scripts?.prebump ? `${prefixBin('nps')} prebump` : undefined,
-        `${prefixBin('nps')} prepare`,
-        `${STANDARD_VERSION_COMMAND} --release-as=minor`,
-        userScripts?.scripts?.postbump ? `${prefixBin('nps')} postbump` : undefined
-      ].filter(Boolean))
-    },
-    patch: {
-      description: 'Generates a changelog and tagged commit, forcing a patch version bump.',
-      script: npsUtils.series(...[
-        userScripts?.scripts?.prebump ? `${prefixBin('nps')} prebump` : undefined,
-        `${prefixBin('nps')} prepare`,
-        `${STANDARD_VERSION_COMMAND} --release-as=patch`,
-        userScripts?.scripts?.postbump ? `${prefixBin('nps')} postbump` : undefined
-      ].filter(Boolean))
-    }
+    default: createReleaseScript(),
+    beta: createReleaseScript('beta', '--prerelease=beta'),
+    first: createReleaseScript('project\'s first', '--first-release'),
+    major: createReleaseScript('major', '--release-as=major'),
+    minor: createReleaseScript('minor', '--release-as=minor'),
+    patch: createReleaseScript('patch', '--release-as=patch')
   };
 
 
@@ -280,17 +250,18 @@ export default (arg0?: NPSConfiguration | NPSConfigurationFactory) => {
     script: skipIfCiNpmLifecycle(
       'prepare',
       npsUtils.series(
-        npsUtils.series.nps(
-          // This ensures that "nps prepare" will run a user-defined build script if
-          // they have set one.
-          'build',
-          'test.passWithNoTests'
-        ),
-        // N.B. Normally, we should not have to provide a full relative path to
-        // these modules. But because this file is outside of our "src" directory
-        // and is not compiled by Babel, we do not get path rewriting here.
-        'npx ts.scripts.link-bins',
-        'npx ts.scripts.update-notifier'
+        // This ensures that "nps prepare" will run a user-defined build script if
+        // they have set one.
+        'nps build',
+        // Again, this invocation allows the user to overwrite our default
+        // test script, but still have this default prepare script invoke it.
+        // We still pass the passWithNoTests argument to Jest to ensure that
+        // if the user has not written any tests yet, the prepare script will
+        // not fail.
+        'nps test -- -- --passWithNoTests',
+        // Finally, notify the user about any updates available at the end of
+        // the prepare script.
+        prefixBin('scripts.update-notifier')
       )
     )
   };
