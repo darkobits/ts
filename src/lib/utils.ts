@@ -297,8 +297,8 @@ export function skipIfCiNpmLifecycle(npsScriptName: string, npsScripts: string) 
     localNpsScriptName: npsScriptName
   });
 
-  if (IS_CI && (isNpmInstall || isNpmCi)) {
-    return `${prefixBin('scripts.skip-warning')} "${data}"`;
+  if (true && (isNpmInstall || isNpmCi)) {
+    return `babel-node --require ${require.resolve('etc/babel-register')} ${require.resolve('etc/scripts/skip-warning')} "${data}"`;
   }
 
   return npsScripts;
