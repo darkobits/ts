@@ -16,6 +16,7 @@
  *  overwrite the "nps" bin symlink. Alternatively, the user could create an
  *  .npsrc configuration file. Both of these solutions seem overly burdensome.
  */
+import 'etc/babel-register';
 
 import merge from 'deepmerge';
 // @ts-expect-error: Package does not have type defs.
@@ -177,7 +178,7 @@ export default (arg0?: NPSConfiguration | NPSConfigurationFactory) => {
         // Link any bins declared in the host project's package.json into its
         // local node_modules/.bin/ folder, allowing the developer to invoke the
         // host package's bins in the same manner as any dependency's bins.
-        prefixBin('scripts.link-bins'),
+        `babel-node --require ${require.resolve('etc/babel-register')} ${require.resolve('etc/scripts/link-bins')}`,
         // Finally, if there is a user-defined script named 'postbuild', run it.
         userScripts?.scripts?.postbuild ? `${prefixBin('nps')} postbuild` : undefined
       ].filter(Boolean))
@@ -261,7 +262,7 @@ export default (arg0?: NPSConfiguration | NPSConfigurationFactory) => {
         'nps test -- -- --passWithNoTests',
         // Finally, notify the user about any updates available at the end of
         // the prepare script.
-        prefixBin('scripts.update-notifier')
+        `babel-node --require ${require.resolve('etc/babel-register')} ${require.resolve('etc/scripts/update-notifier')}`
       )
     )
   };
