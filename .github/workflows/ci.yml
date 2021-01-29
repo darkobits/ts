@@ -5,8 +5,8 @@ on:
 env:
   FORCE_COLOR: 3
 jobs:
-  build-test:
-    name: Build & Test
+  ci-cd:
+    name: CI/CD
     runs-on: ubuntu-latest
     steps:
       - name: Cancel Previous Runs
