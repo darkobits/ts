@@ -65,7 +65,7 @@ async function linkBins() {
       return;
     }
 
-    const npm = await chex('npm ^6.0.0');
+    const npm = await chex('npm >=6.0.0');
     const { stdout: npmBinDir } = await npm(['bin']);
 
     log.silly(log.prefix('link-bins'), `NPM bin path: ${log.chalk.green(npmBinDir)}`);
