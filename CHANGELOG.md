@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.1](https://github.com/darkobits/ts/compare/v0.3.0...v0.3.1) (2021-05-11)
+
+
+### 🏗 Chores
+
+* **deps:** Update dependencies. ([77e22b2](https://github.com/darkobits/ts/commit/77e22b2d7ff476aa15c4f785a1bc6c04a5a95511))
+* Update CI configuration. ([dc6220d](https://github.com/darkobits/ts/commit/dc6220d1f7566d5050456a8c6cb4a84dea85328e))
+* **deps:** Update all dependencies. ([#2](https://github.com/darkobits/ts/issues/2)) ([4b0119f](https://github.com/darkobits/ts/commit/4b0119f49204d2429da350c2a7e8cbf03132ae0c))
+
 ## [0.3.0](https://github.com/darkobits/ts/compare/v0.2.2...v0.3.0) (2021-01-29)
 
 
