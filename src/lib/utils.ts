@@ -7,7 +7,7 @@ import IS_CI from 'is-ci';
 import ms from 'ms';
 // @ts-expect-error: Package does not have type defs.
 import * as npsUtils from 'nps-utils';
-import readPkgUp from 'read-pkg-up';
+import readPkgUp, { NormalizedPackageJson } from 'read-pkg-up';
 import resolvePkg from 'resolve-pkg';
 import updateNotifier from 'update-notifier';
 
@@ -53,6 +53,11 @@ export function fromBase64<T = any>(value: string): T {
 }
 
 
+export interface PkgInfo {
+  json: NormalizedPackageJson;
+  rootDir: string;
+}
+
 /**
  * Synchronously searches for a directory containing a package.json starting
  * from process.cwd() or the provided directory. Returns an object containing
@@ -62,7 +67,7 @@ export function fromBase64<T = any>(value: string): T {
  * cannot be found, and that returns the root directory of the package rather
  * than the path to where package.json was found.
  */
-export function getPackageInfo(cwd?: string) {
+export function getPackageInfo(cwd?: string): PkgInfo {
   const pkgInfo = readPkgUp.sync({ cwd });
 
   if (!pkgInfo) {
