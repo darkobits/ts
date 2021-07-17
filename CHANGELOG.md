@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.3](https://github.com/darkobits/ts/compare/v0.4.2...v0.4.3) (2021-07-17)
+
+
+### 🏗 Chores
+
+* **eslint:** Use @babel/eslint-parser. ([5dc7ebc](https://github.com/darkobits/ts/commit/5dc7ebc77a769cbdad1095fac7c45bad541ee019))
+* Update nr config. ([9b299b6](https://github.com/darkobits/ts/commit/9b299b6d3d219a00a314b065d65f57a35c7688e9))
+
 ### [0.4.2](https://github.com/darkobits/ts/compare/v0.4.1...v0.4.2) (2021-07-17)
 
 
