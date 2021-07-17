@@ -5,10 +5,9 @@ import { doUpdateNotification } from 'lib/utils';
 
 
 /**
- * This standalone script is linked to a binary defined by this package that can
- * then be invoked via NPS. The function that handles most of the actual
- * notification logic is located in utils.ts so that related packages such as
- * @darkobits/tsx can easily re-use it.
+ * Script that logs update information. The function that handles most of the
+ * actual notification logic is located in utils.ts so that related packages
+ * such as @darkobits/tsx can easily re-use it.
  *
  * See: utils.ts / doUpdateNotification
  */

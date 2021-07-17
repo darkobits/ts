@@ -42,10 +42,10 @@ jobs:
         run: npm ci
 
       - name: Build Project
-        run: npx nps build
+        run: npx nr build
 
       - name: Run Unit Tests
-        run: npx nps test
+        run: npx nr test.passWithNoTests
 
       # - name: Upload Coverage Report
       #   run: bash <(curl -s https://codecov.io/bash)

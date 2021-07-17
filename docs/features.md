@@ -9,7 +9,7 @@ smoothly:
 * Linting with [ESLint](https://eslint.org/).
 * Version and change log management with [`standard-version`](https://github.com/conventional-changelog/standard-version).
 * Easily check for newer versions of dependencies with [`npm-check`](https://github.com/dylang/npm-check).
-* Package script management with [NPS](https://github.com/sezna/nps).
+* Package script management with [NR](https://github.com/darkobits/nr).
 
 It is recommended that you have at least a working knowledge of these tools
 before installing `ts`.

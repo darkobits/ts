@@ -1,9 +1,11 @@
 #!/usr/bin/env node
 
 import path from 'path';
+
 import chex from '@darkobits/chex';
 import fs from 'fs-extra';
 import log from 'lib/log';
+
 import { getPackageInfo } from 'lib/utils';
 
 

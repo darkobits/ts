@@ -3,36 +3,13 @@ import path from 'path';
 import env from '@darkobits/env';
 import fs from 'fs-extra';
 import { getBinPathSync } from 'get-bin-path';
-import IS_CI from 'is-ci';
 import ms from 'ms';
-// @ts-expect-error: Package does not have type defs.
-import * as npsUtils from 'nps-utils';
 import readPkgUp, { NormalizedPackageJson } from 'read-pkg-up';
 import resolvePkg from 'resolve-pkg';
 import updateNotifier from 'update-notifier';
 
-import {
-  NpmConfigArgv,
-  NPSConfiguration,
-  NPSConfigurationFactory,
-  SkipWarningPayload
-} from 'etc/types';
+import { NpmConfigArgv } from 'etc/types';
 import log from 'lib/log';
-
-
-/**
- * @private
- *
- * Extracts an NPS script name from the value of a key/value pair in the
- * "scripts" object in package.json.
- */
-function getRootNpsScriptName(npmScriptValue = '') {
-  const npsScriptNameMatches = /^nps (.*)+$/g.exec(npmScriptValue);
-
-  if (npsScriptNameMatches) {
-    return npsScriptNameMatches[1];
-  }
-}
 
 
 /**
@@ -224,89 +201,16 @@ export function prefixBin(binName: string) {
 }
 
 
-/**
- * Introspects the argument passed to our NPS configuration function. If a
- * configuration factory was provided, invokes it and returns the result. If an
- * object was provided, returns it. If no argument was provided, returns a
- * configuration scaffold object.
- */
-export function getUserScripts(userArgument?: NPSConfiguration | NPSConfigurationFactory) {
-  let userScripts: NPSConfiguration = {
-    scripts: {},
-    options: {}
-  };
-
-  if (typeof userArgument === 'function') {
-    userScripts = userArgument({
-      npsUtils,
-      IS_CI
-    });
-  }
-
-  if (typeof userArgument === 'object') {
-    userScripts = userArgument;
-  }
-
-  if (!Reflect.has(userScripts, 'scripts') && !Reflect.has(userScripts, 'options')) {
-    log.warn(log.prefix('package-scripts'), 'Object returned did not contain "scripts" or "options" keys. This may be an error.');
-  }
-
-  return userScripts;
-}
-
-
-/**
- * Provided a string representing a command or set of scripts to run, checks to
- * ensure that (1) we are not in a CI environment and (2) we are not being run
- * as part of an NPM lifecycle. If both of these conditions are met, the
- * provided scripts will be returned (presumably to NPS) for execution.
- * Otherwise, an empty string will be returned, causing NPS to no-op.
- *
- * Rationale:
- *
- * Recommended configuration for TS is to alias the "prepare" NPM lifecycle
- * script in package.json to the NPS "prepare" script. This ensures that when a
- * developer clones a repo based on TS and invokes "npm install", the project
- * will lint, build, and test, giving the developer confidence that they are
- * starting with working code.
- *
- * However, in a CI context, it may be preferable to separate these tasks into
- * explicit commands/invocations so that (1) anyone reading the CI script can
- * discern exactly what's going on (just seeing "npm ci" or "npm install" does
- * not make it clear that this will perform all of the above tasks) and (2) it
- * gives the developer the ability to run alternate build/test scripts in CI.
- *
- * For example, a developer may want to run the "test.coverage" script to
- * generate a coverage report as opposed to the standard "test" script.
- *
- * Without this helper, the developer would have to either (1) invoke their
- * install script with the "--ignore-scripts" option or (2) let the CI job run
- * build/test tasks twice, neither of which are desirable.
- */
-export function skipIfCiNpmLifecycle(npsScriptName: string, npsScripts: string) {
+export function getNpmInfo() {
   const npmConfigArgv = env<NpmConfigArgv>('npm_config_argv');
-  const npmCommand = `npm ${npmConfigArgv?.original.join(' ')}`;
-  const npmScriptName = env('npm_lifecycle_event');
-  const npmScriptValue = env('npm_lifecycle_script');
 
-  const isNpmInstall = npmConfigArgv?.original.includes('install');
-  const isNpmCi = npmConfigArgv?.original.includes('ci');
-
-  const rootNpsScriptName = getRootNpsScriptName(npmScriptValue) ?? '';
-
-  const data = toBase64<SkipWarningPayload>({
-    npmCommand,
-    npmScriptName,
-    npmScriptValue,
-    rootNpsScriptName,
-    localNpsScriptName: npsScriptName
-  });
-
-  if (IS_CI && (isNpmInstall || isNpmCi)) {
-    return `babel-node --require ${require.resolve('etc/babel-register')} ${require.resolve('etc/scripts/skip-warning')} "${data}"`;
-  }
-
-  return npsScripts;
+  return {
+    command: npmConfigArgv?.original.join(' '),
+    event: env('npm_lifecycle_event'),
+    script: env('npm_lifecycle_script'),
+    isInstall: npmConfigArgv?.original.includes('install'),
+    isCi: npmConfigArgv?.original.includes('ci')
+  };
 }
 
 

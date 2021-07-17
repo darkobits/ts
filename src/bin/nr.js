@@ -2,4 +2,4 @@
 
 import { requireBin } from 'lib/utils';
 
-export default requireBin('nps');
+export default requireBin('nr');
