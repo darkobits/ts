@@ -8,7 +8,6 @@ import {
 } from 'etc/constants';
 import {
   prefixBin,
-  // skipIfCiNpmLifecycle,
   // TODO: Move this to nr.
   getNpmInfo
 } from 'lib/utils';
@@ -18,8 +17,9 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
   return async ({ createCommand, createScript }) => {
     // ----- Build: Babel Commands ---------------------------------------------
 
-    const babelArgs = {
-      _: [SRC_DIR],
+    const babelCmd = prefixBin('babel');
+
+    const babelFlags = {
       extensions: EXTENSIONS_WITH_DOT.join(','),
       ignore: '**/*.d.ts',
       outDir: OUT_DIR,
@@ -28,53 +28,44 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       deleteDirOnStart: true
     };
 
-    createCommand({
-      name: 'babel',
-      command: prefixBin('babel'),
-      arguments: babelArgs,
+    createCommand('babel', [
+      babelCmd, [SRC_DIR], babelFlags
+    ], {
       prefix: chalk => chalk.bgYellow.black('Babel')
     });
 
-    createCommand({
-      name: 'babel.watch',
-      command: prefixBin('babel'),
-      arguments: {
-        ...babelArgs,
-        watch: true,
-        verbose: true
-      },
+    createCommand('babel.watch', [
+      babelCmd, [SRC_DIR], {...babelFlags, watch: true, verbose: true }
+    ], {
       prefix: chalk => chalk.bgYellow.black('Babel')
     });
 
 
     // ----- Build: TypeScript Commands ----------------------------------------
 
-    const tsArgs = {
+    const ttscCmd = prefixBin('ttsc');
+
+    const tsFlags = {
       pretty: true
     };
 
-    createCommand({
-      name: 'ts',
-      command: prefixBin('ttsc'),
-      arguments: {
-        ...tsArgs,
-        emitDeclarationOnly: true
-      },
-      preserveArguments: true,
-      prefix: chalk => chalk.bgBlue.white('TS')
+    createCommand('ts', [
+      ttscCmd, { ...tsFlags, emitDeclarationOnly: true }
+    ], {
+      prefix: chalk => chalk.bgBlue.white('TS'),
+      preserveArguments: true
     });
 
-    createCommand({
-      name: 'ts.watch',
-      command: prefixBin('ttsc'),
-      arguments: {
-        pretty: true,
+    createCommand('ts.watch', [
+      ttscCmd, {
+        ...tsFlags,
         emitDeclarationOnly: true,
         watch: true,
         preserveWatchOutput: true
-      },
-      preserveArguments: true,
-      prefix: chalk => chalk.bgBlue.white('TS')
+      }
+    ], {
+      prefix: chalk => chalk.bgBlue.white('TS'),
+      preserveArguments: true
     });
 
     // const tsCheck = createCommand({
@@ -90,68 +81,51 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
 
     // ----- Build: Misc. Commands ---------------------------------------------
 
-    createCommand({
-      name: 'cleanup',
-      command: prefixBin('del'),
-      arguments: {
-        _: [`"${OUT_DIR}/**/*.spec.*"`, `"${OUT_DIR}/**/*.test.*"`]
-      }
-    });
+    createCommand('cleanup', [
+      prefixBin('del'), [`"${OUT_DIR}/**/*.spec.*"`, `"${OUT_DIR}/**/*.test.*"`]
+    ]);
 
-    createCommand({
-      name: 'linkBins',
-      command: 'babel-node',
-      arguments: {
-        _: [require.resolve('etc/scripts/link-bins')],
+    createCommand('linkBins', [
+      'babel-node', [require.resolve('etc/scripts/link-bins')], {
         require: require.resolve('etc/babel-register')
       }
-    });
+    ]);
 
 
     // ----- Lint Commands -----------------------------------------------------
 
-    const eslintArgs = {
-      _: ['src'],
+    const esLintCmd = prefixBin('eslint');
+
+    const eslintFlags = {
       ext: EXTENSIONS_WITH_DOT.join(','),
       format: require.resolve('eslint-codeframe-formatter')
     };
 
-    createCommand({
-      name: 'eslint',
-      command: prefixBin('eslint'),
-      arguments: eslintArgs
-      // prefix: chalk => chalk.bgBlue.white('ESLint')
-    });
+    createCommand('eslint', [
+      esLintCmd, [SRC_DIR], eslintFlags
+    ]);
 
-    createCommand({
-      name: 'eslint.fix',
-      command: prefixBin('eslint'),
-      arguments: {
-        ...eslintArgs,
-        fix: true
-      }
-      // prefix: chalk => chalk.bgBlue.white('ESLint')
-    });
+    createCommand('eslint.fix', [
+      esLintCmd, [SRC_DIR], { ...eslintFlags, fix: true }
+    ]);
 
 
     // ----- Build Scripts -----------------------------------------------------
 
-    createScript({
+    createScript('build', {
       group: 'Build',
-      name: 'build',
       description: 'Lint, type-check, and compile the project.',
-      commands: [
+      timing: true,
+      run: [
         ['babel', 'ts', 'eslint'],
         ['cleanup', 'linkBins']
-      ],
-      timing: true
+      ]
     });
 
-    createScript({
+    createScript('build.watch', {
       group: 'Build',
-      name: 'build.watch',
       description: 'Continuously type-check, and compile the project.',
-      commands: [
+      run: [
         ['babel.watch', 'ts.watch']
       ]
     });
@@ -159,78 +133,63 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
 
     // ----- Testing Scripts ---------------------------------------------------
 
-    createScript({
-      group: 'Test',
-      name: 'test',
-      description: 'Run unit tests.',
-      commands: [
-        createCommand({
-          command: prefixBin('jest')
-        })
-      ],
-      timing: true
-    });
+    const jestCmd = prefixBin('jest');
 
-    createScript({
+    createScript('test', {
       group: 'Test',
-      name: 'test.watch',
-      description: 'Run unit tests in watch mode.',
-      commands: [
-        createCommand({
-          command: prefixBin('jest'),
-          arguments: { watch: true }
-        })
+      description: 'Run unit tests.',
+      timing: true,
+      run: [
+        createCommand('jest', [jestCmd])
       ]
     });
 
-    createScript({
+    createScript('test.watch', {
       group: 'Test',
-      name: 'test.coverage',
-      description: 'Run unit tests and generate a coverage report.',
-      commands: [
-        createCommand({
-          command: prefixBin('jest'),
-          arguments: { coverage: true }
-        })
-      ],
-      timing: true
+      description: 'Run unit tests in watch mode.',
+      run: [
+        createCommand('jest.watch', [jestCmd, { watch: true }])
+      ]
     });
 
-    createScript({
+    createScript('test.coverage', {
       group: 'Test',
-      name: 'test.passWithNoTests',
+      description: 'Run unit tests and generate a coverage report.',
+      timing: true,
+      run: [
+        createCommand('jest.coverage', [jestCmd, { coverage: true }])
+      ]
+    });
+
+    createScript('test.passWithNoTests', {
+      group: 'Test',
       description: 'Run unit tests, but do not fail if no tests exist.',
-      commands: [
-        createCommand({
-          command: prefixBin('jest'),
-          arguments: { passWithNoTests: true }
-        })
+      run: [
+        createCommand('jest.passWithNoTests', [jestCmd, { passWithNoTests: true }])
       ]
     });
 
 
     // ----- Lint Scripts ------------------------------------------------------
 
-    createScript({
+    createScript('lint', {
       group: 'Lint',
-      name: 'lint',
       description: 'Lint the project.',
-      commands: ['eslint'],
-      timing: true
+      timing: true,
+      run: ['eslint']
     });
 
-    createScript({
+    createScript('lint.fix', {
       group: 'Lint',
-      name: 'lint.fix',
       description: 'Lint the project and automatically fix any fixable errors.',
-      commands: [
-        'eslint.fix'
-      ],
-      timing: true
+      timing: true,
+      run: ['eslint.fix']
     });
 
 
     // ----- Release Scripts ---------------------------------------------------
+
+    const standardVersionCmd = prefixBin('standard-version');
 
     interface CreateReleaseScriptOptions {
       releaseType?: 'first' | 'major' | 'minor' | 'patch' | 'beta';
@@ -239,15 +198,14 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
     }
 
     const createReleaseScript = ({ releaseType, args, description }: CreateReleaseScriptOptions) => {
-      createScript({
+
+      createScript(releaseType ? `bump.${releaseType}` : 'bump', {
         group: 'Release',
-        name: releaseType ? `bump.${releaseType}` : 'bump',
         description: `Generate a change log entry and tagged commit for ${description}.`,
-        commands: [
-          createCommand({
-            command: prefixBin('standard-version'),
-            arguments: { preset: require.resolve('config/changelog-preset'), ...args }
-          })
+        run: [
+          createCommand(`standard-version-${releaseType ?? 'default'}`, [
+            standardVersionCmd, { preset: require.resolve('config/changelog-preset'), ...args }
+          ])
         ]
       });
     };
@@ -289,14 +247,13 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
 
     // ----- Dependency Management ---------------------------------------------
 
-    createScript({
+    createScript('deps.check', {
       group: 'Dependency Management',
-      name: 'deps.check',
       description: 'Check for newer versions of installed dependencies.',
-      commands: [
-        createCommand({
-          command: prefixBin('npm-check'),
-          arguments: { skipUnused: true },
+      run: [
+        createCommand('npm-check', [
+          prefixBin('npm-check'), { skipUnused: true }
+        ], {
           // Do not throw an error if this command exits with a non-zero code.
           execaOptions: { reject: false }
         })
@@ -306,28 +263,24 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
 
     // ----- Lifecycles ----------------------------------------------------------
 
-    createCommand({
-      name: 'updateNotifier',
-      command: 'babel-node',
-      arguments: {
-        _: [require.resolve('etc/scripts/update-notifier')],
+    createCommand('updateNotifier', [
+      'babel-node', [require.resolve('etc/scripts/update-notifier')], {
         require: require.resolve('etc/babel-register')
       }
-    });
+    ]);
 
     const { event } = getNpmInfo();
     const shouldSkipPrepare = IS_CI && ['install', 'ci'].includes(event);
 
-    createScript({
+    createScript('prepare', {
       group: 'Lifecycle',
-      name: 'prepare',
       description: 'Run after "npm install" to ensure the project builds correctly and tests are passing.',
-      commands: shouldSkipPrepare ? [] : [
+      timing: true,
+      run: shouldSkipPrepare ? [] : [
         'build',
         'test.passWithNoTests',
         'updateNotifier'
-      ],
-      timing: true
+      ]
     });
 
     if (typeof userConfigFactory === 'function') {
