@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.5.1](https://github.com/darkobits/ts/compare/v0.5.0...v0.5.1) (2021-07-17)
+
+
+### 🐞 Bug Fixes
+
+* Downgrade del-cli to non-ESM version. ([f90139d](https://github.com/darkobits/ts/commit/f90139df44bd39803c3497a90d24c339f5607fe8))
+
+
+### 🏗 Chores
+
+* **deps:** Update dependencies. ([ee2af5d](https://github.com/darkobits/ts/commit/ee2af5d345cb0d785c085c429d96fce141dc4aab))
+* Update nr config. ([c38ce4a](https://github.com/darkobits/ts/commit/c38ce4a7eca5cd890782619ed1f715e9de38845d))
+
 ## [0.5.0](https://github.com/darkobits/ts/compare/v0.4.4...v0.5.0) (2021-07-17)
 
 
