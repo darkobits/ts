@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.4](https://github.com/darkobits/ts/compare/v0.4.3...v0.4.4) (2021-07-17)
+
+
+### 🐞 Bug Fixes
+
+* Add local bin for npm-check. ([1f82494](https://github.com/darkobits/ts/commit/1f82494157dc20167009e60738af170f5962e899))
+
 ### [0.4.3](https://github.com/darkobits/ts/compare/v0.4.2...v0.4.3) (2021-07-17)
 
 
