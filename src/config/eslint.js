@@ -805,7 +805,7 @@ const javaScriptRules = R.reduce((rules, [rule, ruleConfig]) => {
 
 config.overrides.push({
   files: ['*.js'],
-  parser: 'babel-eslint',
+  parser: '@babel/eslint-parser',
   rules: javaScriptRules
 });
 
