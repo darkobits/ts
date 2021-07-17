@@ -16,9 +16,6 @@ import {
 
 export default function(userConfigFactory?: ConfigurationFactory): ConfigurationFactory {
   return async ({ createCommand, createScript }) => {
-    const s: any = {};
-
-
     // ----- Build: Babel Commands ---------------------------------------------
 
     const babelArgs = {
@@ -31,14 +28,14 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       deleteDirOnStart: true
     };
 
-    const babelCmd = createCommand({
+    createCommand({
       name: 'babel',
       command: prefixBin('babel'),
       arguments: babelArgs,
       prefix: chalk => chalk.bgYellow.black('Babel')
     });
 
-    const babelWatchCmd = createCommand({
+    createCommand({
       name: 'babel.watch',
       command: prefixBin('babel'),
       arguments: {
@@ -56,7 +53,8 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       pretty: true
     };
 
-    const tsCmd = createCommand({
+    createCommand({
+      name: 'ts',
       command: prefixBin('ttsc'),
       arguments: {
         ...tsArgs,
@@ -66,7 +64,8 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       prefix: chalk => chalk.bgBlue.white('TS')
     });
 
-    const tsWatchCmd = createCommand({
+    createCommand({
+      name: 'ts.watch',
       command: prefixBin('ttsc'),
       arguments: {
         pretty: true,
@@ -91,7 +90,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
 
     // ----- Build: Misc. Commands ---------------------------------------------
 
-    const cleanupCmd = createCommand({
+    createCommand({
       name: 'cleanup',
       command: prefixBin('del'),
       arguments: {
@@ -99,7 +98,8 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       }
     });
 
-    const linkBinsCmd = createCommand({
+    createCommand({
+      name: 'linkBins',
       command: 'babel-node',
       arguments: {
         _: [require.resolve('etc/scripts/link-bins')],
@@ -116,13 +116,14 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       format: require.resolve('eslint-codeframe-formatter')
     };
 
-    const eslintCmd = createCommand({
+    createCommand({
+      name: 'eslint',
       command: prefixBin('eslint'),
       arguments: eslintArgs
       // prefix: chalk => chalk.bgBlue.white('ESLint')
     });
 
-    const eslintFixCmd = createCommand({
+    createCommand({
       name: 'eslint.fix',
       command: prefixBin('eslint'),
       arguments: {
@@ -135,30 +136,30 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
 
     // ----- Build Scripts -----------------------------------------------------
 
-    s.build = createScript({
+    createScript({
       group: 'Build',
       name: 'build',
       description: 'Lint, type-check, and compile the project.',
       commands: [
-        [babelCmd, tsCmd, eslintCmd],
-        [cleanupCmd, linkBinsCmd]
+        ['babel', 'ts', 'eslint'],
+        ['cleanup', 'linkBins']
       ],
       timing: true
     });
 
-    s.build.watch = createScript({
+    createScript({
       group: 'Build',
       name: 'build.watch',
       description: 'Continuously type-check, and compile the project.',
       commands: [
-        [babelWatchCmd, tsWatchCmd]
+        ['babel.watch', 'ts.watch']
       ]
     });
 
 
     // ----- Testing Scripts ---------------------------------------------------
 
-    s.test = createScript({
+    createScript({
       group: 'Test',
       name: 'test',
       description: 'Run unit tests.',
@@ -170,7 +171,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       timing: true
     });
 
-    s.test.watch = createScript({
+    createScript({
       group: 'Test',
       name: 'test.watch',
       description: 'Run unit tests in watch mode.',
@@ -182,7 +183,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       ]
     });
 
-    s.test.coverage = createScript({
+    createScript({
       group: 'Test',
       name: 'test.coverage',
       description: 'Run unit tests and generate a coverage report.',
@@ -195,7 +196,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       timing: true
     });
 
-    s.test.passWithNoTests = createScript({
+    createScript({
       group: 'Test',
       name: 'test.passWithNoTests',
       description: 'Run unit tests, but do not fail if no tests exist.',
@@ -210,22 +211,20 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
 
     // ----- Lint Scripts ------------------------------------------------------
 
-    s.lint = createScript({
+    createScript({
       group: 'Lint',
       name: 'lint',
       description: 'Lint the project.',
-      commands: [
-        eslintCmd
-      ],
+      commands: ['eslint'],
       timing: true
     });
 
-    s.lint.fix = createScript({
+    createScript({
       group: 'Lint',
       name: 'lint.fix',
       description: 'Lint the project and automatically fix any fixable errors.',
       commands: [
-        eslintFixCmd
+        'eslint.fix'
       ],
       timing: true
     });
@@ -307,7 +306,8 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
 
     // ----- Lifecycles ----------------------------------------------------------
 
-    const updateNotifier = createCommand({
+    createCommand({
+      name: 'updateNotifier',
       command: 'babel-node',
       arguments: {
         _: [require.resolve('etc/scripts/update-notifier')],
@@ -323,9 +323,9 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       name: 'prepare',
       description: 'Run after "npm install" to ensure the project builds correctly and tests are passing.',
       commands: shouldSkipPrepare ? [] : [
-        s.build,
-        s.test.passWithNoTests,
-        updateNotifier
+        'build',
+        'test.passWithNoTests',
+        'updateNotifier'
       ],
       timing: true
     });
