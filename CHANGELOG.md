@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.5.0](https://github.com/darkobits/ts/compare/v0.4.4...v0.5.0) (2021-07-17)
+
+
+### ⚠ BREAKING CHANGES
+
+* **deps:** 
+
+### ✨ Features
+
+* Add option to skip bin-linking. ([3880329](https://github.com/darkobits/ts/commit/38803292c8d4020711f2c8c6a06512db74df2f3e))
+
+
+### 🏗 Chores
+
+* **deps:** Update dependencies. ([8440e72](https://github.com/darkobits/ts/commit/8440e726adda9a6bc8aa065681cf60f520afbb3c))
+* **deps:** Update Jest. ([5ddb044](https://github.com/darkobits/ts/commit/5ddb0442a77a67f625e52c67b6e5ad77fc8c733c)), closes [/github.com/facebook/jest/blob/master/CHANGELOG.md#2700](https://github.com/darkobits//github.com/facebook/jest/blob/master/CHANGELOG.md/issues/2700)
+* Update @darkobits/nr. ([848bccb](https://github.com/darkobits/ts/commit/848bccb83265b359c1220418c1b0e87d100eaf74))
+
 ### [0.4.4](https://github.com/darkobits/ts/compare/v0.4.3...v0.4.4) (2021-07-17)
 
 
