@@ -31,13 +31,13 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
     createCommand('babel', [
       babelCmd, [SRC_DIR], babelFlags
     ], {
-      prefix: chalk => chalk.bgYellow.black('Babel')
+      prefix: chalk => chalk.bgYellow.black(' Babel ')
     });
 
-    createCommand('babel.watch', [
+    createCommand('babel-watch', [
       babelCmd, [SRC_DIR], {...babelFlags, watch: true, verbose: true }
     ], {
-      prefix: chalk => chalk.bgYellow.black('Babel')
+      prefix: chalk => chalk.bgYellow.black(' Babel ')
     });
 
 
@@ -52,11 +52,11 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
     createCommand('ts', [
       ttscCmd, { ...tsFlags, emitDeclarationOnly: true }
     ], {
-      prefix: chalk => chalk.bgBlue.white('TS'),
+      prefix: chalk => chalk.bgBlue.white(' TS '),
       preserveArguments: true
     });
 
-    createCommand('ts.watch', [
+    createCommand('ts-watch', [
       ttscCmd, {
         ...tsFlags,
         emitDeclarationOnly: true,
@@ -64,16 +64,13 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
         preserveWatchOutput: true
       }
     ], {
-      prefix: chalk => chalk.bgBlue.white('TS'),
+      prefix: chalk => chalk.bgBlue.white(' TS '),
       preserveArguments: true
     });
 
-    // const tsCheck = createCommand({
-    //   command: prefixBin('ttsc'),
-    //   arguments: {
-    //     ...tsArgs,
-    //     noEmit: true
-    //   },
+    // createCommand('ts-check', [
+    //   prefixBin('ttsc'), { ...tsFlags, noEmit: true }
+    // ], {
     //   preserveArguments: true,
     //   prefix: chalk => chalk.bgBlue.white('TS')
     // });
@@ -85,7 +82,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       prefixBin('del'), [`"${OUT_DIR}/**/*.spec.*"`, `"${OUT_DIR}/**/*.test.*"`]
     ]);
 
-    createCommand('linkBins', [
+    createCommand('link-bins', [
       'babel-node', [require.resolve('etc/scripts/link-bins')], {
         require: require.resolve('etc/babel-register')
       }
@@ -101,13 +98,8 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       format: require.resolve('eslint-codeframe-formatter')
     };
 
-    createCommand('eslint', [
-      esLintCmd, [SRC_DIR], eslintFlags
-    ]);
-
-    createCommand('eslint.fix', [
-      esLintCmd, [SRC_DIR], { ...eslintFlags, fix: true }
-    ]);
+    createCommand('eslint', [esLintCmd, [SRC_DIR], eslintFlags]);
+    createCommand('eslint-fix', [esLintCmd, [SRC_DIR], { ...eslintFlags, fix: true }]);
 
 
     // ----- Build Scripts -----------------------------------------------------
@@ -118,7 +110,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       timing: true,
       run: [
         ['babel', 'ts', 'eslint'],
-        ['cleanup', 'linkBins']
+        ['cleanup', 'link-bins']
       ]
     });
 
@@ -126,7 +118,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       group: 'Build',
       description: 'Continuously type-check, and compile the project.',
       run: [
-        ['babel.watch', 'ts.watch']
+        ['babel-watch', 'ts-watch']
       ]
     });
 
@@ -148,7 +140,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       group: 'Test',
       description: 'Run unit tests in watch mode.',
       run: [
-        createCommand('jest.watch', [jestCmd, { watch: true }])
+        createCommand('jest-watch', [jestCmd, { watch: true }])
       ]
     });
 
@@ -157,7 +149,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       description: 'Run unit tests and generate a coverage report.',
       timing: true,
       run: [
-        createCommand('jest.coverage', [jestCmd, { coverage: true }])
+        createCommand('jest-coverage', [jestCmd, { coverage: true }])
       ]
     });
 
@@ -165,7 +157,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       group: 'Test',
       description: 'Run unit tests, but do not fail if no tests exist.',
       run: [
-        createCommand('jest.passWithNoTests', [jestCmd, { passWithNoTests: true }])
+        createCommand('jest-pass', [jestCmd, { passWithNoTests: true }])
       ]
     });
 
@@ -183,7 +175,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       group: 'Lint',
       description: 'Lint the project and automatically fix any fixable errors.',
       timing: true,
-      run: ['eslint.fix']
+      run: ['eslint-fix']
     });
 
 
@@ -251,9 +243,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       group: 'Dependency Management',
       description: 'Check for newer versions of installed dependencies.',
       run: [
-        createCommand('npm-check', [
-          prefixBin('npm-check'), { skipUnused: true }
-        ], {
+        createCommand('npm-check', [prefixBin('npm-check'), { skipUnused: true }], {
           // Do not throw an error if this command exits with a non-zero code.
           execaOptions: { reject: false }
         })
@@ -263,7 +253,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
 
     // ----- Lifecycles ----------------------------------------------------------
 
-    createCommand('updateNotifier', [
+    createCommand('update-notifier', [
       'babel-node', [require.resolve('etc/scripts/update-notifier')], {
         require: require.resolve('etc/babel-register')
       }
@@ -279,7 +269,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       run: shouldSkipPrepare ? [] : [
         'build',
         'test.passWithNoTests',
-        'updateNotifier'
+        'update-notifier'
       ]
     });
 
