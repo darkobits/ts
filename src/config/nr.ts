@@ -14,7 +14,7 @@ import {
 } from 'lib/utils';
 
 
-export default function(userConfigFactory: ConfigurationFactory): ConfigurationFactory {
+export default function(userConfigFactory?: ConfigurationFactory): ConfigurationFactory {
   return async ({ createCommand, createScript }) => {
     const s: any = {};
 
@@ -330,7 +330,8 @@ export default function(userConfigFactory: ConfigurationFactory): ConfigurationF
       timing: true
     });
 
-
-    await userConfigFactory({ createCommand, createScript });
+    if (typeof userConfigFactory === 'function') {
+      await userConfigFactory({ createCommand, createScript });
+    }
   };
 }
