@@ -2,6 +2,30 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.4.0](https://github.com/darkobits/ts/compare/v0.3.3...v0.4.0) (2021-07-17)
+
+
+### ⚠ BREAKING CHANGES
+
+* This update replaces NPS, which is now unmaintained and contains numerous security vulnerabilities, with NR. Users will need to acquaint themselves with this tool to upgrade to this version.
+
+See: https://github.com/darkobits/nr
+
+### 📖 Documentation
+
+* Update README. ([4b93219](https://github.com/darkobits/ts/commit/4b9321976fec90117a1d24bd204f514fd295676e))
+
+
+### 🏗 Chores
+
+* **ci:** Add CodeQL workflow. ([8b59c80](https://github.com/darkobits/ts/commit/8b59c808b0744d09ce5fb151bdaebb5c710a384d))
+* **deps:** Update dependencies. ([59a504a](https://github.com/darkobits/ts/commit/59a504ac07f540529348fe213404d82bbf2fe7ec))
+
+
+### 🛠 Refactoring
+
+* Migrate from NPS to NR. ([1dcc8dc](https://github.com/darkobits/ts/commit/1dcc8dc78eda2f9f5f2b9f9fe1be56a5b750ec58))
+
 ### [0.3.3](https://github.com/darkobits/ts/compare/v0.3.2...v0.3.3) (2021-05-12)
 
 
