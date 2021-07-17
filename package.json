@@ -15,13 +15,14 @@
     "dist"
   ],
   "bin": {
-    "ts.nr": "dist/bin/nr.js",
     "ts.babel": "dist/bin/babel.js",
     "ts.del": "dist/bin/del.js",
+    "ts.eslint": "dist/bin/eslint.js",
     "ts.jest": "dist/bin/jest.js",
+    "ts.npm-check": "dist/bin/npm-check.js",
+    "ts.nr": "dist/bin/nr.js",
     "ts.standard-version": "dist/bin/standard-version.js",
-    "ts.ttsc": "dist/bin/ttsc.js",
-    "ts.eslint": "dist/bin/eslint.js"
+    "ts.ttsc": "dist/bin/ttsc.js"
   },
   "main": "dist/index.js",
   "scripts": {
