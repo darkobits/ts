@@ -3,6 +3,7 @@
 import path from 'path';
 
 import chex from '@darkobits/chex';
+import env from '@darkobits/env';
 import fs from 'fs-extra';
 import log from 'lib/log';
 
@@ -11,6 +12,11 @@ import { getPackageInfo } from 'lib/utils';
 
 async function createSymlink(binName: string, symlinkTarget: string, symlinkPath: string) {
   try {
+    if (env.eq('LINK_BINS', false)) {
+      log.verbose(log.prefix('link-bins'), 'No-op.');
+      return;
+    }
+
     // Determine if a file (of any type) already exists at the path where we
     // want to create the symlink.
     if (await fs.stat(symlinkPath)) {
