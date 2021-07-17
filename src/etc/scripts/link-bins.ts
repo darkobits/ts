@@ -17,10 +17,12 @@ async function createSymlink(binName: string, symlinkTarget: string, symlinkPath
       // If a file exists, let's assume its a symbolic link, and try to
       // determine its target. If the file is not a symlink, this will throw.
       const existingSymlinkTarget = await fs.readlink(symlinkPath);
+      log.verbose(log.prefix('link-bins'), `Existing symlink target: ${log.chalk.green(existingSymlinkTarget)}`);
 
       if (existingSymlinkTarget !== symlinkTarget) {
         log.warn(log.prefix('link-bins'), `Symlink for ${log.chalk.green(binName)} already exists and points to ${log.chalk.green(existingSymlinkTarget)}.`);
         log.warn(log.prefix('link-bins'), 'This symlink will be overwritten.');
+        await fs.remove(symlinkPath);
       } else {
         log.verbose(log.prefix('link-bins'), `Symlink for ${log.chalk.green(binName)} already exists and points to desired target.`);
         return;
