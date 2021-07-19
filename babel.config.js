@@ -1,3 +1,1 @@
-module.exports = {
-  extends: require.resolve('./src/config/babel')
-};
+module.exports = { extends: require.resolve('./src/config/babel') };

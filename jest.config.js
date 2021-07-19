@@ -1,6 +1,5 @@
 import { jest } from './src';
 
-
 export default jest({
   coveragePathIgnorePatterns: [
     '<rootDir>/src/bin',

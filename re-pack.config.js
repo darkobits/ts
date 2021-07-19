@@ -1,6 +1,6 @@
-const path = require('path');
+import path from 'path';
 
-module.exports = {
+export default {
   afterRepack: ({ fs, packDir }) => {
     fs.moveSync(
       path.resolve(packDir, 'config', 'tsconfig-base.json'),

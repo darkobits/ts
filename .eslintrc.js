@@ -1,6 +1,5 @@
 import { eslint } from './src';
 
-
 export default {
   extends: eslint,
   rules: {

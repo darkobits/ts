@@ -45,7 +45,7 @@
     "@babel/runtime": "^7.14.0",
     "@darkobits/chex": "^1.0.1",
     "@darkobits/log": "^2.0.0-beta.15",
-    "@darkobits/nr": "^0.5.4",
+    "@darkobits/nr": "^0.5.5",
     "@types/jest": "^26.0.23",
     "@types/node": "^16.3.3",
     "@typescript-eslint/eslint-plugin": "^4.23.0",
@@ -79,7 +79,7 @@
     "which": "^2.0.2"
   },
   "devDependencies": {
-    "@darkobits/re-pack": "^0.1.11",
+    "@darkobits/re-pack": "^0.1.12",
     "@types/esm": "^3.2.0",
     "@types/fs-extra": "^9.0.11",
     "@types/is-ci": "^3.0.0",
