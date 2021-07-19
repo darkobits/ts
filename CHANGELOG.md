@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.6.0-beta.2](https://github.com/darkobits/ts/compare/v0.6.0-beta.1...v0.6.0-beta.2) (2021-07-19)
+
+
+### 🐞 Bug Fixes
+
+* Improve bin resolution. ([8666504](https://github.com/darkobits/ts/commit/8666504c8b1fc902be3e5c12d754252f8d40b1fe))
+
 ## [0.6.0-beta.1](https://github.com/darkobits/ts/compare/v0.6.0-beta.0...v0.6.0-beta.1) (2021-07-19)
 
 
