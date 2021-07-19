@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.6.0-beta.1](https://github.com/darkobits/ts/compare/v0.6.0-beta.0...v0.6.0-beta.1) (2021-07-19)
+
+
+### 🐞 Bug Fixes
+
+* Resolve nr bin correctly. ([36f71ea](https://github.com/darkobits/ts/commit/36f71eada385276ef91fd12b5d025fa9813d92de))
+
+
+### 🛠 Refactoring
+
+* Improve createNodeCommand. ([b6efb85](https://github.com/darkobits/ts/commit/b6efb85b24494e5833d417e78634388d137b895f))
+* Simplify bin prefixing. ([b95d6b6](https://github.com/darkobits/ts/commit/b95d6b6ebcb5d3aec7cf0560ef854aa4648a1c8e))
+
 ## [0.6.0-beta.0](https://github.com/darkobits/ts/compare/v0.5.1...v0.6.0-beta.0) (2021-07-19)
 
 
