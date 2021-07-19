@@ -1,7 +1,7 @@
-// We cannot use custom module resolution here because this file configures the
-// tool that provides it.
-const { EXTENSIONS_WITH_DOT } = require('../etc/constants');
-
+/**
+ * Note: Do not import/require anything in this file and use CommonJS syntax
+ * only. This file configures Babel, which allows the use of these features.
+ */
 require('@babel/register')({
-  extensions: [...EXTENSIONS_WITH_DOT, '.json']
+  extensions: ['.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs', '.json']
 });

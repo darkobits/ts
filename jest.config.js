@@ -1,6 +1,7 @@
-require('./src/etc/babel-register');
+import { jest } from './src';
 
-module.exports = require('./src').jest({
+
+export default jest({
   coveragePathIgnorePatterns: [
     '<rootDir>/src/bin',
     '<rootDir>/src/config',

@@ -1,20 +1,14 @@
 /**
- * Tool Uses 'extends': Yes
- * Tool Supports Non-CJS Config: No
- * Tool Supports .babel Config: N/A
- *
- * Additionally, require() must use relative paths because this file configures
- * Babel, which is responsible for re-writing path aliases.
+ * Note: Do not import/require anything in this file and use CommonJS syntax
+ * only. This file configures Babel, which allows the use of these features.
  */
-const { EXTENSIONS_WITH_DOT } = require('../etc/constants');
-
-
 module.exports = {
   presets: [
     ['@babel/preset-env', {
       targets: [
-        'node 12'
-      ]
+        'node 14'
+      ],
+      modules: 'cjs'
     }],
     '@babel/preset-typescript'
   ],
@@ -28,9 +22,10 @@ module.exports = {
     ['babel-plugin-module-resolver', {
       cwd: 'packagejson',
       root: ['./src'],
-      extensions: [...EXTENSIONS_WITH_DOT, '.json']
+      extensions: ['.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs', '.json']
     }]
   ],
   // Strip comments from transpiled code.
-  comments: false
+  comments: false,
+  sourceType: 'unambiguous'
 };

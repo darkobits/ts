@@ -20,10 +20,7 @@ const config = {
   parser: '@typescript-eslint/parser',
   parserOptions: {
     project: findTsConfig(),
-    sourceType: 'module',
-    // Temporary workaround for this issue:
-    // https://github.com/typescript-eslint/typescript-eslint/issues/967
-    createDefaultProject: true
+    sourceType: 'module'
   },
   env: {
     node: true
@@ -42,7 +39,10 @@ const config = {
     format: 'codeframe'
   },
   rules: {},
-  overrides: []
+  overrides: [],
+  // Temporary workaround for this issue:
+  // https://github.com/typescript-eslint/typescript-eslint/issues/967
+  ignorePatterns: ['/*.ts']
 };
 
 

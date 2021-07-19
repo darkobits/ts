@@ -1,7 +1,8 @@
-require('./src/etc/babel-register');
+import { eslint } from './src';
 
-module.exports = {
-  extends: require('./src').eslint,
+
+export default {
+  extends: eslint,
   rules: {
     '@typescript-eslint/no-var-requires': 'off',
     'max-len': 'off',

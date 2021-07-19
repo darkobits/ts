@@ -1,7 +1,7 @@
-require('./src/etc/babel-register');
+import { nr } from './src';
 
-// eslint-disable-next-line no-unused-vars
-module.exports = require('./src').nr(({ createCommand, createScript }) => {
+
+export default nr(({ createCommand, createScript }) => {
   createScript('publish', {
     group: 'Release',
     description: 'Publish the package using re-pack.',

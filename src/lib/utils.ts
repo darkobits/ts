@@ -1,6 +1,7 @@
 import path from 'path';
 
 import env from '@darkobits/env';
+import esm from 'esm';
 import fs from 'fs-extra';
 import { getBinPathSync } from 'get-bin-path';
 import ms from 'ms';
@@ -60,17 +61,16 @@ export function getPackageInfo(cwd?: string): PkgInfo {
 
 /**
  * Provided a package name and optional binary name, resolves the path to the
- * binary from this package (ensuring nested node_modules are traversed) then
- * require()s the module.
+ * binary from this package (ensuring nested node_modules are traversed).
  *
  * @example
  *
  * "@babel/cli" places an executable script named "babel" in the local
  * node_modules/.bin folder when installed. Therefore, the following invocation:
  *
- * requireBin('@babel/cli', 'babel')
+ * resolveBin('@babel/cli', 'babel')
  *
- * would load that script.
+ * would return the absolute path to the Babel CLI.
  *
  * @example
  *
@@ -78,11 +78,17 @@ export function getPackageInfo(cwd?: string): PkgInfo {
  * the local node_modules/.bin folder when installed. Therefore, the following
  * invocation:
  *
- * requireBin('standard-version')
+ * resolveBin('standard-version')
  *
- * would load that script.
+ * would return the absolute path to the standard-version CLI.
  */
-export function requireBin(pkgName: string, binName?: string) {
+export function resolveBin(pkgName: string, binName?: string) {
+  // In rare cases we may have been passed an absolute path to a file. If so,
+  // return it.
+  if (path.isAbsolute(pkgName)) {
+    return { binPath: pkgName };
+  }
+
   const name = binName ?? pkgName;
 
   // Resolve the path to the package from our current directory. This will
@@ -97,21 +103,35 @@ export function requireBin(pkgName: string, binName?: string) {
 
   if (!binPath) {
     if (binName) {
-      throw new Error(`${log.prefix('requireBin')} Unable to resolve path to binary ${log.chalk.green(binName)} from package ${log.chalk.green(pkgName)}`);
+      throw new Error(`${log.prefix('resolveBin')} Unable to resolve path to binary ${log.chalk.green(binName)} from package ${log.chalk.green(pkgName)}`);
     }
 
-    throw new Error(`${log.prefix('requireBin')} Unable to resolve path to binary: ${log.chalk.green(pkgName)}`);
+    throw new Error(`${log.prefix('resolveBin')} Unable to resolve path to binary: ${log.chalk.green(pkgName)}`);
   }
+
+  return { binPath, pkgPath };
+}
+
+
+/**
+ * Provided a package name and optional binary name, resolves the path to the
+ * binary from this package (ensuring nested node_modules are traversed) and
+ * then loads it.
+ */
+export function requireBin(pkgName: string, binName?: string) {
+  const { binPath, pkgPath } = resolveBin(pkgName, binName);
 
   if (log.isLevelAtLeast('verbose')) {
     // Additionally, load the manifest for the package. This is used for logging
     // purposes only.
     const pkg = getPackageInfo(pkgPath);
+    const name = binName ?? pkgName;
     log.verbose(log.prefix(name), `Using ${log.chalk.yellow.bold(`${pkg.json.name}@${pkg.json.version}`)}.`);
     log.verbose(log.prefix(name), `${log.chalk.gray('=>')} ${log.chalk.green(binPath)}`);
   }
 
-  require(binPath);
+  const requireEsm = esm(module, {cjs: {dedefault: true }});
+  requireEsm(binPath);
 }
 
 
