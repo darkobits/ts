@@ -1,9 +1,10 @@
+import path from 'path';
+
 import {
   ConfigurationFactory,
   CreateCommandArguments,
   CreateCommandOptions
 } from '@darkobits/nr/dist/etc/types';
-import merge from 'deepmerge';
 import IS_CI from 'is-ci';
 
 import {
@@ -30,7 +31,8 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       const [cmd, positionalsOrFlags, flagsOrUndefined] = args;
 
       // Resolve the absolute path to the indicated executable.
-      const resolvedCmd = resolveBin(prefixBin(cmd)).binPath;
+      const resolvedCmd = path.isAbsolute(cmd) ? cmd : resolveBin(cmd).binPath;
+
       let positionals: Array<string> = [];
       let flags: Record<string, any> = {};
 
@@ -51,14 +53,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
         ...positionals
       ];
 
-      return createCommand(name, ['node', nodeArgs, flags ?? undefined], merge({
-        execaOptions: {
-          env: {
-            FORCE_COLOR: 'true',
-            ESM_OPTIONS: '{"cjs":true, "mode": "all"}'
-          }
-        }
-      }, opts ?? {}));
+      return createCommand(name, ['node', nodeArgs, flags ?? undefined], opts);
     };
 
 
