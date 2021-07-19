@@ -2,4 +2,4 @@
 
 import { requireBin } from 'lib/utils';
 
-export default requireBin('nr');
+export default requireBin('@darkobits/nr', 'nr');
