@@ -86,6 +86,7 @@ export function resolveBin(pkgName: string, binName?: string) {
   // In rare cases we may have been passed an absolute path to a file. If so,
   // return it.
   if (path.isAbsolute(pkgName)) {
+    log.warn(log.prefix('resolveBin'), `Absolute path provided: ${pkgName}`);
     return { binPath: pkgName };
   }
 
@@ -187,30 +188,31 @@ export function prefixBin(binName: string) {
   const pkg = getPackageInfo();
 
   if (pkg && pkg.json.name === '@darkobits/ts') {
-    // We are being called locally and need to do some extra work to resolve
-    // the path to the indicated binary.
-    const pkgRoot = pkg.rootDir;
-    const dependencyBinaryPath = path.resolve(pkgRoot, 'node_modules', '.bin', binName);
+    return binName;
+    // // We are being called locally and need to do some extra work to resolve
+    // // the path to the indicated binary.
+    // const pkgRoot = pkg.rootDir;
+    // const dependencyBinaryPath = path.resolve(pkgRoot, 'node_modules', '.bin', binName);
 
-    if (fs.pathExistsSync(dependencyBinaryPath)) {
-      // We are likely calling something like 'eslint', and just need to return
-      // the argument as-is.
-      return binName;
-    }
+    // if (fs.pathExistsSync(dependencyBinaryPath)) {
+    //   // We are likely calling something like 'eslint', and just need to return
+    //   // the argument as-is.
+    //   return binName;
+    // }
 
-    // Otherwise, we may be trying to call one of our scripts, the source for
-    // which will be in our 'dist' folder (requiring that the package has been
-    // built) and we should return the absolute path to the script.
-    const pkgBins = pkg.json.bin;
+    // // Otherwise, we may be trying to call one of our scripts, the source for
+    // // which will be in our 'dist' folder (requiring that the package has been
+    // // built) and we should return the absolute path to the script.
+    // const pkgBins = pkg.json.bin;
 
-    // This is highly unlikely but necessary for type-safety.
-    if (!pkgBins) {
-      throw new Error('package.json does not declare any binaries.');
-    }
+    // // This is highly unlikely but necessary for type-safety.
+    // if (!pkgBins) {
+    //   throw new Error('package.json does not declare any binaries.');
+    // }
 
-    const binPath = pkgBins[`ts.${binName}`];
-    const absBinPath = path.resolve(pkgRoot, binPath);
-    return absBinPath;
+    // const binPath = pkgBins[`ts.${binName}`];
+    // const absBinPath = path.resolve(pkgRoot, binPath);
+    // return absBinPath;
   }
 
   // We are being called from a dependent package, and our own binaries will
