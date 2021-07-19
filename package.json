@@ -1,6 +1,6 @@
 {
   "name": "@darkobits/ts",
-  "version": "0.6.0-beta.2",
+  "version": "0.6.0",
   "author": "darkobits",
   "license": "WTFPL",
   "description": "Boilerplate for TypeScript projects.",
