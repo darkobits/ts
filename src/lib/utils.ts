@@ -1,7 +1,6 @@
 import path from 'path';
 
 import env from '@darkobits/env';
-import esm from 'esm';
 import fs from 'fs-extra';
 import { getBinPathSync } from 'get-bin-path';
 import ms from 'ms';
@@ -83,13 +82,6 @@ export function getPackageInfo(cwd?: string): PkgInfo {
  * would return the absolute path to the standard-version CLI.
  */
 export function resolveBin(pkgName: string, binName?: string) {
-  // In rare cases we may have been passed an absolute path to a file. If so,
-  // return it.
-  if (path.isAbsolute(pkgName)) {
-    log.warn(log.prefix('resolveBin'), `Absolute path provided: ${pkgName}`);
-    return { binPath: pkgName };
-  }
-
   const name = binName ?? pkgName;
 
   // Resolve the path to the package from our current directory. This will
@@ -131,8 +123,36 @@ export function requireBin(pkgName: string, binName?: string) {
     log.verbose(log.prefix(name), `${log.chalk.gray('=>')} ${log.chalk.green(binPath)}`);
   }
 
-  const requireEsm = esm(module, {cjs: {dedefault: true }});
-  requireEsm(binPath);
+  require(binPath);
+}
+
+
+/**
+ * Because this package shares many package scripts and tooling with its own
+ * dependents, we need to differentiate between when a binary is being invoked
+ * by this package and when it is being invoked by a dependent package.
+ *
+ * This is necessary because during this package's install/prepare phase, NPM
+ * will not have linked the "bin" entries from our package.json yet, and those
+ * entries point to files in our "dist" folder, which will not have been created
+ * yet.
+ *
+ * So, when used by us, a package script needs to use the canonical/standard
+ * binary name, and when used by a dependent package, a script needs to use the
+ * prefixed bin name.
+ *
+ * This function makes this determination by checking the "name" field of the
+ * closest package.json file (walking up the directory tree from process.cwd)
+ * and compares it to our package name.
+ */
+export function prefixBin(binName: string) {
+  const pkg = getPackageInfo();
+
+  if (pkg && pkg.json.name === '@darkobits/ts') {
+    return binName;
+  }
+
+  return `ts.${binName}`;
 }
 
 
@@ -167,62 +187,9 @@ export function findTsConfig() {
 
 
 /**
- * Because this package shares many package scripts and tooling with its own
- * dependents, we need to differentiate between when a binary is being invoked
- * by this package and when it is being invoked by a dependent package.
- *
- * This is necessary because during this package's install/prepare phase, NPM
- * will not have linked the "bin" entries from our package.json yet, and those
- * entries point to files in our "dist" folder, which will not have been created
- * yet.
- *
- * So, when used by us, a package script needs to use the canonical/standard
- * binary name, and when used by a dependent package, a script needs to use the
- * prefixed bin name.
- *
- * This function makes this determination by checking the "name" field of the
- * closest package.json file (walking up the directory tree from process.cwd)
- * and compares it to our package name.
+ * If called during the invocation of an NPM lifecycle, returns information
+ * about the lifecycle event.
  */
-export function prefixBin(binName: string) {
-  const pkg = getPackageInfo();
-
-  if (pkg && pkg.json.name === '@darkobits/ts') {
-    return binName;
-    // // We are being called locally and need to do some extra work to resolve
-    // // the path to the indicated binary.
-    // const pkgRoot = pkg.rootDir;
-    // const dependencyBinaryPath = path.resolve(pkgRoot, 'node_modules', '.bin', binName);
-
-    // if (fs.pathExistsSync(dependencyBinaryPath)) {
-    //   // We are likely calling something like 'eslint', and just need to return
-    //   // the argument as-is.
-    //   return binName;
-    // }
-
-    // // Otherwise, we may be trying to call one of our scripts, the source for
-    // // which will be in our 'dist' folder (requiring that the package has been
-    // // built) and we should return the absolute path to the script.
-    // const pkgBins = pkg.json.bin;
-
-    // // This is highly unlikely but necessary for type-safety.
-    // if (!pkgBins) {
-    //   throw new Error('package.json does not declare any binaries.');
-    // }
-
-    // const binPath = pkgBins[`ts.${binName}`];
-    // const absBinPath = path.resolve(pkgRoot, binPath);
-    // return absBinPath;
-  }
-
-  // We are being called from a dependent package, and our own binaries will
-  // have been linked to node_modules/.bin using the 'ts.' prefix (per our
-  // package.json), so simply return the prefixed version of the indicated
-  // binary.
-  return `ts.${binName}`;
-}
-
-
 export function getNpmInfo() {
   const npmConfigArgv = env<NpmConfigArgv>('npm_config_argv');
 

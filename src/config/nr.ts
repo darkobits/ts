@@ -6,6 +6,7 @@ import {
   CreateCommandOptions
 } from '@darkobits/nr/dist/etc/types';
 import IS_CI from 'is-ci';
+import which from 'which';
 
 import {
   EXTENSIONS_WITH_DOT,
@@ -14,8 +15,7 @@ import {
 } from 'etc/constants';
 import {
   prefixBin,
-  getNpmInfo,
-  resolveBin
+  getNpmInfo
 } from 'lib/utils';
 
 
@@ -31,7 +31,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       const [cmd, positionalsOrFlags, flagsOrUndefined] = args;
 
       // Resolve the absolute path to the indicated executable.
-      const resolvedCmd = path.isAbsolute(cmd) ? cmd : resolveBin(cmd).binPath;
+      const resolvedCmd = path.isAbsolute(cmd) ? cmd : which.sync(cmd);
 
       let positionals: Array<string> = [];
       let flags: Record<string, any> = {};
@@ -194,7 +194,9 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       group: 'Test',
       description: 'Run unit tests, but do not fail if no tests exist.',
       run: [
-        createNodeCommand('jest-pass', [jestCmd, { passWithNoTests: true }])
+        createNodeCommand('jest-pass', [jestCmd, { passWithNoTests: true }], {
+          preserveArguments: true
+        })
       ]
     });
 
