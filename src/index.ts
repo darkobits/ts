@@ -1,6 +1,6 @@
 import { jest } from '@darkobits/ts';
 
-import nps from 'config/nps';
+import nr from 'config/nr';
 import webpack from 'config/webpack';
 const babel = require.resolve('config/babel');
 const eslint = require.resolve('config/eslint');
@@ -9,6 +9,6 @@ export {
   babel,
   eslint,
   jest,
-  nps,
+  nr,
   webpack
 };

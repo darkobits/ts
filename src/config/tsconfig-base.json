@@ -7,6 +7,9 @@
       "DOM.Iterable",
       "ESNext"
     ],
+    // Lots of TS errors
+    "skipLibCheck": true,
+    "esModuleInterop": true,
     "plugins": [
       {"name": "typescript-styled-plugin"},
       {"transform": "@zerollup/ts-transform-paths"}

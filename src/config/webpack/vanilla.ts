@@ -8,9 +8,7 @@ import findUp from 'find-up';
 import webpack from 'webpack';
 
 // Plugins
-import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
-import FriendlyErrorsWebpackPlugin from 'friendly-errors-webpack-plugin';
 
 import log from 'lib/log';
 import { createWebpackConfigurationPreset } from 'lib/webpack';
@@ -118,14 +116,7 @@ export default createWebpackConfigurationPreset(({
     }
   }));
 
-  if (isDevelopment && !log.isLevelAtLeast('verbose')) {
-    config.plugins.push(new FriendlyErrorsWebpackPlugin());
-  }
-
   if (isProduction) {
-    // Delete the build output directory before production builds.
-    config.plugins.push(new CleanWebpackPlugin());
-
     // This runs ESLint and TypeScript as separate processes, dramatically
     // speeding-up build times.
     config.plugins.push(new ForkTsCheckerWebpackPlugin({

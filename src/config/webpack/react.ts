@@ -8,9 +8,7 @@ import findUp from 'find-up';
 import webpack from 'webpack';
 
 // Plugins
-import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
-import FriendlyErrorsWebpackPlugin from 'friendly-errors-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 
@@ -170,6 +168,7 @@ export default createWebpackConfigurationPreset(({
     title: pkgJson.displayName ?? ''
   }));
 
+  // @ts-ignore
   config.plugins.push(new MiniCssExtractPlugin({
     filename: isDevelopment ? 'styles.css' : 'styles-[contenthash].css'
   }));
@@ -195,14 +194,7 @@ export default createWebpackConfigurationPreset(({
     }
   }));
 
-  if (isDevelopment && !log.isLevelAtLeast('verbose')) {
-    config.plugins.push(new FriendlyErrorsWebpackPlugin());
-  }
-
   if (isProduction) {
-    // Delete the build output directory before production builds.
-    config.plugins.push(new CleanWebpackPlugin());
-
     // This runs ESLint and TypeScript as separate processes, dramatically
     // speeding-up build times.
     config.plugins.push(new ForkTsCheckerWebpackPlugin({
@@ -240,7 +232,7 @@ export default createWebpackConfigurationPreset(({
 
   // ----- Misc ----------------------------------------------------------------
 
-  config.devtool = isDevelopment ? '#eval-source-map' : '#source-map';
+  config.devtool = isDevelopment ? 'eval' : 'source-map';
 
   config.performance = {
     maxAssetSize: bytes('550kb'),

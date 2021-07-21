@@ -6,6 +6,7 @@ import webpack from 'webpack';
 import merge from 'webpack-merge';
 
 import {
+  NativeWebpackConfigurationFactory,
   WebpackConfiguration,
   WebpackConfigurationFactory,
   WebpackConfigurationFactoryContext
@@ -27,6 +28,7 @@ function generateWebpackConfigurationScaffold(): WebpackConfiguration {
   return {
     entry: {},
     output: {},
+    // @ts-expect-error TODO: Re-type this.
     module: {
       rules: []
     },
@@ -68,37 +70,6 @@ async function ensureIndexEntrypoint(config: webpack.Configuration) {
 }
 
 
-/**
- * @private
- *
- * If the provided Webpack configuration uses HtmlWebpackPlugin, ensures that
- * the "template" option points to a file that exists.
- */
-async function ensureIndexHtml(config: webpack.Configuration) {
-  const htmlWebpackPluginInstance = config.plugins?.find(p => {
-    return p?.constructor?.name === 'HtmlWebpackPlugin';
-  });
-
-  if (!htmlWebpackPluginInstance) {
-    log.verbose(log.prefix('ensureIndexHtml'), 'Configuration does not use HtmlWebpackPlugin.');
-    return;
-  }
-
-  // @ts-expect-error: 'options' is not typed.
-  const templatePath = htmlWebpackPluginInstance.options.template;
-
-  try {
-    await fs.access(templatePath);
-    log.verbose(log.prefix('ensureIndexHtml'), `Using template at: ${log.chalk.green(templatePath)}`);
-  } catch (err) {
-    if (err.code === 'ENOENT') {
-      log.warn(log.prefix('ensureIndexHtml'), `Index template ${log.chalk.green(templatePath)} does not exist.`);
-    }
-
-    throw err;
-  }
-}
-
 
 /**
  * @private
@@ -131,7 +102,7 @@ function reconfigurePlugin(config: webpack.Configuration) {
  * passed to Webpack.
  */
 export function createWebpackConfigurationPreset(baseConfigFactory: WebpackConfigurationFactory) {
-  return (userConfigFactory?: WebpackConfigurationFactory): webpack.ConfigurationFactory => async (env, argv = {}) => {
+  return (userConfigFactory?: WebpackConfigurationFactory): NativeWebpackConfigurationFactory => async (env, argv = {}) => {
     // ----- Build Context -----------------------------------------------------
 
     // Get host package metadata.
@@ -206,7 +177,7 @@ export function createWebpackConfigurationPreset(baseConfigFactory: WebpackConfi
 
     // Warn if HtmlWebpackPlugin was configured with a "template" that does not
     // exist.
-    await ensureIndexHtml(finalConfig);
+    // await ensureIndexHtml(finalConfig);
 
 
     return finalConfig;

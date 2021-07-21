@@ -1,4 +1,5 @@
 import chex from '@darkobits/chex';
+import { getPackageInfo } from '@darkobits/ts/lib/utils';
 import dotenv from 'dotenv';
 import findUp from 'find-up';
 import IS_CI from 'is-ci';
@@ -44,4 +45,15 @@ export function readDotenvUp(cwd?: string) {
   log.verbose(log.prefix('readDotenvUp'), `Loaded ${log.chalk.yellow(Object.keys(result.parsed ?? {}).length)} variables from ${log.chalk.green(envFilePath)}.`);
 
   return result.parsed;
+}
+
+
+export function prefixBin(binName: string) {
+  const pkg = getPackageInfo();
+
+  if (pkg && pkg.json.name === '@darkobits/ts') {
+    return binName;
+  }
+
+  return `tsx.${binName}`;
 }

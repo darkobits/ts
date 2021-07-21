@@ -24,7 +24,10 @@ export interface WebpackConfiguration extends webpack.Configuration {
    */
   entry: webpack.Entry;
 
-  output: webpack.Output;
+  /**
+   * TODO: Re-type this.
+   */
+  output: any;
 
   /**
    * Pre-initialized 'module' object.
@@ -33,21 +36,29 @@ export interface WebpackConfiguration extends webpack.Configuration {
 
   /**
    * Pre-initialized 'plugins' array.
+   *
+   * TODO: Re-type this.
    */
-  plugins: Array<webpack.Plugin>;
+  plugins: Array<any>;
 }
 
 
 /**
  * First parameter passed to standard Webpack configuration factories.
  */
-type Env = Parameters<webpack.ConfigurationFactory>[0];
+type Env = Record<string, string>;
 
 
 /**
  * Second parameter passed to standard Webpack configuration factories.
  */
-type Argv = Parameters<webpack.ConfigurationFactory>[1];
+type Argv = Record<string, any>;
+
+
+/**
+ * Formerly `ConfigurationFactory` in Webpack 4, but was removed in Webpack 5.
+ */
+export type NativeWebpackConfigurationFactory = (env: Env, argv: Argv) => webpack.Configuration | Promise<webpack.Configuration>;
 
 
 /**
