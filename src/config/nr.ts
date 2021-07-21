@@ -1,12 +1,6 @@
-import path from 'path';
-
-import {
-  ConfigurationFactory,
-  CreateCommandArguments,
-  CreateCommandOptions
-} from '@darkobits/nr/dist/etc/types';
+import { ConfigurationFactory } from '@darkobits/nr/dist/etc/types';
+import merge from 'deepmerge';
 import IS_CI from 'is-ci';
-import which from 'which';
 
 import {
   EXTENSIONS_WITH_DOT,
@@ -20,40 +14,19 @@ import {
 
 
 export default function(userConfigFactory?: ConfigurationFactory): ConfigurationFactory {
-  return async ({ createCommand, createScript }) => {
+  return async ({ createCommand, createNodeCommand, createScript }) => {
 
     /**
-     * Using the same signature of `createCommand`, creates a command that
+     * Using the same signature of `createNodeCommand`, creates a command that
      * invokes Node with @babel/register, ensuring any Babel features enabled in
      * the local project are available.
      */
-    const createNodeCommand = (name: string, args: CreateCommandArguments, opts?: CreateCommandOptions) => {
-      const [cmd, positionalsOrFlags, flagsOrUndefined] = args;
-
-      // Resolve the absolute path to the indicated executable.
-      const resolvedCmd = path.isAbsolute(cmd) ? cmd : which.sync(cmd);
-
-      let positionals: Array<string> = [];
-      let flags: Record<string, any> = {};
-
-      if (Array.isArray(positionalsOrFlags)) {
-        positionals = positionalsOrFlags;
-      } else if (typeof positionalsOrFlags === 'object' && !flagsOrUndefined) {
-        flags = positionalsOrFlags;
-      }
-
-      if (typeof flagsOrUndefined === 'object') {
-        flags = flagsOrUndefined;
-      }
-
-      const nodeArgs = [
-        '--require',
-        require.resolve('etc/babel-register'),
-        resolvedCmd,
-        ...positionals
-      ];
-
-      return createCommand(name, ['node', nodeArgs, flags ?? undefined], opts);
+    const createBabelNodeCommand: typeof createNodeCommand = (name, args, opts) => {
+      return createNodeCommand(name, args, merge({
+        execaOptions: {
+          nodeOptions: ['--require', require.resolve('etc/babel-register')]
+        }
+      }, opts ?? {}));
     };
 
 
@@ -124,7 +97,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       prefixBin('del'), [`"${OUT_DIR}/**/*.spec.*"`, `"${OUT_DIR}/**/*.test.*"`]
     ]);
 
-    createNodeCommand('link-bins', [require.resolve('etc/scripts/link-bins')]);
+    createBabelNodeCommand('link-bins', [require.resolve('etc/scripts/link-bins')]);
 
 
     // ----- Lint Commands -----------------------------------------------------
@@ -134,9 +107,9 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       format: require.resolve('eslint-codeframe-formatter')
     };
 
-    createNodeCommand('eslint', ['eslint', [SRC_DIR], eslintFlags]);
+    createBabelNodeCommand('eslint', ['eslint', [SRC_DIR], eslintFlags]);
 
-    createNodeCommand('eslint-fix', ['eslint', [SRC_DIR], { ...eslintFlags, fix: true }]);
+    createBabelNodeCommand('eslint-fix', ['eslint', [SRC_DIR], { ...eslintFlags, fix: true }]);
 
 
     // ----- Build Scripts -----------------------------------------------------
@@ -169,7 +142,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       description: 'Run unit tests.',
       timing: true,
       run: [
-        createNodeCommand('jest', [jestCmd])
+        createBabelNodeCommand('jest', [jestCmd])
       ]
     });
 
@@ -177,7 +150,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       group: 'Test',
       description: 'Run unit tests in watch mode.',
       run: [
-        createNodeCommand('jest-watch', [jestCmd, { watch: true }])
+        createBabelNodeCommand('jest-watch', [jestCmd, { watch: true }])
       ]
     });
 
@@ -186,7 +159,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       description: 'Run unit tests and generate a coverage report.',
       timing: true,
       run: [
-        createNodeCommand('jest-coverage', [jestCmd, { coverage: true }])
+        createBabelNodeCommand('jest-coverage', [jestCmd, { coverage: true }])
       ]
     });
 
@@ -194,7 +167,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       group: 'Test',
       description: 'Run unit tests, but do not fail if no tests exist.',
       run: [
-        createNodeCommand('jest-pass', [jestCmd, { passWithNoTests: true }], {
+        createBabelNodeCommand('jest-pass', [jestCmd, { passWithNoTests: true }], {
           preserveArguments: true
         })
       ]
@@ -234,7 +207,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
         group: 'Release',
         description: `Generate a change log entry and tagged commit for ${description}.`,
         run: [
-          createNodeCommand(`standard-version-${releaseType ?? 'default'}`, [
+          createBabelNodeCommand(`standard-version-${releaseType ?? 'default'}`, [
             standardVersionCmd, { preset: require.resolve('config/changelog-preset'), ...args }
           ])
         ]
@@ -292,7 +265,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
 
     // ----- Lifecycles ----------------------------------------------------------
 
-    createNodeCommand('update-notifier', [require.resolve('etc/scripts/update-notifier')]);
+    createBabelNodeCommand('update-notifier', [require.resolve('etc/scripts/update-notifier')]);
 
     const { event } = getNpmInfo();
     const shouldSkipPrepare = IS_CI && ['install', 'ci'].includes(event);
@@ -309,7 +282,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
     });
 
     if (typeof userConfigFactory === 'function') {
-      await userConfigFactory({ createCommand, createScript });
+      await userConfigFactory({ createCommand, createNodeCommand, createScript });
     }
   };
 }
