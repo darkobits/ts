@@ -25,6 +25,20 @@ module.exports = {
       resolvePath: (sourcePath, currentFile, opts) => {
         const resolvedPath = resolvePath(sourcePath, currentFile, opts);
 
+        // Effectively appends the appropriate extension to imports that reference
+        // a file within a package in node_modules.
+        if (resolvedPath === null) {
+          try {
+            const requireResolvedPath = require.resolve(sourcePath);
+            const idx = requireResolvedPath.lastIndexOf(sourcePath);
+            return requireResolvedPath.slice(idx);
+          } catch {
+            return null;
+          }
+        }
+
+        // Since we are instructing the plugin to not strip extensions, we have to
+        // manually replace the source extension with .js.
         if (typeof resolvedPath === 'string') {
           return resolvedPath.replace(/\.\w{2}$/g, '.js');
         }
