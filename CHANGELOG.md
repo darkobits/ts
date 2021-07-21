@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.7.3](https://github.com/darkobits/ts/compare/v0.7.2...v0.7.3) (2021-07-21)
+
+
+### 🏗 Chores
+
+* **deps:** Update dependencies. ([759511f](https://github.com/darkobits/ts/commit/759511fa07c5754666d7878f0145f2d6e34cf92a))
+* **ts:** Set module to ESNext. ([f8c59d8](https://github.com/darkobits/ts/commit/f8c59d804595195da280f7d180fd295591acc284))
+
 ### [0.7.2](https://github.com/darkobits/ts/compare/v0.7.1...v0.7.2) (2021-07-21)
 
 
