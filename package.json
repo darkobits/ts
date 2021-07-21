@@ -42,7 +42,7 @@
     "@babel/runtime": "^7.14.8",
     "@darkobits/chex": "^1.0.1",
     "@darkobits/log": "^2.0.0-beta.15",
-    "@darkobits/nr": "^0.7.0",
+    "@darkobits/nr": "^0.7.1",
     "@types/jest": "^26.0.23",
     "@types/node": "^16.4.0",
     "@typescript-eslint/eslint-plugin": "^4.28.4",
