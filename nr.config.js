@@ -1,6 +1,5 @@
 import { nr } from './src';
 
-
 export default nr(({ createCommand, createScript }) => {
   createScript('publish', {
     group: 'Release',

@@ -46,13 +46,15 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
     createCommand('babel', [
       babelCmd, [SRC_DIR], babelFlags
     ], {
-      prefix: chalk => chalk.bgYellow.black(' Babel ')
+      prefix: chalk => chalk.bgYellow.black(' Babel '),
+      execaOptions: {env: { TS_ENV: 'esm' } }
     });
 
     createCommand('babel-watch', [
       babelCmd, [SRC_DIR], {...babelFlags, watch: true, verbose: true }
     ], {
-      prefix: chalk => chalk.bgYellow.black(' Babel ')
+      prefix: chalk => chalk.bgYellow.black(' Babel '),
+      execaOptions: {env: { TS_ENV: 'esm' } }
     });
 
 
