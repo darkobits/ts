@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.7.1](https://github.com/darkobits/ts/compare/v0.7.0...v0.7.1) (2021-07-21)
+
+
+### 🐞 Bug Fixes
+
+* **babel-esm:** Resolve files imported from node_modules. ([03f8d4b](https://github.com/darkobits/ts/commit/03f8d4b76d8d1363b682a51b3dcfce1afeb56a1c))
+
+
+### 🏗 Chores
+
+* **babel:** Only use ESM config during build commands. ([2fe2223](https://github.com/darkobits/ts/commit/2fe22236fdd29823be7b87c7234fa503842dea52))
+* **eslint:** Ignore all top-level files. ([f033516](https://github.com/darkobits/ts/commit/f0335166bc6b02e0b3a55e266b3fbabaa3e67a4f))
+
 ## [0.7.0](https://github.com/darkobits/ts/compare/v0.6.0...v0.7.0) (2021-07-21)
 
 
