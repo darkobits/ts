@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.7.0](https://github.com/darkobits/ts/compare/v0.6.0...v0.7.0) (2021-07-21)
+
+
+### ✨ Features
+
+* Add Babel ESM configuration preset. ([dbf82b4](https://github.com/darkobits/ts/commit/dbf82b4a9a710c0bfb4bfa0e0b54a6147a7bbda3))
+
+
+### 🛠 Refactoring
+
+* Use `createNodeCommand`. ([8737b00](https://github.com/darkobits/ts/commit/8737b00db684a5014a79ad3a1c33ced99a71c806))
+
 ## [0.6.0](https://github.com/darkobits/ts/compare/v0.6.0-beta.2...v0.6.0) (2021-07-19)
 
 
