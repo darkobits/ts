@@ -40,9 +40,9 @@ const config = {
   },
   rules: {},
   overrides: [],
-  // Temporary workaround for this issue:
-  // https://github.com/typescript-eslint/typescript-eslint/issues/967
-  ignorePatterns: ['/*.ts']
+  // Ignore all top-level files (usually configuration). Temporary workaround
+  // for this issue: https://github.com/typescript-eslint/typescript-eslint/issues/967
+  ignorePatterns: ['/*.*']
 };
 
 
