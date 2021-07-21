@@ -5,20 +5,17 @@
 module.exports = {
   presets: [
     ['@babel/preset-env', {
-      targets: [
-        'node 14'
-      ],
-      modules: 'cjs'
+      targets: { node: '14' },
+      modules: 'cjs',
+      // Do not transpile import() statements. This will allow packages that
+      // publish CommonJS to import ES Modules.
+      exclude: ['@babel/plugin-proposal-dynamic-import']
     }],
     '@babel/preset-typescript'
   ],
   plugins: [
-    // This plugin must come before @babel/plugin-proposal-class-properties.
-    ['@babel/plugin-proposal-decorators', { legacy: true, loose: true }],
-    '@babel/plugin-proposal-nullish-coalescing-operator',
-    '@babel/plugin-proposal-optional-chaining',
-    '@babel/plugin-proposal-class-properties',
     'babel-plugin-add-module-exports',
+    ['@babel/plugin-proposal-decorators', { legacy: true, loose: true }],
     ['babel-plugin-module-resolver', {
       cwd: 'packagejson',
       root: ['./src'],

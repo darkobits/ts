@@ -1,6 +1,5 @@
-import { ConfigurationFactory } from '@darkobits/nr/dist/etc/types';
+import type { ConfigurationFactory } from '@darkobits/nr/dist/etc/types';
 import merge from 'deepmerge';
-import IS_CI from 'is-ci';
 
 import {
   EXTENSIONS_WITH_DOT,
@@ -14,7 +13,7 @@ import {
 
 
 export default function(userConfigFactory?: ConfigurationFactory): ConfigurationFactory {
-  return async ({ createCommand, createNodeCommand, createScript }) => {
+  return async ({ createCommand, createNodeCommand, createScript, isCI }) => {
 
     /**
      * Using the same signature of `createNodeCommand`, creates a command that
@@ -265,12 +264,12 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
     });
 
 
-    // ----- Lifecycles ----------------------------------------------------------
+    // ----- Lifecycles --------------------------------------------------------
 
     createBabelNodeCommand('update-notifier', [require.resolve('etc/scripts/update-notifier')]);
 
     const { event } = getNpmInfo();
-    const shouldSkipPrepare = IS_CI && ['install', 'ci'].includes(event);
+    const shouldSkipPrepare = isCI && ['install', 'ci'].includes(event);
 
     createScript('prepare', {
       group: 'Lifecycle',
@@ -284,7 +283,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
     });
 
     if (typeof userConfigFactory === 'function') {
-      await userConfigFactory({ createCommand, createNodeCommand, createScript });
+      await userConfigFactory({ createCommand, createNodeCommand, createScript, isCI });
     }
   };
 }
