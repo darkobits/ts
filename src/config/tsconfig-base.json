@@ -15,6 +15,9 @@
       "ESNext"
     ],
 
+    // Allow features like dynamic import.
+    "module": "ESNext",
+
     // Use Node's module resolution strategy.
     "moduleResolution": "node",
 
