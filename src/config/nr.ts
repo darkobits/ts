@@ -247,7 +247,9 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       group: 'Dependency Management',
       description: 'Check for newer versions of installed dependencies.',
       run: [
-        createCommand('update-check', ['npm-check-updates'])
+        createCommand('update-check', ['npm-check-updates'], {
+          execaOptions: { stdio: 'inherit' }
+        })
       ]
     });
 
