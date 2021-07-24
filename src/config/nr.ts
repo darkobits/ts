@@ -16,6 +16,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
      * invokes Node with @babel/register, ensuring any Babel features enabled in
      * the local project are available.
      */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const createBabelNodeCommand: typeof createNodeCommand = (name, args, opts) => {
       return createNodeCommand(name, args, {
         execaOptions: {
@@ -24,7 +25,6 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
         }
       });
     };
-
 
     createScript('build', {
       group: 'Webpack',

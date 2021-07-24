@@ -70,7 +70,6 @@ async function ensureIndexEntrypoint(config: webpack.Configuration) {
 }
 
 
-
 /**
  * @private
  *
@@ -178,7 +177,6 @@ export function createWebpackConfigurationPreset(baseConfigFactory: WebpackConfi
     // Warn if HtmlWebpackPlugin was configured with a "template" that does not
     // exist.
     // await ensureIndexHtml(finalConfig);
-
 
     return finalConfig;
   };

@@ -68,7 +68,7 @@ export default createWebpackConfigurationPreset(({
         cacheDirectory: true
       }
     }, {
-      loader: require.resolve('linaria/loader'),
+      loader: require.resolve('@linaria/webpack-loader'),
       options: {
         sourceMap: isDevelopment,
         displayName: isDevelopment

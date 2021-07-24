@@ -9,8 +9,8 @@ module.exports = {
       useBuiltIns: 'entry',
       corejs: 3
     }],
-    require.resolve('linaria/babel'),
-    require.resolve('@babel/preset-react')
+    require.resolve('@babel/preset-react'),
+    require.resolve('@linaria/babel-preset')
   ],
   plugins: [
     require.resolve('@babel/plugin-transform-runtime'),

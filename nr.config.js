@@ -8,4 +8,12 @@ export default nr(({ createCommand, createScript }) => {
       createCommand('re-pack', ['re-pack'])
     ]
   });
+
+  createScript('publish', {
+    group: 'Release',
+    description: 'Publish the package using re-pack.',
+    run: [
+      createCommand('re-pack', ['re-pack', ['publish']])
+    ]
+  });
 });
