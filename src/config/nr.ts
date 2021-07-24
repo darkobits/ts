@@ -6,10 +6,7 @@ import {
   SRC_DIR,
   OUT_DIR
 } from 'etc/constants';
-import {
-  prefixBin,
-  getNpmInfo
-} from 'lib/utils';
+import { getNpmInfo } from 'lib/utils';
 
 
 export default function(userConfigFactory?: ConfigurationFactory): ConfigurationFactory {
@@ -31,8 +28,6 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
 
     // ----- Build: Babel Commands ---------------------------------------------
 
-    const babelCmd = prefixBin('babel');
-
     const babelFlags = {
       extensions: EXTENSIONS_WITH_DOT.join(','),
       ignore: '**/*.d.ts',
@@ -43,14 +38,14 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
     };
 
     createCommand('babel', [
-      babelCmd, [SRC_DIR], babelFlags
+      'babel', [SRC_DIR], babelFlags
     ], {
       prefix: chalk => chalk.bgYellow.black(' Babel '),
       execaOptions: {env: { TS_ENV: 'esm' } }
     });
 
     createCommand('babel-watch', [
-      babelCmd, [SRC_DIR], {...babelFlags, watch: true, verbose: true }
+      'babel', [SRC_DIR], {...babelFlags, watch: true, verbose: true }
     ], {
       prefix: chalk => chalk.bgYellow.black(' Babel '),
       execaOptions: {env: { TS_ENV: 'esm' } }
@@ -59,21 +54,19 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
 
     // ----- Build: TypeScript Commands ----------------------------------------
 
-    const ttscCmd = prefixBin('ttsc');
-
     const tsFlags = {
       pretty: true
     };
 
     createCommand('ts', [
-      ttscCmd, { ...tsFlags, emitDeclarationOnly: true }
+      'ttsc', { ...tsFlags, emitDeclarationOnly: true }
     ], {
       prefix: chalk => chalk.bgBlue.white(' TS '),
       preserveArguments: true
     });
 
     createCommand('ts-watch', [
-      ttscCmd, {
+      'ttsc', {
         ...tsFlags,
         emitDeclarationOnly: true,
         watch: true,
@@ -85,7 +78,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
     });
 
     // createCommand('ts-check', [
-    //   prefixBin('ttsc'), { ...tsFlags, noEmit: true }
+    //   'ttsc', { ...tsFlags, noEmit: true }
     // ], {
     //   preserveArguments: true,
     //   prefix: chalk => chalk.bgBlue.white('TS')
@@ -95,7 +88,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
     // ----- Build: Misc. Commands ---------------------------------------------
 
     createCommand('cleanup', [
-      prefixBin('del'), [`"${OUT_DIR}/**/*.spec.*"`, `"${OUT_DIR}/**/*.test.*"`]
+      'del', [`"${OUT_DIR}/**/*.spec.*"`, `"${OUT_DIR}/**/*.test.*"`]
     ]);
 
     createBabelNodeCommand('link-bins', [require.resolve('etc/scripts/link-bins')]);
@@ -136,14 +129,12 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
 
     // ----- Testing Scripts ---------------------------------------------------
 
-    const jestCmd = prefixBin('jest');
-
     createScript('test', {
       group: 'Test',
       description: 'Run unit tests.',
       timing: true,
       run: [
-        createBabelNodeCommand('jest', [jestCmd])
+        createBabelNodeCommand('jest', ['jest'])
       ]
     });
 
@@ -151,7 +142,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       group: 'Test',
       description: 'Run unit tests in watch mode.',
       run: [
-        createBabelNodeCommand('jest-watch', [jestCmd, { watch: true }])
+        createBabelNodeCommand('jest-watch', ['jest', { watch: true }])
       ]
     });
 
@@ -160,7 +151,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       description: 'Run unit tests and generate a coverage report.',
       timing: true,
       run: [
-        createBabelNodeCommand('jest-coverage', [jestCmd, { coverage: true }])
+        createBabelNodeCommand('jest-coverage', ['jest', { coverage: true }])
       ]
     });
 
@@ -168,7 +159,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       group: 'Test',
       description: 'Run unit tests, but do not fail if no tests exist.',
       run: [
-        createBabelNodeCommand('jest-pass', [jestCmd, { passWithNoTests: true }], {
+        createBabelNodeCommand('jest-pass', ['jest', { passWithNoTests: true }], {
           preserveArguments: true
         })
       ]
@@ -194,7 +185,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
 
     // ----- Release Scripts ---------------------------------------------------
 
-    const standardVersionCmd = prefixBin('standard-version');
+    const standardVersionCmd = 'standard-version';
 
     interface CreateReleaseScriptOptions {
       releaseType?: 'first' | 'major' | 'minor' | 'patch' | 'beta';
@@ -256,7 +247,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       group: 'Dependency Management',
       description: 'Check for newer versions of installed dependencies.',
       run: [
-        createCommand('npm-check', [prefixBin('npm-check'), { skipUnused: true }], {
+        createCommand('update-check', ['npm-check-updates', { skipUnused: true }], {
           // Do not throw an error if this command exits with a non-zero code.
           execaOptions: { reject: false }
         })
