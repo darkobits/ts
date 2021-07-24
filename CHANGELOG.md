@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.1-beta.0](https://github.com/darkobits/tsx/compare/v0.3.0...v0.3.1-beta.0) (2021-07-24)
+
+
+### 🏗 Chores
+
+* Move dependencies to peerDependencies, require NPM 7. ([d99c1ee](https://github.com/darkobits/tsx/commit/d99c1eede79d2ba3b003d2d562bc2d4d345b368a))
+
 ## [0.3.0](https://github.com/darkobits/tsx/compare/v0.2.6-beta.2...v0.3.0) (2021-07-24)
 
 
