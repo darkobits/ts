@@ -247,10 +247,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       group: 'Dependency Management',
       description: 'Check for newer versions of installed dependencies.',
       run: [
-        createCommand('update-check', ['npm-check-updates', { skipUnused: true }], {
-          // Do not throw an error if this command exits with a non-zero code.
-          execaOptions: { reject: false }
-        })
+        createCommand('update-check', ['npm-check-updates'])
       ]
     });
 
