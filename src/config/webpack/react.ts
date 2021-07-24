@@ -246,5 +246,9 @@ export default createWebpackConfigurationPreset(({
     }
   };
 
+  config.cache = {
+    type: 'filesystem'
+  };
+
   config.stats = 'minimal';
 });
