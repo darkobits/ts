@@ -5,8 +5,6 @@
 import type { ConfigurationFactory } from '@darkobits/nr/dist/etc/types';
 import { nr } from '@darkobits/ts';
 
-import { prefixBin } from 'lib/utils';
-
 
 export default function(userConfigFactory?: ConfigurationFactory): ConfigurationFactory {
   return nr(async ({ createCommand, createNodeCommand, createScript, isCI }) => {
@@ -31,7 +29,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       description: 'Compile the project with Webpack.',
       run: [
         createBabelNodeCommand('webpack',
-          [prefixBin('webpack'), { mode: 'production' }]
+          ['webpack', { mode: 'production' }]
         )
       ]
     });
@@ -41,7 +39,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       description: 'Start the Webpack dev server.',
       run: [
         createBabelNodeCommand('webpack-dev-server',
-          [prefixBin('webpack'), ['serve'], { mode: 'development' }]
+          ['webpack', ['serve'], { mode: 'development' }]
         )
       ]
     });
