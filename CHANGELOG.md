@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.1-beta.1](https://github.com/darkobits/tsx/compare/v0.3.1-beta.0...v0.3.1-beta.1) (2021-07-24)
+
+
+### 🏗 Chores
+
+* Pin versions of react, react-dom, @hot-loader/react-dom. ([6835608](https://github.com/darkobits/tsx/commit/68356085a4b24c9cb0cc9ccc052b831217b20dbf))
+
 ### [0.3.1-beta.0](https://github.com/darkobits/tsx/compare/v0.3.0...v0.3.1-beta.0) (2021-07-24)
 
 
