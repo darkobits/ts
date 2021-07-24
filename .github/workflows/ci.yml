@@ -39,7 +39,9 @@ jobs:
       # If a cache was found, we can skip installing dependencies.
       - name: Install Dependencies
         if: steps.dependencies-cache.outputs.cache-hit != 'true'
-        run: npm ci
+        run: |
+          npm install --global npm@7
+          npm ci
 
       - name: Build Project
         run: npx nps build
