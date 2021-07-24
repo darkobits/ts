@@ -9,28 +9,20 @@
     "url": "https://github.com/darkobits/ts"
   },
   "engines": {
-    "node": ">=14"
+    "node": ">=14",
+    "npm": ">=7"
   },
+  "engineStrict": true,
   "files": [
     "dist"
   ],
-  "bin": {
-    "ts.babel": "dist/bin/babel.js",
-    "ts.del": "dist/bin/del.js",
-    "ts.eslint": "dist/bin/eslint.js",
-    "ts.jest": "dist/bin/jest.js",
-    "ts.npm-check": "dist/bin/npm-check.js",
-    "ts.nr": "dist/bin/nr.js",
-    "ts.standard-version": "dist/bin/standard-version.js",
-    "ts.ttsc": "dist/bin/ttsc.js"
-  },
   "main": "dist/index.js",
   "scripts": {
     "prepare": "nr prepare",
     "prepublishOnly": "re-pack guard",
     "help": "nr --scripts"
   },
-  "dependencies": {
+  "peerDependencies": {
     "@babel/cli": "^7.14.8",
     "@babel/core": "^7.14.8",
     "@babel/eslint-parser": "^7.14.7",

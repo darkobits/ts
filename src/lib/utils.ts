@@ -128,6 +128,8 @@ export function requireBin(pkgName: string, binName?: string) {
 
 
 /**
+ * @deprecated
+ *
  * Because this package shares many package scripts and tooling with its own
  * dependents, we need to differentiate between when a binary is being invoked
  * by this package and when it is being invoked by a dependent package.
