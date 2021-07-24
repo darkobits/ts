@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.7.9](https://github.com/darkobits/ts/compare/v0.7.8...v0.7.9) (2021-07-24)
+
+
+### 🐞 Bug Fixes
+
+* npm-check-updates inherits stdio. ([2c19a19](https://github.com/darkobits/ts/commit/2c19a194fb61356b49b34cc1d08b3ca2a6f020cf))
+
 ### [0.7.8](https://github.com/darkobits/ts/compare/v0.7.7...v0.7.8) (2021-07-24)
 
 
