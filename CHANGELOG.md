@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.7.7](https://github.com/darkobits/ts/compare/v0.7.6...v0.7.7) (2021-07-24)
+
+
+### 🏗 Chores
+
+* Migrate from npm-check to npm-check-dependencies. ([d33bc82](https://github.com/darkobits/ts/commit/d33bc8283f21775fab97f975d43d4bb160ae0702))
+* Move dependencies to peerDependencies, require NPM 7. ([66857d9](https://github.com/darkobits/ts/commit/66857d9fec60a662dc71b3c33dbe19e544d439d8))
+
 ### [0.7.6](https://github.com/darkobits/ts/compare/v0.7.5...v0.7.6) (2021-07-21)
 
 
