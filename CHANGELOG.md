@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.6-beta.1](https://github.com/darkobits/tsx/compare/v0.2.6-beta.0...v0.2.6-beta.1) (2021-07-24)
+
+
+### 🏗 Chores
+
+* Fix various Webpack 5 issues. ([a45208e](https://github.com/darkobits/tsx/commit/a45208ee7e2b512745e514fc50eea59a6480f0b0))
+
 ### [0.2.6-beta.0](https://github.com/darkobits/tsx/compare/v0.2.5...v0.2.6-beta.0) (2021-07-22)
 
 
