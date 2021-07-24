@@ -28,7 +28,6 @@ function generateWebpackConfigurationScaffold(): WebpackConfiguration {
   return {
     entry: {},
     output: {},
-    // @ts-expect-error TODO: Re-type this.
     module: {
       rules: []
     },

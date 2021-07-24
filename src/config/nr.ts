@@ -46,6 +46,18 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       ]
     });
 
+    // Note: We need to re-define the 'prepare' script from `ts` here because
+    // instructions are resolved at script creation rather than at execution, so
+    // the "build" script that `ts` resolves to will be its own, not ours.
+    createScript('prepare', {
+      group: 'Lifecycle',
+      description: 'Run after "npm install" to ensure the project builds correctly and tests are passing.',
+      run: [
+        'build',
+        'test.passWithNoTests'
+      ]
+    });
+
     if (typeof userConfigFactory === 'function') {
       await userConfigFactory({ createCommand, createNodeCommand, createScript, isCI });
     }

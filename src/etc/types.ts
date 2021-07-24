@@ -6,10 +6,12 @@ import type merge from 'webpack-merge';
 
 
 /**
- * Webpack configuration's "modules" key where the "rules" array is required
- * rather than optional.
+ * Options affecting the normal modules (NormalModuleFactory).
+ *
+ * Note: `tsx` pre-declares this property, so its type definition is
+ * non-nullable.
  */
-export interface WebpackModuleConfiguration extends webpack.Module {
+export interface TsxModuleConfiguration extends webpack.ModuleOptions {
   rules: Array<webpack.RuleSetRule>;
 }
 
@@ -20,26 +22,29 @@ export interface WebpackModuleConfiguration extends webpack.Module {
  */
 export interface WebpackConfiguration extends webpack.Configuration {
   /**
-   * Base Webpack entry configurations in 'tsx' use the object form.
+   * `tsx` uses the object form for `entry`. You may assign any property to this
+   * object to create an additional bundle.
    */
-  entry: webpack.Entry;
+  entry: webpack.EntryObject;
 
   /**
-   * TODO: Re-type this.
-   */
-  output: any;
-
-  /**
-   * Pre-initialized 'module' object.
-   */
-  module: WebpackModuleConfiguration;
-
-  /**
-   * Pre-initialized 'plugins' array.
+   * Options affecting the output of the compilation. output options tell
+   * Webpack how to write the compiled files to disk.
    *
-   * TODO: Re-type this.
+   * Note: `tsx` pre-declares this property, so its type definition is
+   * non-nullable.
    */
-  plugins: Array<any>;
+  output: NonNullable<webpack.Configuration['output']>;
+
+  module: TsxModuleConfiguration;
+
+  /**
+   * Add additional plugins to the compiler.
+   *
+   * Note: `tsx` pre-declares this property, so its type definition is
+   * non-nullable.
+   */
+  plugins: NonNullable<webpack.Configuration['plugins']>;
 }
 
 
