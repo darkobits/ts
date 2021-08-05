@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.4.0-beta.1](https://github.com/darkobits/tsx/compare/v0.4.0-beta.0...v0.4.0-beta.1) (2021-08-05)
+
+
+### 🏗 Chores
+
+* Add devcert logging. ([475e8b1](https://github.com/darkobits/tsx/commit/475e8b1f825e35577aac71f82aa49f783ffd99de))
+
 ## [0.4.0-beta.0](https://github.com/darkobits/tsx/compare/v0.3.3...v0.4.0-beta.0) (2021-08-05)
 
 
