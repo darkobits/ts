@@ -5,7 +5,7 @@
 
 import path from 'path';
 
-import devcert from 'devcert';
+import * as devcert from 'devcert';
 import findUp from 'find-up';
 import webpack from 'webpack';
 
@@ -220,7 +220,19 @@ export default createWebpackConfigurationPreset(async ({
   // ----- Dev Server ----------------------------------------------------------
 
   if (isDevelopment) {
-    const { key, cert } = await devcert.certificateFor(['localhost']);
+    const hasCertificates = devcert.hasCertificateFor('localhost');
+
+    if (!hasCertificates) {
+      log.info('Generating development certificate.');
+      log.info(log.chalk.dim('You may be prompted for your password. This should only happen once.'));
+      log.info(log.chalk.dim(`For more information, see: ${log.chalk.blue('https://github.com/davewasmer/devcert')}`));
+    }
+
+    const { key, cert } = await devcert.certificateFor('localhost');
+
+    if (!hasCertificates) {
+      log.info('Certificates generated.');
+    }
 
     config.devServer = {
       host: '0.0.0.0',
