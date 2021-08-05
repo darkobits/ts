@@ -245,7 +245,7 @@ export default createWebpackConfigurationPreset(async ({
     log.info(log.chalk.dim(`Starting development server on port ${log.chalk.green(port)}...`));
 
     // Asynchronously wait for the dev server to start, then open a browser.
-    void waitPort({ host, port }).then(() => open(`https://${host}:${port}`));
+    void waitPort({ host, port, output: 'silent' }).then(() => open(`https://${host}:${port}`));
 
     config.devServer = {
       https: { key, cert },
