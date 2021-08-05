@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.4.0-beta.3](https://github.com/darkobits/tsx/compare/v0.4.0-beta.2...v0.4.0-beta.3) (2021-08-05)
+
+
+### ✨ Features
+
+* Use get-port, open. ([9f69134](https://github.com/darkobits/tsx/commit/9f69134570fb216ba617c9dfaa0a404f32264426))
+
 ## [0.4.0-beta.2](https://github.com/darkobits/tsx/compare/v0.4.0-beta.1...v0.4.0-beta.2) (2021-08-05)
 
 
