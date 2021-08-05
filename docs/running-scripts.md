@@ -1,91 +1,96 @@
 # Running Scripts
 
 The primary way you will interact with tooling is via package scripts using
-NPS. `ts` provides a robust set of default package scripts for most common
+`nr`. `ts` provides a robust set of default package scripts for most common
 tasks, and you are able to add your own (or even overwrite the defaults) in your
-`package-scripts.js` file.
+`nr.config.js` file.
 
-For a list of all scripts provided by `ts`, make sure you have created a
-`package-scripts.js` file in your project root per the [NPS configuration instructions](configuration-files?id=nps).
-Then, run:
+For a list of all scripts provided by `ts`, make sure you have created an
+`nr.config.js` file in your project root, then run:
 
 ```
-npx nps --scripts
+npx nr --scripts
 ```
 
 This will print a list of all defined scripts, a brief description of what the
 script does, and the command(s) it will execute.
 
 If you prefer to run scripts using `npm run script-name`, you can alias any
-NPS package script in `package.json` thusly:
+`nr` script in `package.json` thusly:
 
 ```json
 "scripts": {
-  "script-name": "nps script.name"
+  "script-name": "nr script.name"
 }
 ```
 
 ?> The `npx` prefix is not required here because NPM will automatically look for
-the NPS binary in your local `node_modules` folder.
+the `nr` executable in your local `node_modules` folder.
 
 This rest of this section will go over the most common scripts used to manage a
-project. It assumes the user has not installed NPS globally (not recommended)
+project. It assumes the user has not installed `nr` globally (not recommended)
 nor added [`./node_modules/.bin` to their `$PATH`](#advanced), so each example
 will use the long form notation with `npx`.
 
 ## Building
 
-The build script will compile your project with Babel and use TypeScript to
-type-check the project and emit type declaration files. These two processes are
-run in parallel.
+The build script will lint your project using ESLint, compile with Babel, and
+use TypeScript to type-check and emit type declaration files. These two
+processes are run in parallel.
 
 To execute this script, run:
 
 ```
-npx nps build
+npx nr build
 ```
 
 To continuously build and type-check the project in watch mode, run:
 
 ```
-npx nps build.watch
+npx nr build.watch
 ```
 
 ### Pre-Build & Post-Build Scripts
 
-If you define `prebuild` and/or `postbuild` scripts in `package-scripts.js`,
-`ts` will run them before and after the `build` script. These scripts are not
-run with `build.watch`.
-
-> `package-scripts.js`
+If you define `prebuild` and/or `postbuild` scripts in `nr.config.js`, `ts` will
+run them before and after the `build` script. These scripts are not run with
+`build.watch`.
 
 ```js
-module.exports = require('@darkobits/ts').nps({
-  scripts: {
-    prebuild: ''
-  }
+// nr.config.js
+import { nr } from '@darkobits/nr';
+
+export default nr(({ createCommand, createScript }) => {
+  createScript('postbuild', {
+    description: 'Runs after the "build" script.',
+    run: [
+      createCommand('cleanup', [
+        // Runs del .cache --force
+        'del', ['.cache'], { force: true }
+      ])
+    ]
+  })
 });
 ```
-
 
 ## Testing
 
 To run unit tests for your project with Jest, run:
 
 ```
-npx nps test
+npx nr test
 ```
 
 To continuously run tests in watch mode, run:
 
 ```
-npx nps test.watch
+npx nr test.watch
 ```
 
 To run unit tests and generate a coverage report, run:
 
 ```
-npx nps test.coverage
+npx nr test.coverage
 ```
 
 ## Linting
@@ -94,13 +99,13 @@ Linting is performed automatically as part of the `build` script, but you can
 still manually lint the project by running:
 
 ```
-npx nps lint
+npx nr lint
 ```
 
 To automatically fix any fixable errors in the project, run:
 
 ```
-npx nps lint.fix
+npx nr lint.fix
 ```
 
 ## Releasing
@@ -109,13 +114,13 @@ To generate (or update) your project's `CHANGELOG.md` and bump the project's
 version in `package.json`, run:
 
 ```
-npx nps bump
+npx nr bump
 ```
 
 To create a beta release, run:
 
 ```
-npx nps bump.beta
+npx nr bump.beta
 ```
 
 For your project's [first release](https://github.com/conventional-changelog/standard-version#first-release),
@@ -123,7 +128,7 @@ you may not want to bump the version at all, and only generate a change-log and
 release commit. For this, run:
 
 ```
-npx nps bump.first
+npx nr bump.first
 ```
 
 ?> `ts` uses [`standard-version`](https://github.com/conventional-changelog/standard-version)
@@ -139,14 +144,20 @@ explicitly call `git push` and/or `npm publish` after running this script.
 If you define `prebump` and/or `postbump` scripts in `package-scripts.js`, `ts`
 will run them before and after `bump*` scripts.
 
-> `package-scripts.js`
-
 ```js
-module.exports = require('@darkobits/ts').nps({
-  scripts: {
-    // Push release commit upstream and publish to NPM.
-    postbump: 'git push && npm publish'
-  }
+// nr.config.js
+import { nr } from '@darkobits/nr';
+
+export default nr(({ createCommand, createScript }) => {
+  createScript('postbump', {
+    description: 'Runs after any "bump" scripts.',
+    run: [
+      createCommand('cleanup', [
+        // Runs del .cache --force
+        'del', ['.cache'], { force: true }
+      ])
+    ]
+  })
 });
 ```
 
@@ -164,6 +175,6 @@ create an alias in `package.json`:
 
 ```json
 "scripts": {
-  "prepare": "nps prepare"
+  "prepare": "nr prepare"
 }
 ```

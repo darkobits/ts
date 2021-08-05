@@ -1,3 +1,3 @@
-![TS](./ts-cover-page.png)
+<img src="./ts-cover-page.png" alt="TS">
 
 [Get Started](about)
