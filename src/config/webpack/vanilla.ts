@@ -141,5 +141,5 @@ export default createWebpackConfigurationPreset(({
     minimize: isProduction
   };
 
-  config.stats = 'minimal';
+  config.stats = 'normal';
 });

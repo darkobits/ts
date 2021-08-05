@@ -149,5 +149,5 @@ export default createWebpackConfigurationPreset(({
     splitChunks: false
   };
 
-  config.stats = 'minimal';
+  config.stats = 'normal';
 });

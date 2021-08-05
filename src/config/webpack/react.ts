@@ -221,7 +221,6 @@ export default createWebpackConfigurationPreset(async ({
 
   if (isDevelopment) {
     const host = 'localhost';
-
     const hasCertificates = devcert.hasCertificateFor(host);
 
     if (!hasCertificates) {
@@ -284,5 +283,5 @@ export default createWebpackConfigurationPreset(async ({
     type: 'filesystem'
   };
 
-  config.stats = 'minimal';
+  config.stats = 'normal';
 });
