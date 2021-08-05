@@ -48,6 +48,7 @@
     "copy-webpack-plugin": "^9.0.1",
     "core-js": "^3.16.0",
     "css-loader": "^6.2.0",
+    "devcert": "^1.2.0",
     "dotenv": "^10.0.0",
     "eslint-loader": "^4.0.2",
     "eslint-plugin-jsx-a11y": "^6.4.1",

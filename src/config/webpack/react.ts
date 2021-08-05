@@ -1,9 +1,11 @@
+/* eslint-disable require-atomic-updates */
 // -----------------------------------------------------------------------------
 // ----- Webpack Configuration (React) -----------------------------------------
 // -----------------------------------------------------------------------------
 
 import path from 'path';
 
+import devcert from 'devcert';
 import findUp from 'find-up';
 import webpack from 'webpack';
 
@@ -20,7 +22,7 @@ import { createWebpackConfigurationPreset } from 'lib/webpack';
 
 const compileTime = log.createTimer();
 
-export default createWebpackConfigurationPreset(({
+export default createWebpackConfigurationPreset(async ({
   argv,
   bytes,
   config,
@@ -33,7 +35,7 @@ export default createWebpackConfigurationPreset(({
   // in the host package's node_modules tree. We will need to add this to
   // Webpack's module resolution configuration so that any dependencies that NPM
   // decides to nest in this folder can still be resolved by the host package.
-  const OUR_NODE_MODULES = findUp.sync('node_modules', { cwd: __dirname, type: 'directory' });
+  const OUR_NODE_MODULES = await findUp('node_modules', { cwd: __dirname, type: 'directory' });
 
   if (!OUR_NODE_MODULES) {
     throw new Error(`${log.prefix('webpack')} Unable to resolve the ${log.chalk.green('node_modules')} directory for "tsx".`);
@@ -218,16 +220,19 @@ export default createWebpackConfigurationPreset(({
   // ----- Dev Server ----------------------------------------------------------
 
   if (isDevelopment) {
+    const { key, cert } = await devcert.certificateFor(['localhost']);
+
     config.devServer = {
-      port: 8080,
-      compress: true,
-      historyApiFallback: true,
-      disableHostCheck: true,
       host: '0.0.0.0',
+      port: 8080,
       hot: true,
       inline: true,
       overlay: true,
-      quiet: true
+      compress: true,
+      disableHostCheck: true,
+      historyApiFallback: true,
+      quiet: true,
+      https: { key, cert }
     };
   }
 
