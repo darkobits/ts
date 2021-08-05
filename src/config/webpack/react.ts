@@ -9,6 +9,7 @@ import * as devcert from 'devcert';
 import findUp from 'find-up';
 import getPort from 'get-port';
 import open from 'open';
+import waitPort from 'wait-port';
 import webpack from 'webpack';
 
 // Plugins
@@ -243,10 +244,13 @@ export default createWebpackConfigurationPreset(async ({
 
     log.info(log.chalk.dim(`Starting development server on port ${log.chalk.green(port)}...`));
 
-    void open(`https://${host}:${port}`);
+    // Asynchronously wait for the dev server to start, then open a browser.
+    void waitPort({ host, port }).then(() => open(`https://${host}:${port}`));
 
     config.devServer = {
       https: { key, cert },
+      // Causes the server to listen on all available network devices. Useful if
+      // the developer needs to access the server from a different machine.
       host: '0.0.0.0',
       port,
       hot: true,
