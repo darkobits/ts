@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.3](https://github.com/darkobits/tsx/compare/v0.4.2...v0.4.3) (2021-08-05)
+
+
+### 🏗 Chores
+
+* Pass --always to "git describe". ([263885a](https://github.com/darkobits/tsx/commit/263885a2beebe1dcb1616d4a73688bfeed03d52b))
+
 ### [0.4.2](https://github.com/darkobits/tsx/compare/v0.4.1...v0.4.2) (2021-08-05)
 
 
