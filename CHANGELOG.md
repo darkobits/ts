@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.4.0-beta.0](https://github.com/darkobits/tsx/compare/v0.3.3...v0.4.0-beta.0) (2021-08-05)
+
+
+### 🏗 Chores
+
+* MiniCssExtractPlugin uses HMR in development. ([b6398bd](https://github.com/darkobits/tsx/commit/b6398bd712d23125d7aee79682e4759da1ff9b46))
+* Update dependencies. ([874c06c](https://github.com/darkobits/tsx/commit/874c06c2d58af1098af91a19951ecb38c8a89b51))
+
+
+### ✨ Features
+
+* Use devcert. ([e8c7257](https://github.com/darkobits/tsx/commit/e8c72579175e1ee0170eeef45a3ca60744e06fe5))
+
 ### [0.3.3](https://github.com/darkobits/tsx/compare/v0.3.1...v0.3.3) (2021-07-24)
 
 
