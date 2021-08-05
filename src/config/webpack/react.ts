@@ -7,6 +7,8 @@ import path from 'path';
 
 import * as devcert from 'devcert';
 import findUp from 'find-up';
+import getPort from 'get-port';
+import open from 'open';
 import webpack from 'webpack';
 
 // Plugins
@@ -217,7 +219,9 @@ export default createWebpackConfigurationPreset(async ({
   // ----- Dev Server ----------------------------------------------------------
 
   if (isDevelopment) {
-    const hasCertificates = devcert.hasCertificateFor('localhost');
+    const host = 'localhost';
+
+    const hasCertificates = devcert.hasCertificateFor(host);
 
     if (!hasCertificates) {
       log.info('Generating development certificate.');
@@ -225,23 +229,33 @@ export default createWebpackConfigurationPreset(async ({
       log.info(log.chalk.dim(`For more information, see: ${log.chalk.blue('https://github.com/davewasmer/devcert')}`));
     }
 
-    const { key, cert } = await devcert.certificateFor('localhost');
+    const [
+      port,
+      { key, cert }
+    ] = await Promise.all([
+      getPort({ port: 8080 }),
+      devcert.certificateFor(host)
+    ]);
 
     if (!hasCertificates) {
       log.info('Certificates generated.');
     }
 
+    log.info(log.chalk.dim(`Starting development server on port ${log.chalk.green(port)}...`));
+
+    void open(`https://${host}:${port}`);
+
     config.devServer = {
+      https: { key, cert },
       host: '0.0.0.0',
-      port: 8080,
+      port,
       hot: true,
       inline: true,
       overlay: true,
       compress: true,
       disableHostCheck: true,
       historyApiFallback: true,
-      quiet: true,
-      https: { key, cert }
+      quiet: true
     };
   }
 
