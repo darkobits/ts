@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.4](https://github.com/darkobits/tsx/compare/v0.4.3...v0.4.4) (2021-08-05)
+
+
+### 🏗 Chores
+
+* Pass webpack to configuration functions. ([007416f](https://github.com/darkobits/tsx/commit/007416f6059e987d4c766ea8273791a1055a9b3b))
+* Set stats to 'normal'. ([6b558d5](https://github.com/darkobits/tsx/commit/6b558d54bfd0aeeb0991c2c0d3e7c5eb5e71c5de))
+
 ### [0.4.3](https://github.com/darkobits/tsx/compare/v0.4.2...v0.4.3) (2021-08-05)
 
 
