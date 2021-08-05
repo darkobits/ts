@@ -87,10 +87,7 @@ export default createWebpackConfigurationPreset(async ({
   config.module.rules.push({
     test: /\.css$/,
     use: [{
-      loader: MiniCssExtractPlugin.loader,
-      options: {
-        hmr: isDevelopment
-      }
+      loader: MiniCssExtractPlugin.loader
     }, {
       loader: require.resolve('css-loader'),
       options: {
