@@ -85,7 +85,10 @@ export default createWebpackConfigurationPreset(({
   config.module.rules.push({
     test: /\.css$/,
     use: [{
-      loader: MiniCssExtractPlugin.loader
+      loader: MiniCssExtractPlugin.loader,
+      options: {
+        hmr: isDevelopment
+      }
     }, {
       loader: require.resolve('css-loader'),
       options: {
@@ -168,7 +171,6 @@ export default createWebpackConfigurationPreset(({
     title: pkgJson.displayName ?? ''
   }));
 
-  // @ts-ignore
   config.plugins.push(new MiniCssExtractPlugin({
     filename: isDevelopment ? 'styles.css' : 'styles-[contenthash].css'
   }));
