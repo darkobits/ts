@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.2](https://github.com/darkobits/tsx/compare/v0.4.1...v0.4.2) (2021-08-05)
+
+
+### 🐞 Bug Fixes
+
+* wait-port uses silent output. ([00a7e14](https://github.com/darkobits/tsx/commit/00a7e14829bf3d2b418d35b6e8f4d3582dc40ac3))
+
 ### [0.4.1](https://github.com/darkobits/tsx/compare/v0.4.0...v0.4.1) (2021-08-05)
 
 
