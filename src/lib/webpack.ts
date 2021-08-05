@@ -115,7 +115,8 @@ export function createWebpackConfigurationPreset(baseConfigFactory: WebpackConfi
       ms,
       isProduction: argv.mode === 'production',
       isDevelopment: argv.mode === 'development',
-      merge
+      merge,
+      webpack
     };
 
 

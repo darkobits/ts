@@ -142,6 +142,8 @@ export interface WebpackConfigurationFactoryContext {
    * })
    */
   reconfigurePlugin: (pluginName: string, pluginConfiguration: any) => void;
+
+  webpack: typeof webpack;
 }
 
 
