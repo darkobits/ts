@@ -1,6 +1,6 @@
 {
   "name": "@darkobits/tsx",
-  "version": "0.4.0-beta.2",
+  "version": "0.4.0-beta.3",
   "author": "darkobits",
   "license": "WTFPL",
   "description": "TypeScript React boilerplate.",
@@ -80,5 +80,9 @@
     "@darkobits/re-pack": "^0.1.12",
     "@types/fs-extra": "^9.0.12",
     "@types/is-ci": "^3.0.0"
+  },
+  "dependencies": {
+    "get-port": "^3.2.0",
+    "open": "^8.2.1"
   }
 }
