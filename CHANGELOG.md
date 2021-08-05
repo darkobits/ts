@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.4.0-beta.4](https://github.com/darkobits/tsx/compare/v0.4.0-beta.1...v0.4.0-beta.4) (2021-08-05)
+
+
+### 🐞 Bug Fixes
+
+* Remove invalid options. ([e48001c](https://github.com/darkobits/tsx/commit/e48001c43bd7879f0d7d8e961798c5f1b0d25340))
+
+
+### ✨ Features
+
+* Use get-port, open. ([a4bcaba](https://github.com/darkobits/tsx/commit/a4bcabad9506d557e101cd137e04c98e15cfe0c8))
+
 ## [0.4.0-beta.3](https://github.com/darkobits/tsx/compare/v0.4.0-beta.2...v0.4.0-beta.3) (2021-08-05)
 
 
