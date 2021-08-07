@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.7.11](https://github.com/darkobits/ts/compare/v0.7.10...v0.7.11) (2021-08-07)
+
+
+### 📖 Documentation
+
+* Update documentation. ([4ec3a54](https://github.com/darkobits/ts/commit/4ec3a54d76afb0d3b93f897871952469c685b91f))
+
+
+### 🐞 Bug Fixes
+
+* Remove quotes from del-cli arguments. ([5e180c9](https://github.com/darkobits/ts/commit/5e180c992f68c1c81925ef17e1129f6f55c9e3e3))
+
 ### [0.7.10](https://github.com/darkobits/ts/compare/v0.7.9...v0.7.10) (2021-07-24)
 
 
