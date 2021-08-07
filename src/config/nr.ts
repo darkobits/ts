@@ -88,7 +88,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
     // ----- Build: Misc. Commands ---------------------------------------------
 
     createCommand('cleanup', [
-      'del', [`"${OUT_DIR}/**/*.spec.*"`, `"${OUT_DIR}/**/*.test.*"`]
+      'del', [`${OUT_DIR}/**/*.spec.*`, `${OUT_DIR}/**/*.test.*`]
     ]);
 
     createBabelNodeCommand('link-bins', [require.resolve('etc/scripts/link-bins')]);
