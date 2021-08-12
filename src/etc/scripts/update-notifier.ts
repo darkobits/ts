@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import readPkgUp from 'read-pkg-up';
+
 import { doUpdateNotification } from 'lib/utils';
 
 

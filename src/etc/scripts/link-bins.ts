@@ -5,8 +5,8 @@ import path from 'path';
 import chex from '@darkobits/chex';
 import env from '@darkobits/env';
 import fs from 'fs-extra';
-import log from 'lib/log';
 
+import log from 'lib/log';
 import { getPackageInfo } from 'lib/utils';
 
 

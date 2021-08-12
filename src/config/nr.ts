@@ -1,4 +1,3 @@
-import type { ConfigurationFactory } from '@darkobits/nr/dist/etc/types';
 import merge from 'deepmerge';
 
 import {
@@ -7,6 +6,8 @@ import {
   OUT_DIR
 } from 'etc/constants';
 import { getNpmInfo } from 'lib/utils';
+
+import type { ConfigurationFactory } from '@darkobits/nr/dist/etc/types';
 
 
 export default function(userConfigFactory?: ConfigurationFactory): ConfigurationFactory {

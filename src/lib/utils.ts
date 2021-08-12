@@ -1,7 +1,6 @@
 import path from 'path';
 
 import env from '@darkobits/env';
-import fs from 'fs-extra';
 import { getBinPathSync } from 'get-bin-path';
 import ms from 'ms';
 import readPkgUp, { NormalizedPackageJson } from 'read-pkg-up';
@@ -10,24 +9,6 @@ import updateNotifier from 'update-notifier';
 
 import { NpmConfigArgv } from 'etc/types';
 import log from 'lib/log';
-
-
-/**
- * Provided any JSON-serializable value, returns a base-64 encoded representation
- * of that value.
- */
-export function toBase64<T = any>(value: T): string {
-  return Buffer.from(JSON.stringify(value)).toString('base64');
-}
-
-
-/**
- * Provided a base-64 encoded representation of a JSON-serializable value,
- * returns the un-serialized value.
- */
-export function fromBase64<T = any>(value: string): T {
-  return JSON.parse(Buffer.from(value, 'base64').toString('ascii'));
-}
 
 
 export interface PkgInfo {
@@ -155,36 +136,6 @@ export function prefixBin(binName: string) {
   }
 
   return `ts.${binName}`;
-}
-
-
-/**
- * Used by our ESLint configuration.
- *
- * Returns the path to the host package's tsconfig.json file. If a tsconfig.json
- * cannot be found, returns `false` and issues a warning telling the user they
- * will need to manually indicate the path to their tsconfig.json.
- */
-export function findTsConfig() {
-  const pkg = getPackageInfo();
-  const tsConfigPath = path.resolve(pkg.rootDir, 'tsconfig.json');
-
-  try {
-    fs.accessSync(tsConfigPath, fs.constants.R_OK);
-  } catch (err) {
-    if (err.code === 'ENOENT') {
-      log.warn(log.prefix('ts'), [
-        'Attempted to automatically set ESLint\'s parserOptions.project to',
-        `${log.chalk.green(tsConfigPath)}, but the file does not exist. You`,
-        'will need to create a tsconfig.json or set parserOptions.project',
-        'yourself.'
-      ].join(' '));
-    }
-
-    return false;
-  }
-
-  return tsConfigPath;
 }
 
 

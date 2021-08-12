@@ -4,6 +4,7 @@ const { resolvePath } = require('babel-plugin-module-resolver');
 const readPkgUp = require('read-pkg-up');
 
 const cjsConfig = require('./babel');
+
 const { TS_ENV } = process.env;
 
 
