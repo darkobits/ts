@@ -1,6 +1,7 @@
 module.exports = {
-  extends: require('@darkobits/ts').eslint,
+  extends: 'plugin:@darkobits/ts',
   rules: {
-    '@typescript-eslint/promise-function-async': 'off'
+    '@typescript-eslint/promise-function-async': 'off',
+    'unicorn/no-nested-ternary': 'off'
   }
 };

@@ -5,10 +5,10 @@
 import path from 'path';
 
 import findUp from 'find-up';
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import webpack from 'webpack';
 
 // Plugins
-import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 
 import log from 'lib/log';
 import { createWebpackConfigurationPreset } from 'lib/webpack';

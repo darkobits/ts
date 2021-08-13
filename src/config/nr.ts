@@ -2,8 +2,9 @@
 // ----- NR Configuration ------------------------------------------------------
 // -----------------------------------------------------------------------------
 
-import type { ConfigurationFactory } from '@darkobits/nr/dist/etc/types';
 import { nr } from '@darkobits/ts';
+
+import type { ConfigurationFactory } from '@darkobits/nr/dist/etc/types';
 
 
 export default function(userConfigFactory?: ConfigurationFactory): ConfigurationFactory {

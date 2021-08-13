@@ -79,16 +79,21 @@ async function ensureIndexEntrypoint(config: webpack.Configuration) {
  */
 function reconfigurePlugin(config: webpack.Configuration) {
   return (pluginName: string, pluginConfig: any) => {
-    const pluginInstance: any = config.plugins?.find(p => {
-      return p?.constructor?.name === pluginName;
-    });
+    const pluginInstance = config.plugins?.find(p => p?.constructor?.name === pluginName);
 
     if (!pluginInstance) {
       throw new Error(`${log.prefix('reconfigurePlugin')} Configuration does not contain an instance of plugin ${log.chalk.yellow(pluginName)}.`);
     }
 
-    pluginInstance.options = merge(pluginInstance.options, pluginConfig);
-    log.verbose(log.prefix('reconfigurePlugin'), `Reconfigured ${log.chalk.yellow(pluginName)}:`, pluginInstance.options);
+    if (Reflect.has(pluginInstance, 'options')) {
+      Reflect.set(pluginInstance, 'options', merge(Reflect.get(pluginInstance, 'options'), pluginConfig));
+      log.verbose(log.prefix('reconfigurePlugin'), `Reconfigured ${log.chalk.yellow(pluginName)}:`, Reflect.get(pluginInstance, 'options'));
+    } else if (Reflect.has(pluginInstance, 'userOptions')) {
+      Reflect.set(pluginInstance, 'userOptions', merge(Reflect.get(pluginInstance, 'userOptions'), pluginConfig));
+      log.verbose(log.prefix('reconfigurePlugin'), `Reconfigured ${log.chalk.yellow(pluginName)}:`, Reflect.get(pluginInstance, 'userOptions'));
+    } else {
+      throw new Error(`${log.prefix('reconfigurePlugin')} Plugin ${log.chalk.yellow(pluginName)} lacks "options" and "userOptions" properties.`);
+    }
   };
 }
 

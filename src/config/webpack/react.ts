@@ -7,15 +7,15 @@ import path from 'path';
 
 import * as devcert from 'devcert';
 import findUp from 'find-up';
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import getPort from 'get-port';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import open from 'open';
 import waitPort from 'wait-port';
 import webpack from 'webpack';
 
 // Plugins
-import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
-import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 
 import log from 'lib/log';
 import { createWebpackConfigurationPreset } from 'lib/webpack';
