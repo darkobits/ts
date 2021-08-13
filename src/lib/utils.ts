@@ -88,58 +88,6 @@ export function resolveBin(pkgName: string, binName?: string) {
 
 
 /**
- * Provided a package name and optional binary name, resolves the path to the
- * binary from this package (ensuring nested node_modules are traversed) and
- * then loads it.
- */
-export function requireBin(pkgName: string, binName?: string) {
-  const { binPath, pkgPath } = resolveBin(pkgName, binName);
-
-  if (log.isLevelAtLeast('verbose')) {
-    // Additionally, load the manifest for the package. This is used for logging
-    // purposes only.
-    const pkg = getPackageInfo(pkgPath);
-    const name = binName ?? pkgName;
-    log.verbose(log.prefix(name), `Using ${log.chalk.yellow.bold(`${pkg.json.name}@${pkg.json.version}`)}.`);
-    log.verbose(log.prefix(name), `${log.chalk.gray('=>')} ${log.chalk.green(binPath)}`);
-  }
-
-  require(binPath);
-}
-
-
-/**
- * @deprecated
- *
- * Because this package shares many package scripts and tooling with its own
- * dependents, we need to differentiate between when a binary is being invoked
- * by this package and when it is being invoked by a dependent package.
- *
- * This is necessary because during this package's install/prepare phase, NPM
- * will not have linked the "bin" entries from our package.json yet, and those
- * entries point to files in our "dist" folder, which will not have been created
- * yet.
- *
- * So, when used by us, a package script needs to use the canonical/standard
- * binary name, and when used by a dependent package, a script needs to use the
- * prefixed bin name.
- *
- * This function makes this determination by checking the "name" field of the
- * closest package.json file (walking up the directory tree from process.cwd)
- * and compares it to our package name.
- */
-export function prefixBin(binName: string) {
-  const pkg = getPackageInfo();
-
-  if (pkg && pkg.json.name === '@darkobits/ts') {
-    return binName;
-  }
-
-  return `ts.${binName}`;
-}
-
-
-/**
  * If called during the invocation of an NPM lifecycle, returns information
  * about the lifecycle event.
  */
