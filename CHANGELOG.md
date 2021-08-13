@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.5.0](https://github.com/darkobits/tsx/compare/v0.4.4...v0.5.0) (2021-08-13)
+
+
+### ⚠ BREAKING CHANGES
+
+* **deps:** This update adds ESLint rules from the eslint-plugin-import package that may entail some light refactoring for users. Run nr lint.fix to automatically fix most errors.
+
+### 🏗 Chores
+
+* **deps:** Update dependencies. ([4fbf380](https://github.com/darkobits/tsx/commit/4fbf3805ac2d59608ff3d2ad6b1d6217e50b296d))
+
 ### [0.4.4](https://github.com/darkobits/tsx/compare/v0.4.3...v0.4.4) (2021-08-05)
 
 
