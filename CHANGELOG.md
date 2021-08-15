@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.6.0](https://github.com/darkobits/tsx/compare/v0.5.0...v0.6.0) (2021-08-15)
+
+
+### ✨ Features
+
+* Add 'node' preset. ([bc9ff57](https://github.com/darkobits/tsx/commit/bc9ff57dfd6dc512a4493bb7a90566a938fac60b))
+
+
+### 🛠 Refactoring
+
+* Refactor configuration generator. ([a712507](https://github.com/darkobits/tsx/commit/a71250703f3fbe176d13e7817b845ba2e05ca87d))
+
+
+### 🏗 Chores
+
+* Add build.watch script, update build script. ([6093838](https://github.com/darkobits/tsx/commit/60938385c51d5e9e90ec17e3e8fd76e5b62610e2))
+* **deps:** Update dependencies. ([340fa4f](https://github.com/darkobits/tsx/commit/340fa4f3d19512a1e67e943d30cbc23ab9d99363))
+* Remove unused files. ([d92a54a](https://github.com/darkobits/tsx/commit/d92a54aee9b5adead03637c1864e97702e8f95db))
+* Update ci.yml. ([18f2e39](https://github.com/darkobits/tsx/commit/18f2e399c8df4f27a78e08ddd74bfd0bacac9b62))
+
+
+### 📖 Documentation
+
+* Update README. ([42eb6ef](https://github.com/darkobits/tsx/commit/42eb6ef09109abeb6875d9826cb576c6fe0e9c6c))
+
 ## [0.5.0](https://github.com/darkobits/tsx/compare/v0.4.4...v0.5.0) (2021-08-13)
 
 
