@@ -195,7 +195,6 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
     }
 
     const createReleaseScript = ({ releaseType, args, description }: CreateReleaseScriptOptions) => {
-
       createScript(releaseType ? `bump.${releaseType}` : 'bump', {
         group: 'Release',
         description: `Generate a change log entry and tagged commit for ${description}.`,
