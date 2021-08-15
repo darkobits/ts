@@ -1,15 +1,9 @@
-// -----------------------------------------------------------------------------
-// ----- Webpack Configuration (Serverless) ------------------------------------
-// -----------------------------------------------------------------------------
-
 import path from 'path';
 
 import findUp from 'find-up';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import resolvePkg from 'resolve-pkg';
 import webpack from 'webpack';
-
-// Plugins
 
 import log from 'lib/log';
 import { createWebpackConfigurationPreset } from 'lib/webpack';
@@ -19,8 +13,7 @@ const compileTime = log.createTimer();
 export default createWebpackConfigurationPreset(({
   bytes,
   config,
-  pkgJson,
-  pkgRoot
+  pkg
 }) => {
   // Resolve the path to this package's node_modules folder, which may be nested
   // in the host package's node_modules tree. We will need to add this to
@@ -35,7 +28,7 @@ export default createWebpackConfigurationPreset(({
 
   // ----- Load Serverless-Webpack ---------------------------------------------
 
-  const serverlessWebpackPath = resolvePkg('serverless-webpack', { cwd: pkgRoot });
+  const serverlessWebpackPath = resolvePkg('serverless-webpack', { cwd: pkg.rootDir });
 
   if (!serverlessWebpackPath) {
     throw new Error(`${log.prefix('webpack')} Unable to resolve module "serverless-webpack". You may need to install it.`);
@@ -57,7 +50,7 @@ export default createWebpackConfigurationPreset(({
 
   config.output = {
     libraryTarget: 'commonjs',
-    path: path.resolve(pkgRoot, '.webpack'),
+    path: path.resolve(pkg.rootDir, '.webpack'),
     filename: '[name].js'
   };
 
@@ -101,9 +94,9 @@ export default createWebpackConfigurationPreset(({
 
   config.plugins.push(new webpack.EnvironmentPlugin({
     NODE_ENV: config.mode,
-    DISPLAY_NAME: pkgJson.displayName ?? '',
-    DESCRIPTION: pkgJson.description ?? '',
-    VERSION: pkgJson.version ?? ''
+    DISPLAY_NAME: pkg.json.displayName ?? '',
+    DESCRIPTION: pkg.json.description ?? '',
+    VERSION: pkg.json.version ?? ''
   }));
 
   config.plugins.push(new webpack.ProgressPlugin(progress => {

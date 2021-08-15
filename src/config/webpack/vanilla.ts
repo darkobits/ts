@@ -1,14 +1,8 @@
-// -----------------------------------------------------------------------------
-// ----- Webpack Configuration (Vanilla) ---------------------------------------
-// -----------------------------------------------------------------------------
-
 import path from 'path';
 
 import findUp from 'find-up';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import webpack from 'webpack';
-
-// Plugins
 
 import log from 'lib/log';
 import { createWebpackConfigurationPreset } from 'lib/webpack';
@@ -19,12 +13,10 @@ import { createWebpackConfigurationPreset } from 'lib/webpack';
 const compileTime = log.createTimer();
 
 export default createWebpackConfigurationPreset(({
-  argv,
   config,
   isDevelopment,
   isProduction,
-  pkgJson,
-  pkgRoot
+  pkg
 }) => {
   // Resolve the path to this package's node_modules folder, which may be nested
   // in the host package's node_modules tree. We will need to add this to
@@ -39,18 +31,8 @@ export default createWebpackConfigurationPreset(({
 
   // ----- Entry / Output ------------------------------------------------------
 
-  config.entry = {
-    // As of version 7.4.0, @babel/polyfill is deprecated in favor of including
-    // core-js and regenerator-runtime directly.
-    // See: https://babeljs.io/docs/en/babel-polyfill
-    support: [
-      'core-js/stable',
-      'regenerator-runtime/runtime'
-    ]
-  };
-
   config.output = {
-    path: path.resolve(pkgRoot, 'dist'),
+    path: path.resolve(pkg.rootDir, 'dist'),
     filename: isDevelopment ? '[name].js' : '[name]-[chunkhash].js',
     chunkFilename: '[name]-[chunkhash].js'
   };
@@ -97,13 +79,6 @@ export default createWebpackConfigurationPreset(({
 
   config.plugins.push(new webpack.LoaderOptionsPlugin({
     minimize: isProduction
-  }));
-
-  config.plugins.push(new webpack.EnvironmentPlugin({
-    NODE_ENV: argv.mode,
-    DISPLAY_NAME: pkgJson.displayName ?? '',
-    DESCRIPTION: pkgJson.description ?? '',
-    VERSION: pkgJson.version ?? ''
   }));
 
   config.plugins.push(new webpack.ProgressPlugin(progress => {

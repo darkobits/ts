@@ -74,17 +74,9 @@ export interface WebpackConfigurationFactoryContext {
   argv: Argv;
 
   /**
-   * Normalized package.json for the project. Useful for extracting version
-   * information and other metadata to include in build artifacts.
+   * Normalized package.json and resolved root directory of the host project.
    */
-  pkgJson: ReturnType<typeof getPackageInfo>['json'];
-
-  /**
-   * Resolved path to the project root (containing package.json). Useful for
-   * defining various Webpack input/output paths without having to use __dirname
-   * or relative paths.
-   */
-  pkgRoot: string;
+  pkg: ReturnType<typeof getPackageInfo>;
 
   /**
    * Empty Webpack configuration scaffold that the configuration factory may
@@ -128,6 +120,12 @@ export interface WebpackConfigurationFactoryContext {
   isDevelopment: boolean;
 
   /**
+   * True if the compilation was started by `webpack-dev-server`, false if the
+   * compilation was started by `webpack`.
+   */
+  isDevServer: boolean;
+
+  /**
    * Provides a declarative way to look-up and re-configure existing plugins.
    *
    * Provided a plugin name (according to its constructor.name property) and a
@@ -143,6 +141,9 @@ export interface WebpackConfigurationFactoryContext {
    */
   reconfigurePlugin: (pluginName: string, pluginConfiguration: any) => void;
 
+  /**
+   * Reference to `webpack`.
+   */
   webpack: typeof webpack;
 }
 

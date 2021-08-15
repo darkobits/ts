@@ -1,4 +1,7 @@
-import { getPackageInfo } from '@darkobits/ts/lib/utils';
+import path from 'path';
+
+import parseEnv from '@darkobits/env';
+import { getPackageInfo, PkgInfo } from '@darkobits/ts/lib/utils';
 import bytes from 'bytes';
 import fs from 'fs-extra';
 import ms from 'ms';
@@ -37,31 +40,43 @@ function generateWebpackConfigurationScaffold(): WebpackConfiguration {
 
 
 /**
- * @private
- *
- * Ensures there is an index.tsx file at the expected path. Creates one if it
- * doesn't exist.
+ * Ensures that the provided Webpack configuration has a readable file at
+ * `entry.index`. If one is not set, attempts to use the "main" field from the
+ * host project's package.json.
  */
-async function ensureIndexEntrypoint(config: webpack.Configuration) {
-  if (typeof config.entry !== 'object') {
-    log.verbose(log.prefix('ensureIndexEntrypoint'), 'Configuration path "entry" is not an object.');
-    return;
+export async function ensureIndexEntrypoint(config: webpack.Configuration, pkg: PkgInfo) {
+  let indexEntry: string | undefined;
+
+  if (typeof config.entry === 'object') {
+    // @ts-expect-error
+    const entryPath = config.entry.index;
+
+    if (typeof entryPath === 'string') {
+      log.silly(log.prefix('ensureIndexEntrypoint'), `Using index entry from config: ${log.chalk.green(entryPath)}`);
+      indexEntry = entryPath;
+    } else {
+      log.silly(log.prefix('ensureIndexEntrypoint'), 'Configuration path "entry.index" is not a string.');
+    }
+  } else {
+    log.silly(log.prefix('ensureIndexEntrypoint'), 'Configuration path "entry" is not an object.');
   }
 
-  // @ts-expect-error
-  const entryPath = config.entry.index;
+  if (typeof pkg.json?.main === 'string') {
+    log.silly(log.prefix('ensureIndexEntrypoint'), `Using index entry from package.json: ${log.chalk.green(pkg.json.main)}`);
+    indexEntry = path.resolve(pkg.rootDir, pkg.json.main);
+  }
 
-  if (typeof entryPath !== 'string') {
-    log.verbose(log.prefix('ensureIndexEntrypoint'), 'Configuration path "entry.index" is not a string.');
-    return;
+  if (!indexEntry) {
+    throw new Error('Unable to determine entrypoint. Set "entry.index" in your Webpack configuration or "main" in package.json.');
   }
 
   try {
-    await fs.access(entryPath);
-    log.verbose(log.prefix('ensureIndexEntrypoint'), `Using index entrypoint at: ${log.chalk.green(entryPath)}`);
+    await fs.access(indexEntry);
+    log.verbose(log.prefix('ensureIndexEntrypoint'), `Using index entrypoint: ${log.chalk.green(indexEntry)}`);
+    return indexEntry;
   } catch (err) {
     if (err.code === 'ENOENT') {
-      log.warn(log.prefix('ensureIndexEntrypoint'), `Index entrypoint ${log.chalk.green(entryPath)} does not exist.`);
+      log.warn(log.prefix('ensureIndexEntrypoint'), `Entrypoint ${log.chalk.green(indexEntry)} does not exist.`);
     }
 
     throw err;
@@ -104,7 +119,7 @@ function reconfigurePlugin(config: webpack.Configuration) {
  * factory, then returns a 'standard' Webpack configuration factory that will be
  * passed to Webpack.
  */
-export function createWebpackConfigurationPreset(baseConfigFactory: WebpackConfigurationFactory) {
+export function createWebpackConfigurationPreset(baseConfigFactory: WebpackConfigurationFactory, postConfigFactory?: WebpackConfigurationFactory) {
   return (userConfigFactory?: WebpackConfigurationFactory): NativeWebpackConfigurationFactory => async (env, argv = {}) => {
     // ----- Build Context -----------------------------------------------------
 
@@ -114,12 +129,12 @@ export function createWebpackConfigurationPreset(baseConfigFactory: WebpackConfi
     const context: Omit<WebpackConfigurationFactoryContext, 'config' | 'reconfigurePlugin'> = {
       env,
       argv,
-      pkgJson: pkg.json,
-      pkgRoot: pkg.rootDir,
+      pkg,
       bytes,
       ms,
       isProduction: argv.mode === 'production',
       isDevelopment: argv.mode === 'development',
+      isDevServer: parseEnv.has('WEBPACK_DEV_SERVER'),
       merge,
       webpack
     };
@@ -129,6 +144,8 @@ export function createWebpackConfigurationPreset(baseConfigFactory: WebpackConfi
 
     const baseConfigScaffold = generateWebpackConfigurationScaffold();
 
+    // Invoke base config factory passing all primitives from our context plus a
+    // reference to our base config scaffold and a plugin re-configurator.
     const returnedBaseConfig = await baseConfigFactory({
       ...context,
       config: baseConfigScaffold,
@@ -137,10 +154,10 @@ export function createWebpackConfigurationPreset(baseConfigFactory: WebpackConfi
 
     // If the factory did not return a value, defer to the config object we
     // passed-in and modified in-place.
-    const baseConfig = returnedBaseConfig || baseConfigScaffold;
+    const baseConfig = returnedBaseConfig ?? baseConfigScaffold;
 
 
-    // ----- Update Mode -------------------------------------------------------
+    // ----- Update "Mode" -----------------------------------------------------
 
     // In certain cases, argv.mode may not be set, so if the base configuration
     // set config.mode, set argv.mode to the same value and update predicates in
@@ -157,8 +174,8 @@ export function createWebpackConfigurationPreset(baseConfigFactory: WebpackConfi
 
     // ----- Generate User Configuration ---------------------------------------
 
-    // N.B. The user may invoke the configuration generator with no argument if
-    // they do not need to modify the base configuration.
+    // N.B. If the user only wants to use the base configuration, they may
+    // invoke thus function without any arguments.
     if (!userConfigFactory) {
       return baseConfig;
     }
@@ -169,19 +186,27 @@ export function createWebpackConfigurationPreset(baseConfigFactory: WebpackConfi
       reconfigurePlugin: reconfigurePlugin(baseConfig)
     });
 
-    // If the factory did not return a value, use the baseConfig object we
+    // If the factory did not return a value, defer to the baseConfig object we
     // passed-in and modified in-place.
-    const finalConfig = returnedUserConfig || baseConfig;
+    let finalConfig = returnedUserConfig ?? baseConfig;
 
+
+    // ----- Apply Post-User Config --------------------------------------------
+
+    if (typeof postConfigFactory === 'function') {
+      const returnedPostConfig = await postConfigFactory({
+        ...context,
+        config: finalConfig,
+        reconfigurePlugin: reconfigurePlugin(finalConfig)
+      });
+
+      finalConfig = returnedPostConfig ?? finalConfig;
+    }
 
     // ----- Issue Warnings ----------------------------------------------------
 
     // Warn if config.entry.index does not exist.
-    await ensureIndexEntrypoint(finalConfig);
-
-    // Warn if HtmlWebpackPlugin was configured with a "template" that does not
-    // exist.
-    // await ensureIndexHtml(finalConfig);
+    // finalConfig.entry.index = await ensureIndexEntrypoint(finalConfig, pkg);
 
     return finalConfig;
   };

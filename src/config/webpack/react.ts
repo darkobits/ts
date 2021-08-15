@@ -1,8 +1,4 @@
 /* eslint-disable require-atomic-updates */
-// -----------------------------------------------------------------------------
-// ----- Webpack Configuration (React) -----------------------------------------
-// -----------------------------------------------------------------------------
-
 import path from 'path';
 
 import * as devcert from 'devcert';
@@ -14,8 +10,6 @@ import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import open from 'open';
 import waitPort from 'wait-port';
 import webpack from 'webpack';
-
-// Plugins
 
 import log from 'lib/log';
 import { createWebpackConfigurationPreset } from 'lib/webpack';
@@ -30,9 +24,9 @@ export default createWebpackConfigurationPreset(async ({
   bytes,
   config,
   isDevelopment,
+  isDevServer,
   isProduction,
-  pkgJson,
-  pkgRoot
+  pkg
 }) => {
   // Resolve the path to this package's node_modules folder, which may be nested
   // in the host package's node_modules tree. We will need to add this to
@@ -48,19 +42,11 @@ export default createWebpackConfigurationPreset(async ({
   // ----- Entry / Output ------------------------------------------------------
 
   config.entry = {
-    // As of version 7.4.0, @babel/polyfill is deprecated in favor of including
-    // core-js and regenerator-runtime directly.
-    // See: https://babeljs.io/docs/en/babel-polyfill
-    support: [
-      'core-js/stable',
-      'regenerator-runtime/runtime',
-      'react-hot-loader/patch'
-    ],
-    index: path.resolve(pkgRoot, 'src', 'index.tsx')
+    index: path.resolve(pkg.rootDir, 'src', 'index.tsx')
   };
 
   config.output = {
-    path: path.resolve(pkgRoot, 'dist'),
+    path: path.resolve(pkg.rootDir, 'dist'),
     filename: isDevelopment ? '[name].js' : '[name]-[chunkhash].js',
     chunkFilename: '[name]-[chunkhash].js'
   };
@@ -164,13 +150,13 @@ export default createWebpackConfigurationPreset(async ({
 
   config.plugins.push(new HtmlWebpackPlugin({
     filename: 'index.html',
-    template: path.resolve(pkgRoot, 'src', 'index.html'),
+    template: path.resolve(pkg.rootDir, 'src', 'index.html'),
     inject: true,
     /**
      * Set the document title to "displayName" from package.json using:
      * <title><%= htmlWebpackPlugin.options.title %></title>
      */
-    title: pkgJson.displayName ?? ''
+    title: pkg.json.displayName ?? ''
   }));
 
   config.plugins.push(new MiniCssExtractPlugin({
@@ -183,9 +169,9 @@ export default createWebpackConfigurationPreset(async ({
 
   config.plugins.push(new webpack.EnvironmentPlugin({
     NODE_ENV: argv.mode,
-    DISPLAY_NAME: pkgJson.displayName ?? '',
-    DESCRIPTION: pkgJson.description ?? '',
-    VERSION: pkgJson.version ?? ''
+    DISPLAY_NAME: pkg.json.displayName ?? '',
+    DESCRIPTION: pkg.json.description ?? '',
+    VERSION: pkg.json.version ?? ''
   }));
 
   config.plugins.push(new webpack.ProgressPlugin(progress => {
@@ -219,7 +205,7 @@ export default createWebpackConfigurationPreset(async ({
 
   // ----- Dev Server ----------------------------------------------------------
 
-  if (isDevelopment) {
+  if (isDevServer) {
     const host = 'localhost';
     const hasCertificates = devcert.hasCertificateFor(host);
 
@@ -244,7 +230,7 @@ export default createWebpackConfigurationPreset(async ({
     log.info(log.chalk.dim(`Starting development server on port ${log.chalk.green(port)}...`));
 
     // Asynchronously wait for the dev server to start, then open a browser.
-    void waitPort({ host, port, output: 'silent' }).then(() => open(`https://${host}:${port}`));
+    void waitPort({ host, port, output: 'silent' }).then(() => void open(`https://${host}:${port}`));
 
     config.devServer = {
       https: { key, cert },
@@ -284,4 +270,13 @@ export default createWebpackConfigurationPreset(async ({
   };
 
   config.stats = 'normal';
+}, ({ config }) => {
+  // As of version 7.4.0, @babel/polyfill is deprecated in favor of including
+  // core-js and regenerator-runtime directly.
+  // See: https://babeljs.io/docs/en/babel-polyfill
+  config.entry.support = [
+    'core-js/stable',
+    'regenerator-runtime/runtime',
+    'react-hot-loader/patch'
+  ];
 });
