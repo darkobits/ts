@@ -1,5 +1,6 @@
 import { nr } from '@darkobits/ts';
 import { OUT_DIR } from '@darkobits/ts/etc/constants';
+import { getNpmInfo } from '@darkobits/ts/lib/utils';
 
 import type { ConfigurationFactory } from '@darkobits/nr/dist/etc/types';
 
@@ -53,13 +54,16 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       ]
     });
 
+    const { event } = getNpmInfo();
+    const shouldSkipPrepare = isCI && ['install', 'ci'].includes(event);
+
     // Note: We need to re-define the 'prepare' script from `ts` here because
     // instructions are resolved at script creation rather than at execution, so
     // the "build" script that `ts` resolves to will be its own, not ours.
     createScript('prepare', {
       group: 'Lifecycle',
       description: 'Run after "npm install" to ensure the project builds correctly and tests are passing.',
-      run: [
+      run: shouldSkipPrepare ? [] : [
         'build',
         'test.passWithNoTests',
         'update-notifier'
