@@ -24,5 +24,6 @@ module.exports = {
   ],
   // Strip comments from transpiled code.
   comments: false,
+  compact: false,
   sourceType: 'unambiguous'
 };
