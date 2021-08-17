@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.6.4](https://github.com/darkobits/tsx/compare/v0.6.3...v0.6.4) (2021-08-17)
+
+
+### 🏗 Chores
+
+* **config:** Change default asset naming. ([c86e71d](https://github.com/darkobits/tsx/commit/c86e71db4fcca0ad4a9a8d7e6d9d3c9f027e8419))
+
+
+### 🛠 Refactoring
+
+* **react:** Update optimization configuration. ([f55d701](https://github.com/darkobits/tsx/commit/f55d7016582f7be188fb700b4789c7aa5f275f1b))
+
 ### [0.6.3](https://github.com/darkobits/tsx/compare/v0.6.2...v0.6.3) (2021-08-17)
 
 
