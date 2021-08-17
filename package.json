@@ -65,10 +65,12 @@
   },
   "devDependencies": {
     "@darkobits/re-pack": "^0.1.12",
+    "@types/faker": "^5.5.8",
     "@types/fs-extra": "^9.0.12",
     "@types/ms": "^0.7.31",
     "@types/update-notifier": "^5.1.0",
     "docsify-cli": "^4.4.3",
-    "docsify-darklight-theme": "^3.2.0"
+    "docsify-darklight-theme": "^3.2.0",
+    "faker": "^5.5.3"
   }
 }

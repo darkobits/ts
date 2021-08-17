@@ -1,7 +1,5 @@
-/**
- * Note: Do not import/require anything in this file and use CommonJS syntax
- * only. This file configures Babel, which allows the use of these features.
- */
+const { EXTENSIONS_WITH_DOT } = require('../etc/constants');
+
 module.exports = {
   presets: [
     ['@babel/preset-env', {
@@ -20,10 +18,9 @@ module.exports = {
     ['babel-plugin-module-resolver', {
       cwd: 'packagejson',
       root: ['./src'],
-      extensions: ['.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs', '.json']
+      extensions: EXTENSIONS_WITH_DOT
     }]
   ],
-  // Strip comments from transpiled code.
   comments: false,
   compact: false,
   sourceType: 'unambiguous'

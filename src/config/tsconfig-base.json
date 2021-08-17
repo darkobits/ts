@@ -11,9 +11,7 @@
     "target": "ESNext",
 
     // Specify a list of built-in API groups to include in the project.
-    "lib": [
-      "ESNext"
-    ],
+    "lib": [ "ESNext" ],
 
     // Allow features like dynamic import.
     "module": "ESNext",

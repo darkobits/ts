@@ -3,6 +3,8 @@ const path = require('path');
 const { resolvePath } = require('babel-plugin-module-resolver');
 const readPkgUp = require('read-pkg-up');
 
+const { EXTENSIONS_WITH_DOT } = require('../etc/constants');
+
 const cjsConfig = require('./babel');
 
 const { TS_ENV } = process.env;
@@ -70,12 +72,12 @@ module.exports = TS_ENV === 'esm' ? {
     ['babel-plugin-module-resolver', {
       cwd: 'packagejson',
       root: ['./src'],
-      extensions: ['.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs', '.json'],
+      extensions: EXTENSIONS_WITH_DOT,
       stripExtensions: [],
       resolvePath: customResolvePath
     }]
   ],
-  // Strip comments from transpiled code.
   comments: false,
+  compact: false,
   sourceType: 'unambiguous'
 } : cjsConfig;

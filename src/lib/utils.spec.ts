@@ -1,3 +1,8 @@
+import path from 'path';
+
+import env from '@darkobits/env';
+import callsites from 'callsites';
+import faker from 'faker';
 import { getBinPathSync } from 'get-bin-path';
 import readPkgUp from 'read-pkg-up';
 import resolvePkg from 'resolve-pkg';
@@ -8,192 +13,188 @@ import {
   getNpmInfo
 } from 'lib/utils';
 
-import type env from '@darkobits/env';
-
-const PKG_NAME = '__PKG_NAME__';
-const BIN_NAME = '__BIN_NAME__';
-const PKG_JSON = '__PKG_JSON__';
-const PKG_PATH = '__PKG_PATH__';
-const BIN_PATH = '__BIN_PATH__';
-
-jest.mock('read-pkg-up', () => {
-  return {
-    sync: jest.fn(() => {
-      return {
-        packageJson: PKG_JSON,
-        path: PKG_PATH
-      };
-    })
-  };
-});
-
-
-jest.mock('resolve-pkg', () => {
-  return jest.fn(() => PKG_PATH);
-});
-
-
-jest.mock('get-bin-path', () => {
-  return {
-    getBinPathSync: jest.fn(() => BIN_PATH)
-  };
-});
-
+jest.mock('@darkobits/env');
+jest.mock('callsites');
+jest.mock('read-pkg-up');
+jest.mock('resolve-pkg');
+jest.mock('get-bin-path');
 
 describe('getPackageInfo', () => {
-  it('should do return the contents of the nearest package.json', () => {
+  const readPkgUpMock = readPkgUp as jest.Mocked<typeof readPkgUp>;
+  const pkgName = faker.lorem.word();
+  const pkgPath = faker.system.directoryPath();
+
+  beforeEach(() => {
+    readPkgUpMock.sync.mockReturnValue({
+      packageJson: {
+        name: pkgName
+      },
+      path: path.join(pkgPath, 'package.json')
+    });
+  });
+
+  it('should return the contents of and path to the nearest package.json', () => {
     const result = getPackageInfo();
-    expect(result.json).toEqual(PKG_JSON);
-    expect(result.rootDir).toEqual('.');
-    expect(readPkgUp.sync).toHaveBeenCalled();
+    expect(result.json.name).toEqual(pkgName);
+    expect(result.rootDir).toEqual(pkgPath);
+    expect(readPkgUpMock.sync).toHaveBeenCalled();
   });
 });
-
 
 describe('resolveBin', () => {
-  describe('when the binary and package name match', () => {
-    it('should return the path to the binary', () => {
-      const result = resolveBin(PKG_NAME);
-      expect(result.binPath).toBe(BIN_PATH);
-      expect(result.pkgPath).toBe(PKG_PATH);
-      expect(resolvePkg).toHaveBeenCalledWith(PKG_NAME, { cwd: __dirname });
-      expect(getBinPathSync).toHaveBeenCalledWith({ cwd: PKG_PATH, name: PKG_NAME });
+  const callsitesMock = callsites as jest.MockedFunction<typeof callsites>;
+  const envMock = env as jest.Mocked<typeof env> & jest.MockedFunction<typeof env>;
+  const resolvePkgMock = resolvePkg as jest.MockedFunction<typeof resolvePkg>;
+  const getBinPathSyncMock = getBinPathSync as jest.MockedFunction<typeof getBinPathSync>;
+
+  const ourFileName = faker.system.filePath();
+  const ourDirname = path.dirname(ourFileName);
+  const pkgName = faker.lorem.word();
+  const binName = faker.lorem.word();
+  const pkgPath = faker.system.filePath();
+  const binPath = faker.system.filePath();
+
+  describe('in ESM environments', () => {
+    beforeEach(() => {
+      // Ensure our check for NODE_ENV === 'test' returns true to force the
+      // use of the callsites-based path.
+      envMock.eq.mockImplementation((variableName: string) => variableName === 'NODE_ENV');
+
+      callsitesMock.mockReturnValue([{
+        getFileName: () => ourFileName
+      } as any]);
+
+      resolvePkgMock.mockReturnValue(pkgPath);
+      getBinPathSyncMock.mockReturnValue(binPath);
+    });
+
+    describe('when the binary and package name match', () => {
+      it('should return the path to the binary', () => {
+        const result = resolveBin(pkgName);
+        expect(result.binPath).toBe(binPath);
+        expect(result.pkgPath).toBe(pkgPath);
+        expect(resolvePkg).toHaveBeenCalledWith(pkgName, { cwd: ourDirname });
+        expect(getBinPathSyncMock).toHaveBeenCalledWith({ cwd: pkgPath, name: pkgName });
+      });
+    });
+
+    describe('when the binary and package name differ', () => {
+      it('should return the path to the binary', () => {
+        const result = resolveBin(pkgName, binName);
+        expect(result.binPath).toBe(binPath);
+        expect(result.pkgPath).toBe(pkgPath);
+        expect(resolvePkg).toHaveBeenCalledWith(pkgName, { cwd: ourDirname });
+        expect(getBinPathSync).toHaveBeenCalledWith({ cwd: pkgPath, name: binName });
+      });
     });
   });
 
-  describe('when the binary and package name differ', () => {
-    it('should return the path to the binary', () => {
-      const result = resolveBin(PKG_NAME, BIN_NAME);
-      expect(result.binPath).toBe(BIN_PATH);
-      expect(result.pkgPath).toBe(PKG_PATH);
-      expect(resolvePkg).toHaveBeenCalledWith(PKG_NAME, { cwd: __dirname });
-      expect(getBinPathSync).toHaveBeenCalledWith({ cwd: PKG_PATH, name: BIN_NAME });
+  describe('in non-ESM environments', () => {
+    beforeEach(() => {
+      // Ensure our check for NODE_ENV === 'test' returns false to force the
+      // use of __dirname / __filename fallbacks.
+      envMock.eq.mockImplementation((variableName: string) => variableName !== 'NODE_ENV');
+      resolvePkgMock.mockReturnValue(pkgPath);
+      getBinPathSyncMock.mockReturnValue(binPath);
+    });
+
+    describe('when the binary and package name match', () => {
+      it('should return the path to the binary', () => {
+        const result = resolveBin(pkgName);
+        expect(result.binPath).toBe(binPath);
+        expect(result.pkgPath).toBe(pkgPath);
+        expect(resolvePkgMock).toHaveBeenCalledWith(pkgName, { cwd: __dirname });
+        expect(getBinPathSyncMock).toHaveBeenCalledWith({ cwd: pkgPath, name: pkgName });
+      });
+    });
+
+    describe('when the binary and package name differ', () => {
+      it('should return the path to the binary', () => {
+        const result = resolveBin(pkgName, binName);
+        expect(result.binPath).toBe(binPath);
+        expect(result.pkgPath).toBe(pkgPath);
+        expect(resolvePkgMock).toHaveBeenCalledWith(pkgName, { cwd: __dirname });
+        expect(getBinPathSync).toHaveBeenCalledWith({ cwd: pkgPath, name: binName });
+      });
     });
   });
 });
 
-
 describe('getNpmInfo', () => {
+  const envMock = env as jest.Mocked<typeof env> & jest.MockedFunction<typeof env>;
+
   describe('when called during an "npm install" command', () => {
-    let getNpmInfoMock: typeof getNpmInfo;
-    let envMock: typeof env;
-
     beforeEach(() => {
-      jest.resetModules();
-      jest.resetAllMocks();
-
-      jest.doMock('@darkobits/env', () => {
-        const envModule = jest.fn(arg => {
-          switch (arg) {
-            case 'npm_config_argv':
-              return { original: ['install'] };
-            case 'npm_lifecycle_event':
-              return 'npm_lifecycle_event';
-            case 'npm_lifecycle_script':
-              return 'npm_lifecycle_script';
-          }
-        });
-
-        // @ts-expect-error
-        envModule.has = jest.fn();
-
-        return envModule as unknown as typeof env;
+      envMock.mockImplementation((arg: string) => {
+        switch (arg) {
+          case 'npm_config_argv':
+            return { original: ['install'] };
+          case 'npm_lifecycle_event':
+            return 'npm_lifecycle_event';
+          case 'npm_lifecycle_script':
+            return 'npm_lifecycle_script';
+        }
       });
-
-      getNpmInfoMock = require('lib/utils').getNpmInfo;
-      envMock = require('@darkobits/env');
     });
 
     it('should report accurate info', () => {
-      const result = getNpmInfoMock();
+      const result = getNpmInfo();
       expect(result.command).toBe('install');
       expect(result.event).toBe('npm_lifecycle_event');
       expect(result.script).toBe('npm_lifecycle_script');
       expect(result.isInstall).toBe(true);
       expect(result.isCi).toBe(false);
-      expect(envMock).toHaveBeenCalledTimes(5);
+      expect(envMock).toHaveBeenCalledTimes(3);
     });
   });
 
   describe('when called during an "npm ci" command', () => {
-    let getNpmInfoMock: typeof getNpmInfo;
-    let envMock: typeof env;
-
     beforeEach(() => {
-      jest.resetModules();
-      jest.resetAllMocks();
-
-      jest.doMock('@darkobits/env', () => {
-        const envModule = jest.fn(arg => {
-          switch (arg) {
-            case 'npm_config_argv':
-              return { original: ['ci'] };
-            case 'npm_lifecycle_event':
-              return 'npm_lifecycle_event';
-            case 'npm_lifecycle_script':
-              return 'npm_lifecycle_script';
-          }
-        });
-
-        // @ts-expect-error
-        envModule.has = jest.fn();
-
-        return envModule as unknown as typeof env;
+      envMock.mockImplementation((arg: string) => {
+        switch (arg) {
+          case 'npm_config_argv':
+            return { original: ['ci'] };
+          case 'npm_lifecycle_event':
+            return 'npm_lifecycle_event';
+          case 'npm_lifecycle_script':
+            return 'npm_lifecycle_script';
+        }
       });
-
-      getNpmInfoMock = require('lib/utils').getNpmInfo;
-      envMock = require('@darkobits/env');
     });
 
     it('should report accurate info', () => {
-      const result = getNpmInfoMock();
+      const result = getNpmInfo();
       expect(result.command).toBe('ci');
       expect(result.event).toBe('npm_lifecycle_event');
       expect(result.script).toBe('npm_lifecycle_script');
       expect(result.isInstall).toBe(false);
       expect(result.isCi).toBe(true);
-      expect(envMock).toHaveBeenCalledTimes(5);
+      expect(envMock).toHaveBeenCalledTimes(3);
     });
   });
 
   describe('when called during any other command', () => {
-    let getNpmInfoMock: typeof getNpmInfo;
-    let envMock: typeof env;
-
     beforeEach(() => {
-      jest.resetModules();
-      jest.resetAllMocks();
-
-      jest.doMock('@darkobits/env', () => {
-        const envModule = jest.fn(arg => {
-          switch (arg) {
-            case 'npm_config_argv':
-              return { original: ['audit'] };
-            case 'npm_lifecycle_event':
-              return 'npm_lifecycle_event';
-            case 'npm_lifecycle_script':
-              return 'npm_lifecycle_script';
-          }
-        });
-
-        // @ts-expect-error
-        envModule.has = jest.fn();
-
-        return envModule as unknown as typeof env;
+      envMock.mockImplementation((arg: string) => {
+        switch (arg) {
+          case 'npm_config_argv':
+            return { original: ['audit'] };
+          case 'npm_lifecycle_event':
+            return 'npm_lifecycle_event';
+          case 'npm_lifecycle_script':
+            return 'npm_lifecycle_script';
+        }
       });
-
-      getNpmInfoMock = require('lib/utils').getNpmInfo;
-      envMock = require('@darkobits/env');
     });
 
     it('should report accurate info', () => {
-      const result = getNpmInfoMock();
+      const result = getNpmInfo();
       expect(result.command).toBe('audit');
       expect(result.event).toBe('npm_lifecycle_event');
       expect(result.script).toBe('npm_lifecycle_script');
       expect(result.isInstall).toBe(false);
       expect(result.isCi).toBe(false);
-      expect(envMock).toHaveBeenCalledTimes(5);
+      expect(envMock).toHaveBeenCalledTimes(3);
     });
   });
 });
