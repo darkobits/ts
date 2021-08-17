@@ -22,6 +22,9 @@ export default nr(({ createCommand, createScript }) => {
     group: 'Build',
     description: 'Re-pack the project after building.',
     run: [
+      // Remove the 'documentation' folder created by Docsify's postinstall
+      // script on fresh installs.
+      createCommand('rm-docsify', ['del', ['documentation']]),
       createCommand('re-pack', ['re-pack'])
     ]
   });
