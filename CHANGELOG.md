@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.8.4](https://github.com/darkobits/ts/compare/v0.8.3...v0.8.4) (2021-08-17)
+
+
+### 🛠 Refactoring
+
+* **babel:** Add `babel-plugin-transform-import-meta`. ([6cee5e6](https://github.com/darkobits/ts/commit/6cee5e68268ae7908896c90a987db85ed67235da))
+* Move `createBabelNodeCommand` to utils. ([8ebc65e](https://github.com/darkobits/ts/commit/8ebc65ed0f0a286b817a0e61679849aa190e421d))
+
+
+### ✨ Features
+
+* Add `dirname` / `filename` helpers. ([48a0d25](https://github.com/darkobits/ts/commit/48a0d25ff90ce96e107d828ca51a5c7022885b59))
+
+
+### 🏗 Chores
+
+* Add unit tests. ([ad0d67a](https://github.com/darkobits/ts/commit/ad0d67a6961c87ee98999af9fe8c00bb5d9a7ab5))
+
 ### [0.8.3](https://github.com/darkobits/ts/compare/v0.8.2...v0.8.3) (2021-08-17)
 
 
