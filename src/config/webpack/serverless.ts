@@ -5,6 +5,7 @@ import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import findUp from 'find-up';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import resolvePkg from 'resolve-pkg';
+import TerserWebpackPlugin from 'terser-webpack-plugin';
 import webpack from 'webpack';
 
 import log from 'lib/log';
@@ -90,15 +91,7 @@ export default createWebpackConfigurationPreset(({
 
   // ----- Plugins -------------------------------------------------------------
 
-  config.plugins.push(new CleanWebpackPlugin({
-    // This must be set because the below assets are considered part of the
-    // Webpack compilation.
-    protectWebpackAssets: false,
-    cleanAfterEveryBuildPatterns: [
-      // Remove generated LICENSE files. This seems to be a Webpack 5 issue.
-      '**/*LICENSE*'
-    ]
-  }));
+  config.plugins.push(new CleanWebpackPlugin());
 
   config.plugins.push(new webpack.LoaderOptionsPlugin({
     minimize: config.mode === 'production'
@@ -139,6 +132,14 @@ export default createWebpackConfigurationPreset(({
     }));
   }
 
+  // ----- Optimization --------------------------------------------------------
+
+  config.optimization = {
+    minimize: config.mode === 'production',
+    minimizer: [new TerserWebpackPlugin({ extractComments: false })],
+    splitChunks: false
+  };
+
 
   // ----- Misc ----------------------------------------------------------------
 
@@ -147,11 +148,6 @@ export default createWebpackConfigurationPreset(({
   config.performance = {
     maxAssetSize: bytes('1mb'),
     maxEntrypointSize: bytes('1mb')
-  };
-
-  config.optimization = {
-    minimize: config.mode === 'production',
-    splitChunks: false
   };
 
   config.stats = 'normal';

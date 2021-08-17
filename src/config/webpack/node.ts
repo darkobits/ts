@@ -95,15 +95,7 @@ export default createWebpackConfigurationPreset(({
 
   // ----- Plugins -------------------------------------------------------------
 
-  config.plugins.push(new CleanWebpackPlugin({
-    // This must be set because the below assets are considered part of the
-    // Webpack compilation.
-    protectWebpackAssets: false,
-    cleanAfterEveryBuildPatterns: [
-      // Remove generated LICENSE files. This seems to be a Webpack 5 issue.
-      '**/*LICENSE*'
-    ]
-  }));
+  config.plugins.push(new CleanWebpackPlugin());
 
   config.plugins.push(new webpack.LoaderOptionsPlugin({
     minimize: false
@@ -143,6 +135,15 @@ export default createWebpackConfigurationPreset(({
   }
 
 
+  // ----- Optimization --------------------------------------------------------
+
+  config.optimization = {
+    minimize: false,
+    concatenateModules: true,
+    splitChunks: false
+  };
+
+
   // ----- Misc ----------------------------------------------------------------
 
   config.devtool = isDevelopment ? 'eval' : 'source-map';
@@ -150,12 +151,6 @@ export default createWebpackConfigurationPreset(({
   config.watchOptions = {
     aggregateTimeout: 200,
     ignored: /node_modules/
-  };
-
-  config.optimization = {
-    minimize: false,
-    concatenateModules: true,
-    splitChunks: false
   };
 
   config.stats = 'normal';

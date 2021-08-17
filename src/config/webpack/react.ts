@@ -10,6 +10,7 @@ import getPort from 'get-port';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import open from 'open';
+import TerserWebpackPlugin from 'terser-webpack-plugin';
 import waitPort from 'wait-port';
 import webpack from 'webpack';
 
@@ -18,7 +19,6 @@ import {
   createWebpackConfigurationPreset,
   getPackageManifest
 } from 'lib/webpack';
-
 
 // ----- React Configuration ---------------------------------------------------
 
@@ -155,15 +155,7 @@ export default createWebpackConfigurationPreset(async ({
 
   // ----- Plugins -------------------------------------------------------------
 
-  config.plugins.push(new CleanWebpackPlugin({
-    // This must be set because the below assets are considered part of the
-    // Webpack compilation.
-    protectWebpackAssets: false,
-    cleanAfterEveryBuildPatterns: [
-      // Remove generated LICENSE files. This seems to be a Webpack 5 issue.
-      '**/*LICENSE*'
-    ]
-  }));
+  config.plugins.push(new CleanWebpackPlugin());
 
   config.plugins.push(new HtmlWebpackPlugin({
     filename: 'index.html',
@@ -265,18 +257,19 @@ export default createWebpackConfigurationPreset(async ({
     };
   }
 
-  // ----- Optimizations -------------------------------------------------------
+  // ----- Optimization --------------------------------------------------------
 
-  config.optimization.minimize = isProduction;
-
-  // N.B. This is needed in order to ensure hot reloading works.
-  config.optimization.runtimeChunk = 'single';
+  config.optimization = {
+    minimize: isProduction,
+    minimizer: [new TerserWebpackPlugin({ extractComments: false })],
+    chunkIds: 'named',
+    // N.B. This is needed in order to ensure hot reloading works.
+    runtimeChunk: 'single',
+    mergeDuplicateChunks: true,
+    concatenateModules: true
+  };
 
   if (isProduction) {
-    config.optimization.chunkIds = 'named';
-    config.optimization.mergeDuplicateChunks = true;
-    config.optimization.concatenateModules = true;
-
     config.optimization.splitChunks = {
       chunks: 'all',
       cacheGroups: {

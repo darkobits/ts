@@ -4,6 +4,7 @@ import { dirname } from '@darkobits/ts';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import findUp from 'find-up';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
+import TerserWebpackPlugin from 'terser-webpack-plugin';
 import webpack from 'webpack';
 
 import log from 'lib/log';
@@ -79,15 +80,7 @@ export default createWebpackConfigurationPreset(({
 
   // ----- Plugins -------------------------------------------------------------
 
-  config.plugins.push(new CleanWebpackPlugin({
-    // This must be set because the below assets are considered part of the
-    // Webpack compilation.
-    protectWebpackAssets: false,
-    cleanAfterEveryBuildPatterns: [
-      // Remove generated LICENSE files. This seems to be a Webpack 5 issue.
-      '**/*LICENSE*'
-    ]
-  }));
+  config.plugins.push(new CleanWebpackPlugin());
 
   config.plugins.push(new webpack.LoaderOptionsPlugin({
     minimize: isProduction
@@ -122,13 +115,16 @@ export default createWebpackConfigurationPreset(({
   }
 
 
+  // ----- Optimization --------------------------------------------------------
+
+  config.optimization = {
+    minimize: isProduction,
+    minimizer: [new TerserWebpackPlugin({ extractComments: false })]
+  };
+
+
   // ----- Misc ----------------------------------------------------------------
 
   config.devtool = isDevelopment ? 'eval' : 'source-map';
-
-  config.optimization = {
-    minimize: isProduction
-  };
-
   config.stats = 'normal';
 });
