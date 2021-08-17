@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.6.5](https://github.com/darkobits/tsx/compare/v0.6.4...v0.6.5) (2021-08-17)
+
+
+### 🛠 Refactoring
+
+* **config:** Disable comment extraction. ([a52d0f6](https://github.com/darkobits/tsx/commit/a52d0f607a85f60357bb9c2427317aef41f4abd4))
+
 ### [0.6.4](https://github.com/darkobits/tsx/compare/v0.6.3...v0.6.4) (2021-08-17)
 
 
