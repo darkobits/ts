@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.6.2](https://github.com/darkobits/tsx/compare/v0.6.1...v0.6.2) (2021-08-17)
+
+
+### 🛠 Refactoring
+
+* **config:** Add `clean-webpack-plugin`. ([908812f](https://github.com/darkobits/tsx/commit/908812f38de9009a3a0f8fe942aed947210f5f81))
+
+
+### 🏗 Chores
+
+* **deps:** Update dependencies. ([1c00717](https://github.com/darkobits/tsx/commit/1c00717ecf882ed9006f23be80e8f86499a864af))
+* Misc. cleanup. ([af2dbdf](https://github.com/darkobits/tsx/commit/af2dbdf869bbd33dffccad285aa4561c1b8210bd))
+
 ### [0.6.1](https://github.com/darkobits/tsx/compare/v0.6.0...v0.6.1) (2021-08-15)
 
 
