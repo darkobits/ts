@@ -52,8 +52,7 @@ export default createWebpackConfigurationPreset(async ({
 
   config.output = {
     path: path.resolve(pkg.rootDir, 'dist'),
-    filename: isDevelopment ? '[name].js' : '[name]-[chunkhash].js',
-    chunkFilename: '[name]-[chunkhash].js'
+    filename: isDevelopment ? '[name].js' : '[name]-[contenthash:8].js'
   };
 
 
@@ -105,7 +104,7 @@ export default createWebpackConfigurationPreset(async ({
       loader: require.resolve('url-loader'),
       options: {
         limit: bytes('10kb'),
-        name: '[name]-[hash].[ext]'
+        name: 'assets/[name]-[contenthash:8].[ext]'
       }
     }]
   });
@@ -169,7 +168,7 @@ export default createWebpackConfigurationPreset(async ({
   }));
 
   config.plugins.push(new MiniCssExtractPlugin({
-    filename: isDevelopment ? 'styles.css' : 'styles-[contenthash].css'
+    filename: isDevelopment ? 'styles.css' : 'styles/[contenthash:8].css'
   }));
 
   config.plugins.push(new webpack.LoaderOptionsPlugin({
@@ -296,7 +295,7 @@ export default createWebpackConfigurationPreset(async ({
           chunks: 'all',
           test: (module: webpack.NormalModule) => !module.context?.includes('node_modules'),
           name: 'app',
-          filename: '[name]-[contenthash].js',
+          filename: '[name]-[contenthash:8].js',
           reuseExistingChunk: true,
           maxSize: Number.POSITIVE_INFINITY,
           maxInitialRequests: Number.POSITIVE_INFINITY,
