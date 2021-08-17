@@ -1,27 +1,11 @@
 import { nr } from '@darkobits/ts';
 import { OUT_DIR } from '@darkobits/ts/etc/constants';
-import { getNpmInfo } from '@darkobits/ts/lib/utils';
+import { getNpmInfo, createBabelNodeCommand } from '@darkobits/ts/lib/utils';
 
 import type { ConfigurationFactory } from '@darkobits/nr/dist/etc/types';
 
-
 export default function(userConfigFactory?: ConfigurationFactory): ConfigurationFactory {
   return nr(async ({ createCommand, createNodeCommand, createScript, isCI }) => {
-    /**
-     * Using the same signature of `createNodeCommand`, creates a command that
-     * invokes Node with @babel/register, ensuring any Babel features enabled in
-     * the local project are available.
-     */
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const createBabelNodeCommand: typeof createNodeCommand = (name, args) => {
-      return createNodeCommand(name, args, {
-        execaOptions: {
-          // @ts-ignore
-          nodeOptions: ['--require', require.resolve('@darkobits/ts/etc/babel-register')]
-        }
-      });
-    };
-
     createCommand('rm-out-dir', ['del', [OUT_DIR]]);
     createBabelNodeCommand('webpack', ['webpack', { mode: 'production' }]);
     createBabelNodeCommand('webpack-watch', ['webpack', { watch: true, progress: true, mode: 'development' }]);

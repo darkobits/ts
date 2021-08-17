@@ -1,6 +1,7 @@
 /* eslint-disable require-atomic-updates */
 import path from 'path';
 
+import { dirname } from '@darkobits/ts';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import * as devcert from 'devcert';
 import findUp from 'find-up';
@@ -33,7 +34,7 @@ export default createWebpackConfigurationPreset(async ({
   // in the host package's node_modules tree. We will need to add this to
   // Webpack's module resolution configuration so that any dependencies that NPM
   // decides to nest in this folder can still be resolved by the host package.
-  const OUR_NODE_MODULES = await findUp('node_modules', { cwd: __dirname, type: 'directory' });
+  const OUR_NODE_MODULES = await findUp('node_modules', { cwd: dirname(), type: 'directory' });
 
   if (!OUR_NODE_MODULES) {
     throw new Error(`${log.prefix('webpack')} Unable to resolve the ${log.chalk.green('node_modules')} directory for "tsx".`);
@@ -132,7 +133,9 @@ export default createWebpackConfigurationPreset(async ({
     alias: {
       // Use the @hot-loader variant of react-dom in development to avoid this
       // issue: https://github.com/gatsbyjs/gatsby/issues/11934#issuecomment-469046186
-      'react-dom': isDevelopment ? '@hot-loader/react-dom': 'react-dom'
+      'react-dom': isDevelopment
+        ? require.resolve('@hot-loader/react-dom')
+        : require.resolve('react-dom')
     },
     extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
     modules: [
@@ -283,8 +286,8 @@ export default createWebpackConfigurationPreset(async ({
   // core-js and regenerator-runtime directly.
   // See: https://babeljs.io/docs/en/babel-polyfill
   config.entry.support = [
-    'core-js/stable',
-    'regenerator-runtime/runtime',
-    'react-hot-loader/patch'
+    require.resolve('core-js/stable'),
+    require.resolve('regenerator-runtime/runtime'),
+    require.resolve('react-hot-loader/patch')
   ];
 });

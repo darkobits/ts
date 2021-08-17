@@ -1,5 +1,6 @@
 import path from 'path';
 
+import { dirname } from '@darkobits/ts';
 import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import findUp from 'find-up';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
@@ -140,6 +141,8 @@ export default createWebpackConfigurationPreset(({
 
 
   // ----- Misc ----------------------------------------------------------------
+
+  config.devtool = isDevelopment ? 'eval' : 'source-map';
 
   config.watchOptions = {
     aggregateTimeout: 200,
