@@ -153,6 +153,9 @@ export default createWebpackConfigurationPreset(async ({
   // ----- Plugins -------------------------------------------------------------
 
   config.plugins.push(new CleanWebpackPlugin({
+    // This must be set because the below assets are considered part of the
+    // Webpack compilation.
+    protectWebpackAssets: false,
     cleanAfterEveryBuildPatterns: [
       // Remove generated LICENSE files. This seems to be a Webpack 5 issue.
       '**/*LICENSE*'
