@@ -102,7 +102,7 @@ export default createWebpackConfigurationPreset(async ({
       loader: require.resolve('url-loader'),
       options: {
         limit: bytes('10kb'),
-        name: '[name].[hash].[ext]'
+        name: '[name]-[hash].[ext]'
       }
     }]
   });
