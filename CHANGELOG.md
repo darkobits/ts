@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.6.6](https://github.com/darkobits/tsx/compare/v0.6.5...v0.6.6) (2021-08-17)
+
+
+### 🛠 Refactoring
+
+* **react:** Update file naming templates. ([8fc17a2](https://github.com/darkobits/tsx/commit/8fc17a2cd8760bad0c3746d52fefa8e76a71489d))
+
 ### [0.6.5](https://github.com/darkobits/tsx/compare/v0.6.4...v0.6.5) (2021-08-17)
 
 
