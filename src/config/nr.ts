@@ -1,32 +1,15 @@
-import merge from 'deepmerge';
-
 import {
   EXTENSIONS_WITH_DOT,
   SRC_DIR,
   OUT_DIR
 } from 'etc/constants';
-import { getNpmInfo } from 'lib/utils';
+import { createBabelNodeCommand, getNpmInfo } from 'lib/utils';
 
 import type { ConfigurationFactory } from '@darkobits/nr/dist/etc/types';
 
 
 export default function(userConfigFactory?: ConfigurationFactory): ConfigurationFactory {
   return async ({ createCommand, createNodeCommand, createScript, isCI }) => {
-
-    /**
-     * Using the same signature of `createNodeCommand`, creates a command that
-     * invokes Node with @babel/register, ensuring any Babel features enabled in
-     * the local project are available.
-     */
-    const createBabelNodeCommand: typeof createNodeCommand = (name, args, opts) => {
-      return createNodeCommand(name, args, merge({
-        execaOptions: {
-          nodeOptions: ['--require', require.resolve('etc/babel-register')]
-        }
-      }, opts ?? {}));
-    };
-
-
     // ----- Build: Babel Commands ---------------------------------------------
 
     const babelFlags = {
@@ -143,7 +126,10 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       group: 'Test',
       description: 'Run unit tests in watch mode.',
       run: [
-        createBabelNodeCommand('jest-watch', ['jest', { watch: true }])
+        createBabelNodeCommand('jest-watch', ['jest', { watch: true }], {
+          // This command involves user interaction, so we need to
+          execaOptions: { stdio: 'inherit' }
+        })
       ]
     });
 
