@@ -1,6 +1,7 @@
 /* eslint-disable require-atomic-updates */
 import path from 'path';
 
+import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import * as devcert from 'devcert';
 import findUp from 'find-up';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
@@ -147,6 +148,13 @@ export default createWebpackConfigurationPreset(async ({
 
 
   // ----- Plugins -------------------------------------------------------------
+
+  config.plugins.push(new CleanWebpackPlugin({
+    cleanAfterEveryBuildPatterns: [
+      // Remove generated LICENSE files. This seems to be a Webpack 5 issue.
+      '**/*LICENSE*'
+    ]
+  }));
 
   config.plugins.push(new HtmlWebpackPlugin({
     filename: 'index.html',

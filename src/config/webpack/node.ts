@@ -1,5 +1,6 @@
 import path from 'path';
 
+import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import findUp from 'find-up';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import webpack from 'webpack';
@@ -24,7 +25,7 @@ export default createWebpackConfigurationPreset(({
   // in the host package's node_modules tree. We will need to add this to
   // Webpack's module resolution configuration so that any dependencies that NPM
   // decides to nest in this folder can still be resolved by the host package.
-  const OUR_NODE_MODULES = findUp.sync('node_modules', { cwd: __dirname, type: 'directory' });
+  const OUR_NODE_MODULES = findUp.sync('node_modules', { cwd: dirname(), type: 'directory' });
 
   if (!OUR_NODE_MODULES) {
     throw new Error(`${log.prefix('webpack')} Unable to resolve the ${log.chalk.green('node_modules')} directory for "tsx".`);
@@ -92,6 +93,13 @@ export default createWebpackConfigurationPreset(({
 
 
   // ----- Plugins -------------------------------------------------------------
+
+  config.plugins.push(new CleanWebpackPlugin({
+    cleanAfterEveryBuildPatterns: [
+      // Remove generated LICENSE files. This seems to be a Webpack 5 issue.
+      '**/*LICENSE*'
+    ]
+  }));
 
   config.plugins.push(new webpack.LoaderOptionsPlugin({
     minimize: false

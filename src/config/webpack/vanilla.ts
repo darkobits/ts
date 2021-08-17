@@ -1,5 +1,6 @@
 import path from 'path';
 
+import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 import findUp from 'find-up';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import webpack from 'webpack';
@@ -76,6 +77,13 @@ export default createWebpackConfigurationPreset(({
 
 
   // ----- Plugins -------------------------------------------------------------
+
+  config.plugins.push(new CleanWebpackPlugin({
+    cleanAfterEveryBuildPatterns: [
+      // Remove generated LICENSE files. This seems to be a Webpack 5 issue.
+      '**/*LICENSE*'
+    ]
+  }));
 
   config.plugins.push(new webpack.LoaderOptionsPlugin({
     minimize: isProduction
