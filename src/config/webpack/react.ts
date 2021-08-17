@@ -14,7 +14,10 @@ import waitPort from 'wait-port';
 import webpack from 'webpack';
 
 import log from 'lib/log';
-import { createWebpackConfigurationPreset } from 'lib/webpack';
+import {
+  createWebpackConfigurationPreset,
+  getPackageManifest
+} from 'lib/webpack';
 
 
 // ----- React Configuration ---------------------------------------------------
@@ -262,6 +265,55 @@ export default createWebpackConfigurationPreset(async ({
     };
   }
 
+  // ----- Optimizations -------------------------------------------------------
+
+  config.optimization.minimize = isProduction;
+
+  // N.B. This is needed in order to ensure hot reloading works.
+  config.optimization.runtimeChunk = 'single';
+
+  if (isProduction) {
+    config.optimization.chunkIds = 'named';
+    config.optimization.mergeDuplicateChunks = true;
+    config.optimization.concatenateModules = true;
+
+    config.optimization.splitChunks = {
+      chunks: 'all',
+      cacheGroups: {
+        defaultVendors: {
+          chunks: 'all',
+          test: (module: webpack.NormalModule) => module.context?.includes('node_modules'),
+          name: (module: webpack.NormalModule) => {
+            if (module.context) {
+              const pkgJson = getPackageManifest(module.context);
+
+              if (pkgJson) {
+                return `${pkgJson.name}-${pkgJson.version}`;
+              }
+            }
+
+            throw new Error(`Unable to resolve name/version for: ${module.context}`);
+          },
+          filename: 'vendor/[name].js',
+          reuseExistingChunk: true,
+          enforce: true,
+          priority: 10
+        },
+        default: {
+          chunks: 'all',
+          test: (module: webpack.NormalModule) => !module.context?.includes('node_modules'),
+          name: 'app',
+          filename: '[name]-[contenthash].js',
+          reuseExistingChunk: true,
+          maxSize: Number.POSITIVE_INFINITY,
+          maxInitialRequests: Number.POSITIVE_INFINITY,
+          enforce: true,
+          priority: 0
+        }
+      }
+    };
+  }
+
 
   // ----- Misc ----------------------------------------------------------------
 
@@ -272,25 +324,29 @@ export default createWebpackConfigurationPreset(async ({
     maxEntrypointSize: bytes('550kb')
   };
 
-  config.optimization = {
-    minimize: isProduction,
-    splitChunks: {
-      chunks: 'all'
-    }
-  };
-
   config.cache = {
     type: 'filesystem'
   };
 
   config.stats = 'normal';
-}, ({ config }) => {
+}, ({ config, isDevelopment }) => {
   // As of version 7.4.0, @babel/polyfill is deprecated in favor of including
   // core-js and regenerator-runtime directly.
   // See: https://babeljs.io/docs/en/babel-polyfill
-  config.entry.support = [
+  const SUPPORT_MODULES = [
     require.resolve('core-js/stable'),
     require.resolve('regenerator-runtime/runtime'),
-    require.resolve('react-hot-loader/patch')
-  ];
+    isDevelopment && require.resolve('react-hot-loader/patch')
+  ].filter(Boolean) as Array<string>;
+
+  config.entry.vendor = SUPPORT_MODULES;
+
+  // if (typeof config.entry.index === 'string') {
+  //   config.entry.index = [
+  //     ...SUPPORT_MODULES,
+  //     config.entry.index
+  //   ];
+  // } else {
+  //   config.entry.vendor = SUPPORT_MODULES;
+  // }
 });

@@ -34,8 +34,38 @@ function generateWebpackConfigurationScaffold(): WebpackConfiguration {
     module: {
       rules: []
     },
-    plugins: []
+    plugins: [],
+    optimization: {}
   };
+}
+
+
+/**
+ * Provided a module context (re: directory), scans downward from the first
+ * directory beneath node_modules until a package.json is found. This algorithm
+ * is better suited to loading the correct package.json for a packages with
+ * nested package.json files.
+ */
+export function getPackageManifest(moduleContext: string) {
+  const search = 'node_modules';
+  const searchSegment = moduleContext.indexOf('node_modules');
+  const basePath = moduleContext.slice(0, searchSegment + search.length);
+  const searchSegments = moduleContext.slice(searchSegment + search.length).split('/').filter(Boolean);
+
+  for (let i = 1; i <= searchSegments.length; i++) {
+    const curPath = path.join(basePath, ...searchSegments.slice(0, i), 'package.json');
+
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const manifest: PkgInfo['json'] = require(curPath);
+
+      if (manifest) {
+        return manifest;
+      }
+    } catch {
+      // No package.json at this path.
+    }
+  }
 }
 
 

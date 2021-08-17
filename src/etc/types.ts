@@ -45,6 +45,11 @@ export interface WebpackConfiguration extends webpack.Configuration {
    * non-nullable.
    */
   plugins: NonNullable<webpack.Configuration['plugins']>;
+
+  /**
+   * Configure various Webpack optimizations.
+   */
+  optimization: NonNullable<webpack.Configuration['optimization']>;
 }
 
 
