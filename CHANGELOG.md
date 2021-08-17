@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.6.3](https://github.com/darkobits/tsx/compare/v0.6.2...v0.6.3) (2021-08-17)
+
+
+### 🐞 Bug Fixes
+
+* Disable protectWebpackAssets. ([76afd93](https://github.com/darkobits/tsx/commit/76afd93be815ce78c7e37f2f9db70ed18be3427c))
+
 ### [0.6.2](https://github.com/darkobits/tsx/compare/v0.6.1...v0.6.2) (2021-08-17)
 
 
