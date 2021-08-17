@@ -6,6 +6,11 @@ const babelEsm = require.resolve('config/babel-esm');
 const eslint = require.resolve('config/eslint');
 
 export {
+  dirname,
+  filename
+} from 'lib/utils';
+
+export {
   babel,
   babelEsm,
   eslint,

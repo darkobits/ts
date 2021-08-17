@@ -2,6 +2,7 @@ import path from 'path';
 
 import env from '@darkobits/env';
 import { createNodeCommand } from '@darkobits/nr/dist/lib/commands';
+import callsites from 'callsites';
 import merge from 'deepmerge';
 import { getBinPathSync } from 'get-bin-path';
 import ms from 'ms';
@@ -11,6 +12,33 @@ import updateNotifier from 'update-notifier';
 
 import { NpmConfigArgv } from 'etc/types';
 import log from 'lib/log';
+
+
+/**
+ * Backwards-compatible replacement for __filename in ESM.
+ */
+export function filename() {
+  if (typeof __filename !== 'undefined' && !env.eq('NODE_ENV', 'test')) {
+    return __filename;
+  }
+
+  for (const callSite of callsites()) {
+    const fileName = callSite.getFileName();
+    if (fileName) return fileName.replace(/^file:\/\//, '');
+  }
+}
+
+
+/**
+ * Backwards-compatible replacement for __dirname in ESM.
+ */
+export function dirname() {
+  if (typeof __dirname !== 'undefined' && !env.eq('NODE_ENV', 'test')) {
+    return __dirname;
+  }
+
+  return filename()?.replace(/\/[^/]*$/, '');
+}
 
 
 export interface PkgInfo {
@@ -70,7 +98,7 @@ export function resolveBin(pkgName: string, binName?: string) {
   // Resolve the path to the package from our current directory. This will
   // ensure that if the package is installed in a nested node_modules, we should
   // still be able to find it.
-  const pkgPath = resolvePkg(pkgName, { cwd: __dirname });
+  const pkgPath = resolvePkg(pkgName, { cwd: dirname() });
 
   // Resolve the path to the package's binary. If no additional "binName"
   // argument was provided, we assume that the binary name matches the package

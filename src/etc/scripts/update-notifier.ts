@@ -2,7 +2,7 @@
 
 import readPkgUp from 'read-pkg-up';
 
-import { doUpdateNotification } from 'lib/utils';
+import { doUpdateNotification, dirname } from 'lib/utils';
 
 
 /**
@@ -15,7 +15,7 @@ import { doUpdateNotification } from 'lib/utils';
 async function updateNotifier() {
   // Start from the directory of this file rather than process.cwd(), or we will
   // wind up reading the host project's package.json, not our own.
-  const pkg = await readPkgUp({ cwd: __dirname });
+  const pkg = await readPkgUp({ cwd: dirname() });
 
   if (!pkg) {
     throw new Error('Unable to read package.json for @darkobits/ts.');
