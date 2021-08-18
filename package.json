@@ -52,8 +52,8 @@
   },
   "dependencies": {
     "@darkobits/chex": "^1.0.2",
+    "@darkobits/fd-name": "^0.1.1",
     "@darkobits/log": "^2.0.0-beta.15",
-    "callsites": "^3.1.0",
     "deepmerge": "^4.2.2",
     "errno": "^1.0.0",
     "fs-extra": "^10.0.0",

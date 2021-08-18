@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 
+import { dirname } from '@darkobits/fd-name';
 import readPkgUp from 'read-pkg-up';
 
-import { doUpdateNotification, dirname } from 'lib/utils';
+import { doUpdateNotification } from 'lib/utils';
 
 
 /**

@@ -1,3 +1,1 @@
-module.exports = {
-  extends: 'plugin:@darkobits/ts'
-};
+throw new Error('This module is deprecated. Extend "plugin:@darkobits/ts" instead.');
