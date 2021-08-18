@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.8.5](https://github.com/darkobits/ts/compare/v0.8.4...v0.8.5) (2021-08-18)
+
+
+### 🛠 Refactoring
+
+* Externalize `filename` / `dirname`. ([09d5f4d](https://github.com/darkobits/ts/commit/09d5f4d8f54d1897ebcf45e5a37b5c38692f2395))
+
 ### [0.8.4](https://github.com/darkobits/ts/compare/v0.8.3...v0.8.4) (2021-08-17)
 
 
