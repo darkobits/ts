@@ -1,7 +1,7 @@
 import path from 'path';
 
 import env from '@darkobits/env';
-import callsites from 'callsites';
+import { dirname } from '@darkobits/fd-name';
 import faker from 'faker';
 import { getBinPathSync } from 'get-bin-path';
 import readPkgUp from 'read-pkg-up';
@@ -14,7 +14,7 @@ import {
 } from 'lib/utils';
 
 jest.mock('@darkobits/env');
-jest.mock('callsites');
+jest.mock('@darkobits/fd-name');
 jest.mock('read-pkg-up');
 jest.mock('resolve-pkg');
 jest.mock('get-bin-path');
@@ -42,8 +42,8 @@ describe('getPackageInfo', () => {
 });
 
 describe('resolveBin', () => {
-  const callsitesMock = callsites as jest.MockedFunction<typeof callsites>;
-  const envMock = env as jest.Mocked<typeof env> & jest.MockedFunction<typeof env>;
+  const dirnameMock = dirname as jest.MockedFunction<typeof dirname>;
+
   const resolvePkgMock = resolvePkg as jest.MockedFunction<typeof resolvePkg>;
   const getBinPathSyncMock = getBinPathSync as jest.MockedFunction<typeof getBinPathSync>;
 
@@ -56,14 +56,7 @@ describe('resolveBin', () => {
 
   describe('in ESM environments', () => {
     beforeEach(() => {
-      // Ensure our check for NODE_ENV === 'test' returns true to force the
-      // use of the callsites-based path.
-      envMock.eq.mockImplementation((variableName: string) => variableName === 'NODE_ENV');
-
-      callsitesMock.mockReturnValue([{
-        getFileName: () => ourFileName
-      } as any]);
-
+      dirnameMock.mockReturnValue(ourDirname);
       resolvePkgMock.mockReturnValue(pkgPath);
       getBinPathSyncMock.mockReturnValue(binPath);
     });
@@ -91,9 +84,7 @@ describe('resolveBin', () => {
 
   describe('in non-ESM environments', () => {
     beforeEach(() => {
-      // Ensure our check for NODE_ENV === 'test' returns false to force the
-      // use of __dirname / __filename fallbacks.
-      envMock.eq.mockImplementation((variableName: string) => variableName !== 'NODE_ENV');
+      dirnameMock.mockReturnValue(ourDirname);
       resolvePkgMock.mockReturnValue(pkgPath);
       getBinPathSyncMock.mockReturnValue(binPath);
     });
@@ -103,7 +94,7 @@ describe('resolveBin', () => {
         const result = resolveBin(pkgName);
         expect(result.binPath).toBe(binPath);
         expect(result.pkgPath).toBe(pkgPath);
-        expect(resolvePkgMock).toHaveBeenCalledWith(pkgName, { cwd: __dirname });
+        expect(resolvePkgMock).toHaveBeenCalledWith(pkgName, { cwd: ourDirname });
         expect(getBinPathSyncMock).toHaveBeenCalledWith({ cwd: pkgPath, name: pkgName });
       });
     });
@@ -113,7 +104,7 @@ describe('resolveBin', () => {
         const result = resolveBin(pkgName, binName);
         expect(result.binPath).toBe(binPath);
         expect(result.pkgPath).toBe(pkgPath);
-        expect(resolvePkgMock).toHaveBeenCalledWith(pkgName, { cwd: __dirname });
+        expect(resolvePkgMock).toHaveBeenCalledWith(pkgName, { cwd: ourDirname });
         expect(getBinPathSync).toHaveBeenCalledWith({ cwd: pkgPath, name: binName });
       });
     });
