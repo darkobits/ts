@@ -1,82 +1,24 @@
 import type { getPackageInfo } from '@darkobits/ts/lib/utils';
 import type bytes from 'bytes';
+import type merge from 'deepmerge';
 import type ms from 'ms';
-import type webpack from 'webpack';
-import type merge from 'webpack-merge';
+import type { UserConfig } from 'vite';
 
 
-/**
- * Options affecting the normal modules (NormalModuleFactory).
- *
- * Note: `tsx` pre-declares this property, so its type definition is
- * non-nullable.
- */
-export interface TsxModuleConfiguration extends webpack.ModuleOptions {
-  rules: Array<webpack.RuleSetRule>;
+export interface ViteConfiguration extends UserConfig {
+  build: NonNullable<UserConfig['build']>;
+  plugins: NonNullable<UserConfig['plugins']>;
+  server: NonNullable<UserConfig['server']>;
 }
 
 
 /**
- * Webpack configuration object where `module.rules` and `plugins` are required
- * rather than optional.
+ * Object passed to 'tsx' Vite configuration factories.
  */
-export interface WebpackConfiguration extends webpack.Configuration {
-  /**
-   * `tsx` uses the object form for `entry`. You may assign any property to this
-   * object to create an additional bundle.
-   */
-  entry: webpack.EntryObject;
+export interface ViteConfigurationFnContext {
+  command: 'build' | 'serve';
 
-  /**
-   * Options affecting the output of the compilation. output options tell
-   * Webpack how to write the compiled files to disk.
-   *
-   * Note: `tsx` pre-declares this property, so its type definition is
-   * non-nullable.
-   */
-  output: NonNullable<webpack.Configuration['output']>;
-
-  module: TsxModuleConfiguration;
-
-  /**
-   * Add additional plugins to the compiler.
-   *
-   * Note: `tsx` pre-declares this property, so its type definition is
-   * non-nullable.
-   */
-  plugins: NonNullable<webpack.Configuration['plugins']>;
-
-  /**
-   * Configure various Webpack optimizations.
-   */
-  optimization: NonNullable<webpack.Configuration['optimization']>;
-}
-
-
-/**
- * First parameter passed to standard Webpack configuration factories.
- */
-type Env = Record<string, string>;
-
-
-/**
- * Second parameter passed to standard Webpack configuration factories.
- */
-type Argv = Record<string, any>;
-
-
-/**
- * Formerly `ConfigurationFactory` in Webpack 4, but was removed in Webpack 5.
- */
-export type NativeWebpackConfigurationFactory = (env: Env, argv: Argv) => webpack.Configuration | Promise<webpack.Configuration>;
-
-
-/**
- * Object passed to 'tsx' Webpack configuration factories.
- */
-export interface WebpackConfigurationFactoryContext {
-  env: Env;
-  argv: Argv;
+  mode: string;
 
   /**
    * Normalized package.json and resolved root directory of the host project.
@@ -84,10 +26,10 @@ export interface WebpackConfigurationFactoryContext {
   pkg: ReturnType<typeof getPackageInfo>;
 
   /**
-   * Empty Webpack configuration scaffold that the configuration factory may
+   * Empty Vite configuration scaffold that the configuration factory may
    * modify and return.
    */
-  config: WebpackConfiguration;
+  config: ViteConfiguration;
 
   /**
    * Utility to parse a human readable string (ex: '512kb') to bytes (524288)
@@ -109,53 +51,37 @@ export interface WebpackConfigurationFactoryContext {
 
   /**
    * Utility for recursively merging objects.
-   *
-   * See: https://github.com/survivejs/webpack-merge
    */
   merge: typeof merge;
 
   /**
-   * True if argv.mode equals 'production'.
+   * True if mode === 'production'.
    */
   isProduction: boolean;
 
   /**
-   * True if argv.mode equals 'development';
+   * True if mode === 'development';
    */
   isDevelopment: boolean;
 
   /**
-   * True if the compilation was started by `webpack-dev-server`, false if the
-   * compilation was started by `webpack`.
+   * True if the compilation was started with the `serve` command.
    */
   isDevServer: boolean;
 
   /**
    * Provides a declarative way to look-up and re-configure existing plugins.
    *
-   * Provided a plugin name (according to its constructor.name property) and a
-   * configuration object, merges the provided configuration with the plugin's
-   * base configuration.
-   *
-   * @example
-   *
-   * // Change the default path to the application's index.html template.
-   * reconfigurePlugin('HtmlWebpackPlugin', {
-   *   template: path.resolve('foo', 'bar', 'template.html')
-   * })
+   * Provided a plugin name and a configuration object, merges the provided
+   * configuration with the plugin's base configuration.
    */
   reconfigurePlugin: (pluginName: string, pluginConfiguration: any) => void;
-
-  /**
-   * Reference to `webpack`.
-   */
-  webpack: typeof webpack;
 }
 
 
 /**
- * Signature of a 'tsx' Webpack configuration factory.
+ * Signature of a 'tsx' Vite configuration factory.
  */
-export type WebpackConfigurationFactory = (
-  opts: WebpackConfigurationFactoryContext
-) => void | WebpackConfiguration | Promise<void | WebpackConfiguration>;
+export type ViteConfigurationFactory = (
+  opts: ViteConfigurationFnContext
+) => void | ViteConfiguration | Promise<void | ViteConfiguration>;

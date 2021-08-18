@@ -13,20 +13,30 @@ module.exports = api => {
   return {
     extends: require('@darkobits/ts').babel,
     presets: [
-      [require.resolve('@babel/preset-env'), {
+      ['@babel/preset-env', {
         useBuiltIns: 'entry',
-        corejs: 3
+        corejs: 3,
+        targets: { node: '14' },
+        // Do not transpile import() statements. This will allow packages that
+        // publish CommonJS to import ES Modules.
+        exclude: ['@babel/plugin-proposal-dynamic-import']
       }],
-      require.resolve('@babel/preset-react'),
-      require.resolve('@linaria/babel-preset')
+      '@babel/preset-typescript',
+      '@babel/preset-react',
+      '@linaria/babel-preset'
     ],
     plugins: [
-      require.resolve('@babel/plugin-transform-runtime'),
-      require.resolve('react-hot-loader/babel')
+      'babel-plugin-transform-import-meta',
+      '@babel/plugin-transform-runtime',
+      ['@babel/plugin-proposal-decorators', { legacy: true, loose: true }],
+      // At the moment, this is required for Linaria to work.
+      ['babel-plugin-module-resolver', {
+        cwd: 'packagejson',
+        root: ['./src'],
+        extensions: ['.ts', '.tsx', '.js', '.jsx', '.cjs', '.mjs', '.json']
+      }]
     ],
-    // This is set to `true`, inverting the default setting from 'ts') to
-    // prevent Babel from stripping-out Webpack 'magic' comments before Webpack
-    // can parse them. Comments will then be removed by Webpack's minifier.
-    comments: true
+    comments: false,
+    sourceType: 'unambiguous'
   };
 };

@@ -5,11 +5,12 @@
       {"name": "typescript-styled-plugin"},
       {"transform": "@zerollup/ts-transform-paths"}
     ],
+    "noEmit": true,
     "jsx": "react",
-    "lib": [
-      "DOM",
-      "DOM.Iterable",
-      "ESNext"
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "types": [
+      "vite/client",
+      "vite-plugin-pwa/client"
     ]
   }
 }

@@ -7,34 +7,34 @@ import type { ConfigurationFactory } from '@darkobits/nr/dist/etc/types';
 export default function(userConfigFactory?: ConfigurationFactory): ConfigurationFactory {
   return nr(async ({ createCommand, createNodeCommand, createScript, isCI }) => {
     createCommand('rm-out-dir', ['del', [OUT_DIR]]);
-    createBabelNodeCommand('webpack', ['webpack', { mode: 'production' }]);
-    createBabelNodeCommand('webpack-watch', ['webpack', { watch: true, progress: true, mode: 'development' }]);
-    createBabelNodeCommand('webpack-dev-server', ['webpack', ['serve'], { mode: 'development' }]);
+    createBabelNodeCommand('vite', ['vite', ['build']]);
+    createBabelNodeCommand('vite-watch', ['vite', ['build'], { watch: true }]);
+    createBabelNodeCommand('vite-serve', ['vite', ['serve']]);
 
     createScript('build', {
-      group: 'Webpack',
-      description: 'Compile the project with Webpack.',
+      group: 'Vite',
+      description: 'Compile the project with Vite.',
       run: [
         'rm-out-dir',
-        'webpack',
+        'vite',
         'link-bins'
       ]
     });
 
     createScript('build.watch', {
-      group: 'Webpack',
-      description: 'Continuously compile the project with Webpack.',
+      group: 'Vite',
+      description: 'Continuously compile the project with Vite.',
       run: [
         'rm-out-dir',
-        'webpack-watch'
+        'vite-watch'
       ]
     });
 
     createScript('start', {
-      group: 'Webpack',
-      description: 'Start the Webpack dev server.',
+      group: 'Vite',
+      description: 'Start the Vite dev server.',
       run: [
-        'webpack-dev-server'
+        'vite-dev-server'
       ]
     });
 
