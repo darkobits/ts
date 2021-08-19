@@ -8,7 +8,7 @@ import {
   EXTENSIONS_WITH_DOT
 } from '@darkobits/ts/etc/constants';
 import reactRefreshPlugin from '@vitejs/plugin-react-refresh';
-import devcert from 'devcert';
+import * as devcert from 'devcert';
 import findUp from 'find-up';
 import checkerPlugin from 'vite-plugin-checker';
 // @ts-expect-error - No type declarations.
