@@ -7,7 +7,7 @@ import type { ConfigurationFactory } from '@darkobits/nr/dist/etc/types';
 export default function(userConfigFactory?: ConfigurationFactory): ConfigurationFactory {
   return nr(async ({ createCommand, createNodeCommand, createScript, isCI }) => {
     createCommand('rm-out-dir', ['del', [OUT_DIR]]);
-    createBabelNodeCommand('vite', ['vite', ['build']]);
+    createBabelNodeCommand('vite-build', ['vite', ['build']]);
     createBabelNodeCommand('vite-watch', ['vite', ['build'], { watch: true }]);
     createBabelNodeCommand('vite-serve', ['vite', ['serve']]);
 
@@ -16,7 +16,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       description: 'Compile the project with Vite.',
       run: [
         'rm-out-dir',
-        'vite',
+        'vite-build',
         'link-bins'
       ]
     });
@@ -34,7 +34,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       group: 'Vite',
       description: 'Start the Vite dev server.',
       run: [
-        'vite-dev-server'
+        'vite-serve'
       ]
     });
 

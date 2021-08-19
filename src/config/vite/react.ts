@@ -1,4 +1,3 @@
-/* eslint-disable require-atomic-updates */
 import path from 'path';
 
 import { dirname } from '@darkobits/ts';
@@ -125,6 +124,8 @@ export default createViteConfigurationPreset(async ({
     }
 
     const { key, cert } = await devcert.certificateFor(hosts);
+
+    // eslint-disable-next-line require-atomic-updates
     config.server.https = { key, cert };
   }
 });
