@@ -1,9 +1,21 @@
+import os from 'os';
+
 import chex from '@darkobits/chex';
 import dotenv from 'dotenv';
 import findUp from 'find-up';
 import IS_CI from 'is-ci';
 
 import log from 'lib/log';
+
+
+/**
+ * Returns an array of all local IP addresses for the host machine.
+ */
+export function getLocalIpAddresses() {
+  return Object.values(os.networkInterfaces()).flatMap(interfaces => {
+    return interfaces?.map(i => (i.family === 'IPv4' ? i.address : false)).filter(Boolean);
+  }) as Array<string>;
+}
 
 
 /**
