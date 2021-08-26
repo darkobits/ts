@@ -9,6 +9,7 @@
     "jsx": "react",
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "types": [
+      "node",
       "vite/client",
       "vite-plugin-pwa/client"
     ]
