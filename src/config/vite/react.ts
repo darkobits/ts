@@ -33,7 +33,7 @@ export default createViteConfigurationPreset(async ({
 
   // TODO: Change this when Vite makes it less awkward to put index.html in
   // a subdirectory like 'src'. Using 'src' currently breaks module resolution.
-  config.root = path.resolve(pkg.rootDir);
+  config.root = path.resolve(pkg.rootDir, SRC_DIR);
 
   config.build.outDir = path.resolve(pkg.rootDir, OUT_DIR);
 
@@ -69,7 +69,7 @@ export default createViteConfigurationPreset(async ({
 
   // This ensures that React and React DOM are always resolved to the same
   // package. Not doing this can result in hooks-related errors.
-  config.resolve.dedupe = ['react', 'react-dom'];
+  config.resolve.dedupe = [require.resolve('react'), require.resolve('react-dom')];
 
   // Prevents https://github.com/vitejs/vite/issues/813.
   config.optimizeDeps = {

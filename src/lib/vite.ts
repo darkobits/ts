@@ -146,8 +146,26 @@ export const createViteConfigurationPreset = (
 
   // ----- Merge Configurations ------------------------------------------------
 
-  return merge(baseConfig, userConfig, {
-    arrayMerge: (target: Array<any>, source: Array<any>) => (source ? source : target),
-    isMergeableObject: isPlainObject
+  const finalConfig = merge(baseConfig, userConfig, {
+    customMerge: (key: string) => (a: any, b: any) => {
+      if (key === 'plugins') {
+        return [...a, ...b];
+      }
+
+      if (isPlainObject(a) && isPlainObject(b)) {
+        return {...a, ...b};
+      }
+
+      if (Array.isArray(a) || Array.isArray(b)) {
+        log.warn(`[${key}] Encountered arrays:`, a, b);
+        return b;
+      }
+
+      log.warn(`[${key}] Encountered unknown:`, a, b);
+
+      return a;
+    }
   });
+
+  return finalConfig;
 };
