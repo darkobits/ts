@@ -49,7 +49,11 @@ export function readDotenvUp(cwd?: string) {
   const result = dotenv.config({ path: envFilePath });
 
   if (result.error) {
-    log.warn(log.prefix('readDotenvUp'), `Error loading .env file: ${result.error.message}`);
+    // @ts-expect-error
+    if (result.error.code !== 'ENOENT') {
+      log.warn(log.prefix('readDotenvUp'), `Error loading .env file: ${result.error.message}`);
+    }
+
     return {};
   }
 
