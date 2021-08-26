@@ -3,7 +3,7 @@ import path from 'path';
 import { getPackageInfo } from '@darkobits/ts/lib/utils';
 import bytes from 'bytes';
 import merge from 'deepmerge';
-import isPlainObject from 'is-plain-object';
+import { isPlainObject } from 'is-plain-object';
 import mem from 'mem';
 import ms from 'ms';
 import readPkg from 'read-pkg';
@@ -147,7 +147,6 @@ export function createViteConfigurationPreset(baseConfigFactory: ViteConfigurati
 
     return merge(baseConfig, userConfig, {
       arrayMerge: (target: Array<any>, source: Array<any>) => (source ? source : target),
-      // @ts-expect-error
       isMergeableObject: isPlainObject
     });
   };
