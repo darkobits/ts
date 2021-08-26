@@ -12,7 +12,7 @@ export default jest({
     global: {
       statements: 15,
       branches: 10,
-      functions: 15,
+      functions: 10,
       lines: 15
     }
   }
