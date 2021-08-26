@@ -1,6 +1,5 @@
 import path from 'path';
 
-import { dirname } from '@darkobits/fd-name';
 import {
   SRC_DIR,
   OUT_DIR,
@@ -8,14 +7,13 @@ import {
 } from '@darkobits/ts/etc/constants';
 import reactRefreshPlugin from '@vitejs/plugin-react-refresh';
 import * as devcert from 'devcert';
-import findUp from 'find-up';
 import checkerPlugin from 'vite-plugin-checker';
 // @ts-expect-error - No type declarations.
 import linariaPlugin from 'vite-plugin-linaria';
 import tsconfigPathsPlugin from 'vite-tsconfig-paths';
 
 import log from 'lib/log';
-import { gitDescribe } from 'lib/utils';
+import { gitDescribe, readDotenvUp } from 'lib/utils';
 import {
   createViteConfigurationPreset,
   getPackageManifest
@@ -31,21 +29,11 @@ export default createViteConfigurationPreset(async ({
   mode,
   pkg
 }) => {
-  // Resolve the path to this package's node_modules folder, which may be nested
-  // in the host package's node_modules tree. We will need to add this to
-  // Webpack's module resolution configuration so that any dependencies that NPM
-  // decides to nest in this folder can still be resolved by the host package.
-  const OUR_NODE_MODULES = await findUp('node_modules', { cwd: dirname(), type: 'directory' });
-
-  if (!OUR_NODE_MODULES) {
-    throw new Error(`${log.prefix('webpack')} Unable to resolve the ${log.chalk.green('node_modules')} directory for "tsx".`);
-  }
-
   // ----- Input / Output ------------------------------------------------------
 
   // TODO: Change this when Vite makes it less awkward to put index.html in
   // a subdirectory like 'src'.
-  config.root = path.resolve(pkg.rootDir);
+  config.root = path.resolve(pkg.rootDir, 'src');
 
   config.build.outDir = path.resolve(pkg.rootDir, OUT_DIR);
 
@@ -77,10 +65,32 @@ export default createViteConfigurationPreset(async ({
     };
   }
 
+  // ----- Module Resolution ---------------------------------------------------
+
+  // This ensures that React and React DOM are always resolved to the same
+  // package. Not doing this can result in hooks-related errors.
+  config.resolve.alias = {
+    'react': require.resolve('react'),
+    'react-dom': require.resolve('react-dom')
+  };
+
+  // Prevents https://github.com/vitejs/vite/issues/813.
+  config.optimizeDeps = {
+    include: [require.resolve('react')]
+  };
+
 
   // ----- Environment ---------------------------------------------------------
 
+  // Load variables from the nearest .env file and map them into the appropriate
+  // format.
+  const dotEnv = Object.entries(readDotenvUp() ?? {}).map(([key, value]) => [
+    `process.env.${key}`,
+    JSON.stringify(value)
+  ]);
+
   config.define = {
+    ...dotEnv,
     'process.env.GIT_DESC': JSON.stringify(gitDescribe()),
     'process.env.NODE_ENV': JSON.stringify(mode)
   };

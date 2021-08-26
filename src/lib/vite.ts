@@ -27,6 +27,7 @@ function generateViteConfigurationScaffold(): ViteConfiguration {
   return {
     build: {},
     plugins: [],
+    resolve: {},
     server: {}
   };
 }
@@ -83,7 +84,7 @@ function reconfigurePlugin(config: ViteConfiguration) {
  * factory, then returns a 'standard' Webpack configuration factory that will be
  * passed to Webpack.
  */
-export function createViteConfigurationPreset(baseConfigFactory: ViteConfigurationFactory, postConfigFactory?: ViteConfigurationFactory) {
+export function createViteConfigurationPreset(baseConfigFactory: ViteConfigurationFactory) {
   return (userConfigFactory?: ViteConfigurationFactory): UserConfigFn => async ({ command, mode }) => {
     // ----- Build Context -----------------------------------------------------
 
@@ -128,30 +129,23 @@ export function createViteConfigurationPreset(baseConfigFactory: ViteConfigurati
       return baseConfig;
     }
 
+    const userConfigScaffold = generateViteConfigurationScaffold();
+
     const returnedUserConfig = await userConfigFactory({
       ...context,
-      config: baseConfig,
+      config: userConfigScaffold,
       reconfigurePlugin: reconfigurePlugin(baseConfig)
     });
 
     // If the factory did not return a value, defer to the baseConfig object we
     // passed-in and modified in-place.
-    let finalConfig = returnedUserConfig ?? baseConfig;
+    const userConfig = returnedUserConfig ?? userConfigScaffold;
 
 
-    // ----- Apply Post-User Config --------------------------------------------
+    // ----- Merge Configurations ----------------------------------------------
 
-    if (typeof postConfigFactory === 'function') {
-      const returnedPostConfig = await postConfigFactory({
-        ...context,
-        config: finalConfig,
-        reconfigurePlugin: reconfigurePlugin(finalConfig)
-      });
-
-      finalConfig = returnedPostConfig ?? finalConfig;
-    }
-
-
-    return finalConfig;
+    return merge(baseConfig, userConfig, {
+      arrayMerge: (target: Array<any>, source: Array<any>) => (source ? source : target)
+    });
   };
 }

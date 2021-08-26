@@ -8,6 +8,7 @@ import type { UserConfig } from 'vite';
 export interface ViteConfiguration extends UserConfig {
   build: NonNullable<UserConfig['build']>;
   plugins: NonNullable<UserConfig['plugins']>;
+  resolve: NonNullable<UserConfig['resolve']>;
   server: NonNullable<UserConfig['server']>;
 }
 
