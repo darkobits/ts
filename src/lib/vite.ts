@@ -85,69 +85,69 @@ function reconfigurePlugin(config: ViteConfiguration) {
  * factory, then returns a 'standard' Webpack configuration factory that will be
  * passed to Webpack.
  */
-export function createViteConfigurationPreset(baseConfigFactory: ViteConfigurationFactory) {
-  return (userConfigFactory?: ViteConfigurationFactory): UserConfigFn => async ({ command, mode }) => {
-    // ----- Build Context -----------------------------------------------------
+export const createViteConfigurationPreset = (
+  baseConfigFactory: ViteConfigurationFactory
+) => (
+  userConfigFactory?: ViteConfigurationFactory
+): UserConfigFn => async ({ command, mode }) => {
+  // Get host package metadata.
+  const pkg = getPackageInfo();
 
-    // Get host package metadata.
-    const pkg = getPackageInfo();
-
-    const context: Omit<ViteConfigurationFnContext, 'config' | 'reconfigurePlugin'> = {
-      command,
-      mode,
-      pkg,
-      bytes,
-      ms,
-      isProduction: mode === 'production',
-      isDevelopment: mode === 'development',
-      isDevServer: command === 'serve',
-      merge
-    };
-
-
-    // ----- Generate Base Configuration ---------------------------------------
-
-    const baseConfigScaffold = generateViteConfigurationScaffold();
-
-    // Invoke base config factory passing all primitives from our context plus a
-    // reference to our base config scaffold and a plugin re-configurator.
-    const returnedBaseConfig = await baseConfigFactory({
-      ...context,
-      config: baseConfigScaffold,
-      reconfigurePlugin: reconfigurePlugin(baseConfigScaffold)
-    });
-
-    // If the factory did not return a value, defer to the config object we
-    // passed-in and modified in-place.
-    const baseConfig = returnedBaseConfig ?? baseConfigScaffold;
-
-
-    // ----- Generate User Configuration ---------------------------------------
-
-    // N.B. If the user only wants to use the base configuration, they may
-    // invoke thus function without any arguments.
-    if (!userConfigFactory) {
-      return baseConfig;
-    }
-
-    const userConfigScaffold = generateViteConfigurationScaffold();
-
-    const returnedUserConfig = await userConfigFactory({
-      ...context,
-      config: userConfigScaffold,
-      reconfigurePlugin: reconfigurePlugin(baseConfig)
-    });
-
-    // If the factory did not return a value, defer to the baseConfig object we
-    // passed-in and modified in-place.
-    const userConfig = returnedUserConfig ?? userConfigScaffold;
-
-
-    // ----- Merge Configurations ----------------------------------------------
-
-    return merge(baseConfig, userConfig, {
-      arrayMerge: (target: Array<any>, source: Array<any>) => (source ? source : target),
-      isMergeableObject: isPlainObject
-    });
+  const context: Omit<ViteConfigurationFnContext, 'config' | 'reconfigurePlugin'> = {
+    command,
+    mode,
+    pkg,
+    bytes,
+    ms,
+    isProduction: mode === 'production',
+    isDevelopment: mode === 'development',
+    isDevServer: command === 'serve',
+    merge
   };
-}
+
+
+  // ----- Generate Base Configuration -----------------------------------------
+
+  const baseConfigScaffold = generateViteConfigurationScaffold();
+
+  // Invoke base config factory passing all primitives from our context plus a
+  // reference to our base config scaffold and a plugin re-configurator.
+  const returnedBaseConfig = await baseConfigFactory({
+    ...context,
+    config: baseConfigScaffold,
+    reconfigurePlugin: reconfigurePlugin(baseConfigScaffold)
+  });
+
+  // If the factory did not return a value, defer to the config object we
+  // passed-in and modified in-place.
+  const baseConfig = returnedBaseConfig ?? baseConfigScaffold;
+
+
+  // ----- Generate User Configuration -----------------------------------------
+
+  // N.B. If the user only wants to use the base configuration, they may
+  // invoke thus function without any arguments.
+  if (!userConfigFactory) {
+    return baseConfig;
+  }
+
+  const userConfigScaffold = generateViteConfigurationScaffold();
+
+  const returnedUserConfig = await userConfigFactory({
+    ...context,
+    config: userConfigScaffold,
+    reconfigurePlugin: reconfigurePlugin(baseConfig)
+  });
+
+  // If the factory did not return a value, defer to the baseConfig object we
+  // passed-in and modified in-place.
+  const userConfig = returnedUserConfig ?? userConfigScaffold;
+
+
+  // ----- Merge Configurations ------------------------------------------------
+
+  return merge(baseConfig, userConfig, {
+    arrayMerge: (target: Array<any>, source: Array<any>) => (source ? source : target),
+    isMergeableObject: isPlainObject
+  });
+};

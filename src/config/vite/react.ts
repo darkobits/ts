@@ -84,10 +84,10 @@ export default createViteConfigurationPreset(async ({
 
   // Load variables from the nearest .env file and map them into the appropriate
   // format.
-  const dotEnv = Object.entries(readDotenvUp() ?? {}).map(([key, value]) => [
+  const dotEnv = Object.fromEntries(Object.entries(readDotenvUp() ?? {}).map(([key, value]) => [
     `process.env.${key}`,
     JSON.stringify(value)
-  ]);
+  ]));
 
   config.define = {
     ...dotEnv,
