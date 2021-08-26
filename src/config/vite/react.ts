@@ -100,7 +100,7 @@ export default createViteConfigurationPreset(async ({
   config.plugins.push(checkerPlugin({
     typescript: true,
     eslint: {
-      files: [path.resolve(config.root, SRC_DIR)],
+      files: [path.resolve(pkg.rootDir, SRC_DIR)],
       extensions: EXTENSIONS_WITH_DOT
     }
   }));
