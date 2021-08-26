@@ -1,6 +1,6 @@
 import path from 'path';
 
-import { dirname } from '@darkobits/ts';
+import { dirname } from '@darkobits/fd-name';
 import {
   SRC_DIR,
   OUT_DIR,
