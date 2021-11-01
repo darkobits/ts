@@ -65,7 +65,7 @@
   },
   "devDependencies": {
     "@darkobits/re-pack": "^0.1.12",
-    "@types/faker": "^5.5.8",
+    "@types/faker": "^5.5.9",
     "@types/fs-extra": "^9.0.13",
     "@types/ms": "^0.7.31",
     "@types/update-notifier": "^5.1.0",
