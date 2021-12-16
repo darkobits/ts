@@ -102,7 +102,7 @@ describe('readDotenvUp', () => {
 
       it('should return the contents of the nearest .env file', () => {
         const result = readDotenvUpLocal();
-        expect(findUpMock.sync).toHaveBeenCalledWith('.env', { cwd: undefined });
+        expect(findUpMock.sync).toHaveBeenCalledWith('.env');
         expect(dotenvMock.config).toHaveBeenCalledWith({ path: dotenvPath });
         expect(result).toBe(parsedConfig);
       });
@@ -116,7 +116,7 @@ describe('readDotenvUp', () => {
 
       it('should return an empty object', () => {
         const result = readDotenvUpLocal();
-        expect(findUpMock.sync).toHaveBeenCalledWith('.env', { cwd: undefined });
+        expect(findUpMock.sync).toHaveBeenCalledWith('.env');
         expect(dotenvErrorMock.config).toHaveBeenCalledWith({ path: dotenvPath });
         expect(result).toMatchObject({});
       });

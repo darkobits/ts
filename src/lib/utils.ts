@@ -45,7 +45,12 @@ export function readDotenvUp(cwd?: string) {
     return;
   }
 
-  const envFilePath = findUp.sync('.env', { cwd });
+  const envFilePath = cwd ? findUp.sync('.env', { cwd }) : findUp.sync('.env');
+
+  if (!envFilePath) {
+    return {};
+  }
+
   const result = dotenv.config({ path: envFilePath });
 
   if (result.error) {

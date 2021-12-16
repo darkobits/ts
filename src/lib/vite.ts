@@ -50,7 +50,7 @@ export const getPackageManifest = mem((id: string) => {
 
     try {
       return readPkg.sync({ cwd: curPath });
-    } catch (err) {
+    } catch (err: any) {
       if (err.code === 'ENOENT') {
         // No package.json at this path.
         continue;
