@@ -41,6 +41,10 @@
     // type system compatibility.
     "esModuleInterop": true,
 
+    // Differentiate between `undefined` and non-existent object keys when
+    // type-checking.
+    "exactOptionalPropertyTypes": true,
+
     // Enables experimental support for ES7 decorators.
     "experimentalDecorators": true,
 
