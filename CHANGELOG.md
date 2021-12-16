@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.8.8](https://github.com/darkobits/ts/compare/v0.8.7...v0.8.8) (2021-12-16)
+
+
+### 🐞 Bug Fixes
+
+* Fix login in getPkgInfo, resolveBin. ([b11d4c4](https://github.com/darkobits/ts/commit/b11d4c42ca81e5bb1d12d52a36e0be2d7e0a4e18))
+
 ### [0.8.7](https://github.com/darkobits/ts/compare/v0.8.6...v0.8.7) (2021-12-16)
 
 
