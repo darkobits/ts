@@ -28,7 +28,9 @@ export interface PkgInfo {
  * than the path to where package.json was found.
  */
 export function getPackageInfo(cwd?: string): PkgInfo {
-  const pkgInfo = readPkgUp.sync({ cwd });
+  const dir = cwd ?? dirname();
+
+  const pkgInfo = dir ? readPkgUp.sync({ cwd: dir }) : readPkgUp.sync();
 
   if (!pkgInfo) {
     throw new Error(`${log.prefix('getPackageInfo')} Unable to find a package.json for the project.`);
@@ -66,11 +68,20 @@ export function getPackageInfo(cwd?: string): PkgInfo {
  */
 export function resolveBin(pkgName: string, binName?: string) {
   const name = binName ?? pkgName;
+  const cwd = dirname();
+
+  if (!cwd) {
+    throw new Error(`${log.prefix('resolveBin')} Unable to determine the current directory.`);
+  }
 
   // Resolve the path to the package from our current directory. This will
   // ensure that if the package is installed in a nested node_modules, we should
   // still be able to find it.
-  const pkgPath = resolvePkg(pkgName, { cwd: dirname() });
+  const pkgPath = resolvePkg(pkgName, { cwd });
+
+  if (!pkgPath) {
+    throw new Error(`${log.prefix('resolveBin')} Unable to determine the current package path.`);
+  }
 
   // Resolve the path to the package's binary. If no additional "binName"
   // argument was provided, we assume that the binary name matches the package

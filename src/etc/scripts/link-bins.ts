@@ -34,7 +34,7 @@ async function createSymlink(binName: string, symlinkTarget: string, symlinkPath
         return;
       }
     }
-  } catch (err) {
+  } catch (err: any) {
     if (err.code === 'EINVAL') {
       log.warn(log.prefix('link-bins'), `${log.chalk.green(binName)}: File exists at ${log.chalk.green(symlinkPath)} that is ${log.chalk.bold('not')} a symbolic link. ${log.chalk.red.bold('Refusing to overwrite this file.')}`);
       return;
@@ -86,7 +86,7 @@ async function linkBins() {
 
       try {
         await createSymlink(binName, symlinkTarget, symlinkPath);
-      } catch (err) {
+      } catch (err: any) {
         err.message = `${log.prefix('link-bins')} Error linking ${binName}: ${err.message}`;
         throw err;
       }
