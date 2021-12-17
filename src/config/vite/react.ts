@@ -13,7 +13,7 @@ import linariaPlugin from 'vite-plugin-linaria';
 import tsconfigPathsPlugin from 'vite-tsconfig-paths';
 
 import log from 'lib/log';
-import { gitDescribe, readDotenvUp } from 'lib/utils';
+import { gitDescribe } from 'lib/utils';
 import {
   createViteConfigurationPreset,
   getPackageManifest
@@ -79,17 +79,9 @@ export default createViteConfigurationPreset(async ({
 
   // ----- Environment ---------------------------------------------------------
 
-  // Load variables from the nearest .env file and map them into the appropriate
-  // format.
-  const dotEnv = Object.fromEntries(Object.entries(readDotenvUp() ?? {}).map(([key, value]) => [
-    `process.env.${key}`,
-    JSON.stringify(value)
-  ]));
-
   config.define = {
-    ...dotEnv,
-    'process.env.GIT_DESC': JSON.stringify(gitDescribe()),
-    'process.env.NODE_ENV': JSON.stringify(mode)
+    'import.meta.env.GIT_DESC': JSON.stringify(gitDescribe()),
+    'import.meta.env.NODE_ENV': JSON.stringify(mode)
   };
 
 
