@@ -2,6 +2,43 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.7.0](https://github.com/darkobits/tsx/compare/v0.6.6...v0.7.0) (2021-12-17)
+
+
+### ⚠ BREAKING CHANGES
+
+* This update is a major refactor that replaces Webpack with Vite.
+
+### 🐞 Bug Fixes
+
+* Convert environment mapping back to object. ([21340a9](https://github.com/darkobits/tsx/commit/21340a966200e9ba1bbac8fe48cf9b40c5020af4))
+* Explicitly add "node" to tsconfig/types. ([e022539](https://github.com/darkobits/tsx/commit/e0225398f1732b36f93e15dda28f7a690f13dc88))
+* Fix ESLint options. ([60c0bff](https://github.com/darkobits/tsx/commit/60c0bffe6914a8f6e40ddf8002443fb56c717254))
+* Improve custom merging logic. ([b1cc4f6](https://github.com/darkobits/tsx/commit/b1cc4f619770696554572fca4f8fd6f78057fc19))
+* Revert root to project root. ([d7aa4fc](https://github.com/darkobits/tsx/commit/d7aa4fc2023bd27d1d5b9ae370a1354b50e7bc3e))
+* Update command names. ([4edf2b4](https://github.com/darkobits/tsx/commit/4edf2b4b27667c7c0b7f85b1d74398cea665f5e6))
+* Use `isPlainObject` when merging configs. ([048e8bd](https://github.com/darkobits/tsx/commit/048e8bd2e30d494a0c1c49256100b5b691d0679d))
+* Use named import of `is-plain-object`. ([eeca67c](https://github.com/darkobits/tsx/commit/eeca67c5eeb38f09a7dd9213746d4c7570a30d13))
+* Use wildcard import for `devcert`. ([81ce5fb](https://github.com/darkobits/tsx/commit/81ce5fb288092bb26fdf85892a276ce6a0297b81))
+
+
+### 🏗 Chores
+
+* Add `getLocalIpAddresses` helper. ([8bb1688](https://github.com/darkobits/tsx/commit/8bb16883d2cec207da2f1b41de97bc8003b647fe))
+* **deps:** Update dependencies. ([464a432](https://github.com/darkobits/tsx/commit/464a432c1deb48a7d925cf9904d48eee1b9803bf))
+* **deps:** Update dependencies. ([d7a9b95](https://github.com/darkobits/tsx/commit/d7a9b95117cc628d8bf1f946215dae0a87a5ffd5))
+* **deps:** Update dependencies. ([1b6a938](https://github.com/darkobits/tsx/commit/1b6a938bba8af4f848226a50f667aa4bee1544a9))
+* **deps:** Update dependencies. ([f3bbf97](https://github.com/darkobits/tsx/commit/f3bbf97741f7afb12b587398e3d8571f23876d0b))
+* Suppress .env warning. ([29be106](https://github.com/darkobits/tsx/commit/29be106a06ec31f9db517c237ee18dd08983999c))
+* Update React configuration. ([93d4a54](https://github.com/darkobits/tsx/commit/93d4a54cf0b2756ca38b6a32557fbec91a428974))
+
+
+### 🛠 Refactoring
+
+* "prepare" script only checks IS_CI. ([bf7b9bc](https://github.com/darkobits/tsx/commit/bf7b9bc982472253619b78743c2d30265390cabb))
+* Migrate to Vite. ([da9ffcf](https://github.com/darkobits/tsx/commit/da9ffcfb3b30efd2a1b2dad8efad5df8232fd58b))
+* **react:** Don't call `readDotEnvUp`. ([5554cd5](https://github.com/darkobits/tsx/commit/5554cd56234fb0518305023c9a84621a51d43b5b))
+
 ### [0.6.6](https://github.com/darkobits/tsx/compare/v0.6.5...v0.6.6) (2021-08-17)
 
 
