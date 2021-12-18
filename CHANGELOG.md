@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.7.1](https://github.com/darkobits/tsx/compare/v0.7.0...v0.7.1) (2021-12-18)
+
+
+### 🏗 Chores
+
+* **deps:** Bump dependencies. ([b44d141](https://github.com/darkobits/tsx/commit/b44d141910b2a203c156de9272a66de0315ea4fb))
+
 ## [0.7.0](https://github.com/darkobits/tsx/compare/v0.6.6...v0.7.0) (2021-12-17)
 
 
