@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.7.4](https://github.com/darkobits/tsx/compare/v0.7.3...v0.7.4) (2021-12-18)
+
+
+### 🐞 Bug Fixes
+
+* **vite:** Use build time logger. ([f1cf2d2](https://github.com/darkobits/tsx/commit/f1cf2d2d635130602d4bb79d5ca5cc0e73a3afdc))
+
 ### [0.7.3](https://github.com/darkobits/tsx/compare/v0.7.2...v0.7.3) (2021-12-18)
 
 
