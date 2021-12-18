@@ -7,6 +7,7 @@ import { isPlainObject } from 'is-plain-object';
 import mem from 'mem';
 import ms from 'ms';
 import readPkg from 'read-pkg';
+import inspect from 'vite-plugin-inspect';
 
 import {
   ViteConfiguration,
@@ -166,6 +167,11 @@ export const createViteConfigurationPreset = (
       return a;
     }
   });
+
+  if (finalConfig.inspect) {
+    finalConfig.plugins.push(inspect());
+    log.info(log.prefix('inspect'), `${log.chalk.bold('"vite-plugin-inspect"')} added to compilation.`);
+  }
 
   return finalConfig;
 };
