@@ -47,7 +47,7 @@ function onCompletePlugin(): Plugin {
   return {
     name: '__internal-tsx-vite-plugin-on-complete',
     writeBundle: () => {
-      log.info('vite', `Done in ${runTime}.`);
+      log.info(log.prefix('vite'), log.chalk.gray(`Done in ${log.chalk.white(runTime)}. ✨`));
     }
   };
 }
