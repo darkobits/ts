@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.7.2](https://github.com/darkobits/tsx/compare/v0.7.1...v0.7.2) (2021-12-18)
+
+
+### ✨ Features
+
+* **inspect:** Enable `vite-plugin-inspect` when the `inspect` config param is present. ([9521844](https://github.com/darkobits/tsx/commit/9521844c1fb612302f1d76f402e6254d88b76925))
+
 ### [0.7.1](https://github.com/darkobits/tsx/compare/v0.7.0...v0.7.1) (2021-12-18)
 
 
