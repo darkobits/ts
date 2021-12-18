@@ -16,7 +16,8 @@ import {
 } from 'etc/types';
 import log from 'lib/log';
 
-import type { UserConfigFn } from 'vite';
+import type { Plugin, UserConfigFn } from 'vite';
+
 
 /**
  * @private
@@ -31,6 +32,18 @@ function generateViteConfigurationScaffold(): ViteConfiguration {
     plugins: [],
     resolve: {},
     server: {}
+  };
+}
+
+
+export default function onCompletePlugin(): Plugin {
+  const runTime = log.createTimer();
+
+  return {
+    name: '__internal-tsx-vite-plugin-on-complete',
+    writeBundle: () => {
+      log.info('vite', `Done in ${runTime}.`);
+    }
   };
 }
 
