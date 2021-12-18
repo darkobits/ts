@@ -36,7 +36,12 @@ function generateViteConfigurationScaffold(): ViteConfiguration {
 }
 
 
-export default function onCompletePlugin(): Plugin {
+/**
+ * @private
+ *
+ * Plugin that logs total build time.
+ */
+function onCompletePlugin(): Plugin {
   const runTime = log.createTimer();
 
   return {
@@ -185,6 +190,8 @@ export const createViteConfigurationPreset = (
     finalConfig.plugins.push(inspect());
     log.info(log.prefix('inspect'), `${log.chalk.bold('"vite-plugin-inspect"')} added to compilation.`);
   }
+
+  finalConfig.plugins.unshift(onCompletePlugin());
 
   return finalConfig;
 };
