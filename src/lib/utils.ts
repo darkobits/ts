@@ -25,8 +25,12 @@ export function getLocalIpAddresses() {
  */
 export function gitDescribe() {
   const git = chex.sync('git');
-  // Remove the 'g' that immediately precedes the commit SHA.
-  const result = git.sync(['describe', '--tags', '--always']).stdout.replace(/-g(\w{7,})$/g, '-$1');
+  const result = git.sync(['describe', '--tags', '--always']).stdout
+    // Remove the 'g' that immediately precedes the commit SHA.
+    .replace(/-g(\w{7,})$/g, '-$1')
+    // Replace the 'commits since last tag' segment with a dash.
+    .replace(/-\d+-/g, '-');
+
   log.verbose(log.prefix('gitDescribe'), `Current Git description: ${log.chalk.green(result)}`);
   return result;
 }
