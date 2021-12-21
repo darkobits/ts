@@ -186,7 +186,8 @@ export const createViteConfigurationPreset = (
       log.warn(`[${key}] Encountered unknown:`, a, b);
 
       return a;
-    }
+    },
+    isMergeableObject: isPlainObject
   });
 
   if (finalConfig.inspect) {
