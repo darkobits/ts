@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.7.9](https://github.com/darkobits/tsx/compare/v0.7.8...v0.7.9) (2021-12-21)
+
+
+### 🐞 Bug Fixes
+
+* Use `isMergeableObject` with `deepmerge`. ([45bd28c](https://github.com/darkobits/tsx/commit/45bd28cc7721f2db2135d8e679f2a98f172c4b03))
+
 ### [0.7.8](https://github.com/darkobits/tsx/compare/v0.7.7...v0.7.8) (2021-12-21)
 
 
