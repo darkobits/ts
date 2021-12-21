@@ -28,7 +28,9 @@ import type { Plugin, UserConfigFn } from 'vite';
  */
 function generateViteConfigurationScaffold(): ViteConfiguration {
   return {
-    build: {},
+    build: {
+      outDir: ''
+    },
     plugins: [],
     resolve: {},
     server: {}

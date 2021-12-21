@@ -5,8 +5,12 @@ import type ms from 'ms';
 import type { UserConfig } from 'vite';
 
 
+export interface ViteBuildConfiguration extends NonNullable<UserConfig['build']> {
+  outDir: string;
+}
+
 export interface ViteConfiguration extends UserConfig {
-  build: NonNullable<UserConfig['build']>;
+  build: ViteBuildConfiguration;
   plugins: NonNullable<UserConfig['plugins']>;
   resolve: NonNullable<UserConfig['resolve']>;
   server: NonNullable<UserConfig['server']>;
