@@ -152,17 +152,18 @@ export const createViteConfigurationPreset = (
     return baseConfig;
   }
 
-  const userConfigScaffold = generateViteConfigurationScaffold();
+  // const userConfigScaffold = generateViteConfigurationScaffold();
 
   const returnedUserConfig = await userConfigFactory({
     ...context,
-    config: userConfigScaffold,
+    config: baseConfig,
     reconfigurePlugin: reconfigurePlugin(baseConfig)
   });
 
   // If the factory did not return a value, defer to the baseConfig object we
   // passed-in and modified in-place.
-  const userConfig = returnedUserConfig ?? userConfigScaffold;
+  // const userConfig = returnedUserConfig ?? userConfigScaffold;
+  const userConfig = returnedUserConfig ?? baseConfig;
 
 
   // ----- Merge Configurations ------------------------------------------------
