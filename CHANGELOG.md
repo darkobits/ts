@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.7.8](https://github.com/darkobits/tsx/compare/v0.7.7...v0.7.8) (2021-12-21)
+
+
+### 🐞 Bug Fixes
+
+* Pass base config to user config functions. ([a8d9a28](https://github.com/darkobits/tsx/commit/a8d9a2810bb36b7a86cb80be87233fc63e22dce8))
+
 ### [0.7.7](https://github.com/darkobits/tsx/compare/v0.7.6...v0.7.7) (2021-12-21)
 
 
