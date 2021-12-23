@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.7.10](https://github.com/darkobits/tsx/compare/v0.7.9...v0.7.10) (2021-12-23)
+
+
+### 🏗 Chores
+
+* Update Vite defines. ([531dd5d](https://github.com/darkobits/tsx/commit/531dd5d904e686a5322008486285b26c17102f24))
+
 ### [0.7.9](https://github.com/darkobits/tsx/compare/v0.7.8...v0.7.9) (2021-12-21)
 
 
