@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.7.12](https://github.com/darkobits/tsx/compare/v0.7.11...v0.7.12) (2021-12-29)
+
+
+### 🏗 Chores
+
+* Add `sideEffects: false` to support tree-shaking. ([7828169](https://github.com/darkobits/tsx/commit/7828169533c25cf896fb85e1f99dfc4a5ba30572))
+* Update tsconfig.json. ([08f3dc3](https://github.com/darkobits/tsx/commit/08f3dc3576f223bb8567f97dad43c5ccf328e6c8))
+
 ### [0.7.11](https://github.com/darkobits/tsx/compare/v0.7.10...v0.7.11) (2021-12-29)
 
 
