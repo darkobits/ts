@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.7.11](https://github.com/darkobits/tsx/compare/v0.7.10...v0.7.11) (2021-12-29)
+
+
+### ✨ Features
+
+* Add `injectScript` and `loadFont` utilities. ([276c176](https://github.com/darkobits/tsx/commit/276c17602306aa99cee09c1ecc5d292a3a6e1a4a))
+
 ### [0.7.10](https://github.com/darkobits/tsx/compare/v0.7.9...v0.7.10) (2021-12-23)
 
 
