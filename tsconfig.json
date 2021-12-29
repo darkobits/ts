@@ -4,6 +4,8 @@
   "compilerOptions": {
     "baseUrl": "src",
     "outDir": "dist",
+    // Type errors with `vite` and `vite-plugin-checker`.
+    "skipLibCheck": true,
     "lib": [
       "DOM",
       "DOM.Iterable",
