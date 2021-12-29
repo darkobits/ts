@@ -1,4 +1,10 @@
 /**
+ * This is a runtime utility and has been factored-out into its own module to
+ * avoid dependency bloat in consumers.
+ */
+
+
+/**
  * Injects a <script> tag with the provided URL into the document and returns a
  * Promise that resolves when the script has finished loading.
  */

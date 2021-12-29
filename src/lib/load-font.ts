@@ -1,4 +1,10 @@
 /**
+ * This is a runtime utility and has been factored-out into its own module to
+ * avoid dependency bloat in consumers.
+ */
+
+
+/**
  * Options object accepted by `loadFont`.
  */
 export interface LoadFontOptions extends Omit<FontFaceDescriptors, 'weight'> {
@@ -32,7 +38,7 @@ export async function loadFont(opts: LoadFontOptions) {
 
   const font = new FontFace(family, urlValue, {
     ...rest,
-    weight: String(weight)
+    weight: weight ? String(weight) : undefined
   } as Required<FontFaceDescriptors>);
 
   document.fonts.add(await font.load());
