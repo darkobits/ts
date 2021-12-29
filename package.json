@@ -17,6 +17,7 @@
     "dist"
   ],
   "main": "dist/index.js",
+  "sideEffects": false,
   "scripts": {
     "prepare": "nr prepare",
     "prepublishOnly": "re-pack guard",
