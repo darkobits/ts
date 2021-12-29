@@ -4,7 +4,10 @@
   "compilerOptions": {
     "baseUrl": "src",
     "outDir": "dist",
-    // Lots of TS errors from fork-ts-checker-webpack-plugin.
-    "skipLibCheck": true
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ESNext"
+    ]
   }
 }
