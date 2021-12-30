@@ -1,14 +1,5 @@
-import jest from 'config/jest';
-import nr from 'config/nr';
-
-const babel = require.resolve('config/babel');
-const babelEsm = require.resolve('config/babel-esm');
-const eslint = require.resolve('config/eslint');
-
-export {
-  babel,
-  babelEsm,
-  eslint,
-  jest,
-  nr
-};
+export { default as jest } from 'config/jest';
+export { default as nr } from 'config/nr';
+export const babel = require.resolve('config/babel');
+export const babelEsm = require.resolve('config/babel-esm');
+export const eslint = require.resolve('config/eslint');
