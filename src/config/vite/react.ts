@@ -15,8 +15,7 @@ import tsconfigPathsPlugin from 'vite-tsconfig-paths';
 import log from 'lib/log';
 import { gitDescribe } from 'lib/utils';
 import {
-  createViteConfigurationPreset,
-  getPackageManifest
+  createViteConfigurationPreset
 } from 'lib/vite';
 
 
@@ -43,23 +42,11 @@ export default createViteConfigurationPreset(async ({
     config.build.rollupOptions = {
       output: {
         entryFileNames: '[name]-[hash].js',
-        chunkFileNames: '[name].js',
         assetFileNames: 'assets/[name]-[hash][extname]',
-        manualChunks: id => {
-          const cleanedId = id.replace(/\0/g, '');
-
-          if (id.includes('node_modules')) {
-            const dirname = path.dirname(cleanedId);
-            const manifest = getPackageManifest(dirname);
-
-            if (manifest) {
-              return `vendor/${manifest.name}-${manifest.version}`;
-            }
-
-            throw new Error(`Unable to parse manifest for vendor module: ${id}`);
-          }
-
-          return 'app';
+        chunkFileNames: '[name]-[hash].js',
+        manualChunks: rawId => {
+          const id = rawId.replace(/\0/g, '');
+          if (id.includes('node_modules')) return 'vendor';
         }
       }
     };
@@ -130,5 +117,27 @@ export default createViteConfigurationPreset(async ({
 
     // eslint-disable-next-line require-atomic-updates
     config.server.https = { key, cert };
+  }
+
+
+  // ----- Hacks ---------------------------------------------------------------
+
+  /**
+   * See: https://github.com/vitejs/vite/discussions/5079#discussioncomment-1890839
+   */
+  if (isProduction) {
+    // eslint-disable-next-line require-atomic-updates
+    config.css = {
+      postcss: {
+        plugins: [{
+          postcssPlugin: 'internal:charset-removal',
+          AtRule: {
+            charset: atRule => {
+              if (atRule.name === 'charset') atRule.remove();
+            }
+          }
+        }]
+      }
+    };
   }
 });
