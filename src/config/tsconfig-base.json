@@ -14,7 +14,13 @@
     ],
     "types": [
       "node",
-      "vite/client"
+      "vite/client",
+      // Unfortunately, Typescript does not merge "types" from parent
+      // configurations. Therefore, although this is not one of our
+      // dependencies, this is included here so that consumers who use this
+      // plugin do not have to re-declare "types" => "vite/client" in their
+      // configuration.
+      "vite-plugin-pwa/client"
     ]
   }
 }
