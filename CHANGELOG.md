@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.7.16](https://github.com/darkobits/tsx/compare/v0.7.15...v0.7.16) (2021-12-31)
+
+
+### 🐞 Bug Fixes
+
+* Restore `jest` export. ([93c9054](https://github.com/darkobits/tsx/commit/93c9054e5065dcb7d465cf8e59c9240adf11bd65))
+
 ### [0.7.15](https://github.com/darkobits/tsx/compare/v0.7.14...v0.7.15) (2021-12-31)
 
 
