@@ -3,7 +3,7 @@ import {
   SRC_DIR,
   OUT_DIR
 } from 'etc/constants';
-import { createBabelNodeCommand, getNpmInfo } from 'lib/utils';
+import { createBabelNodeCommand } from 'lib/utils';
 
 import type { ConfigurationFactory } from '@darkobits/nr/dist/etc/types';
 
@@ -244,14 +244,11 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
 
     createBabelNodeCommand('update-notifier', [require.resolve('etc/scripts/update-notifier')]);
 
-    const { event } = getNpmInfo();
-    const shouldSkipPrepare = isCI && ['install', 'ci'].includes(event);
-
     createScript('prepare', {
       group: 'Lifecycle',
       description: 'Run after "npm install" to ensure the project builds correctly and tests are passing.',
       timing: true,
-      run: shouldSkipPrepare ? [] : [
+      run: isCI ? [] : [
         'build',
         'test.passWithNoTests',
         'update-notifier'
