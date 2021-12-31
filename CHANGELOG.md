@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.8.11](https://github.com/darkobits/ts/compare/v0.8.10...v0.8.11) (2021-12-31)
+
+
+### 🐞 Bug Fixes
+
+* Ensure prepare script does not run in CI. ([1ef64b7](https://github.com/darkobits/ts/commit/1ef64b72adc63bec6a58b5e6d98d32cb9cef26f1))
+
 ### [0.8.10](https://github.com/darkobits/ts/compare/v0.8.9...v0.8.10) (2021-12-30)
 
 
