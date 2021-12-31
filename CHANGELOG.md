@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.7.15](https://github.com/darkobits/tsx/compare/v0.7.14...v0.7.15) (2021-12-31)
+
+
+### 🛠 Refactoring
+
+* **react:** Update code-splitting logic. ([3356e90](https://github.com/darkobits/tsx/commit/3356e905522d1552aa48d9eb36c1116dfabc7de5))
+
 ### [0.7.14](https://github.com/darkobits/tsx/compare/v0.7.13...v0.7.14) (2021-12-31)
 
 
