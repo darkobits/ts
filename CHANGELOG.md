@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.7.14](https://github.com/darkobits/tsx/compare/v0.7.13...v0.7.14) (2021-12-31)
+
+
+### 🛠 Refactoring
+
+* Remove `loadFont`. ([13cec41](https://github.com/darkobits/tsx/commit/13cec41667d6a87b127659869cdac556c004a1b4))
+
+
+### 🏗 Chores
+
+* Add tests. ([9f763fb](https://github.com/darkobits/tsx/commit/9f763fbfd1e75775e0117e52b4f0acafcc19a70a))
+* **deps:** Update dependencies. ([642d05f](https://github.com/darkobits/tsx/commit/642d05f7994a97798e1aca5ab9055e50f13ed8a0))
+* Update ci.yml. ([790b3e8](https://github.com/darkobits/tsx/commit/790b3e83539aed7be4b5f2fdd876b9e0d30c8dff))
+* Update tests. ([867ec50](https://github.com/darkobits/tsx/commit/867ec506c8698aba8260808f305697b632d96853))
+
 ### [0.7.13](https://github.com/darkobits/tsx/compare/v0.7.12...v0.7.13) (2021-12-29)
 
 
