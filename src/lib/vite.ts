@@ -16,7 +16,15 @@ import {
 } from 'etc/types';
 import log from 'lib/log';
 
-import type { Plugin, UserConfigFn } from 'vite';
+import type { UserConfigFn } from 'vite';
+
+
+/**
+ * @private
+ *
+ * Tracks build time.
+ */
+const runTime = log.createTimer();
 
 
 /**
@@ -34,23 +42,6 @@ function generateViteConfigurationScaffold(): ViteConfiguration {
     plugins: [],
     resolve: {},
     server: {}
-  };
-}
-
-
-/**
- * @private
- *
- * Plugin that logs total build time.
- */
-function onCompletePlugin(): Plugin {
-  const runTime = log.createTimer();
-
-  return {
-    name: '__internal-tsx-vite-plugin-on-complete',
-    writeBundle: () => {
-      log.info(log.prefix('vite'), log.chalk.gray(`Done in ${log.chalk.white(runTime)}. ✨`));
-    }
   };
 }
 
@@ -190,12 +181,22 @@ export const createViteConfigurationPreset = (
     isMergeableObject: isPlainObject
   });
 
+
+  // ----- Miscellany ----------------------------------------------------------
+
   if (finalConfig.inspect) {
     finalConfig.plugins.push(inspect());
     log.info(log.prefix('inspect'), `${log.chalk.bold('"vite-plugin-inspect"')} added to compilation.`);
   }
 
-  finalConfig.plugins.unshift(onCompletePlugin());
+  if (mode === 'production') {
+    process.on('exit', code => {
+      if (code === 0) {
+        log.info(log.prefix('vite'), log.chalk.gray(`Done in ${log.chalk.white(runTime)}. ✨`));
+      }
+    });
+  }
+
 
   return finalConfig;
 };
