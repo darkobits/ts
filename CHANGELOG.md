@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.7.18](https://github.com/darkobits/tsx/compare/v0.7.17...v0.7.18) (2022-01-06)
+
+
+### 🛠 Refactoring
+
+* **vite:** Improve build time output. ([7826d82](https://github.com/darkobits/tsx/commit/7826d826eb6e7dcbf2297e8adbf639bb95040301))
+
 ### [0.7.17](https://github.com/darkobits/tsx/compare/v0.7.16...v0.7.17) (2022-01-06)
 
 
