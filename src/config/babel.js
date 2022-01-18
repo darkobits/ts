@@ -1,14 +1,4 @@
-module.exports = api => {
-  const target = api.caller(caller => caller && caller.target);
-
-  // If compiling with Webpack and the 'target' has been set to 'node', use the
-  // base preset only.
-  if (target === 'node') {
-    return {
-      extends: require('@darkobits/ts').babel
-    };
-  }
-
+module.exports = () => {
   return {
     extends: require('@darkobits/ts').babel,
     presets: [
