@@ -5,7 +5,8 @@ import {
   OUT_DIR,
   EXTENSIONS_WITH_DOT
 } from '@darkobits/ts/etc/constants';
-import reactRefreshPlugin from '@vitejs/plugin-react-refresh';
+// import reactRefreshPlugin from '@vitejs/plugin-react-refresh';
+import reactPlugin from '@vitejs/plugin-react';
 import * as devcert from 'devcert';
 import checkerPlugin from 'vite-plugin-checker';
 // @ts-expect-error - No type declarations.
@@ -56,12 +57,16 @@ export default createViteConfigurationPreset(async ({
 
   // This ensures that React and React DOM are always resolved to the same
   // package. Not doing this can result in hooks-related errors.
-  config.resolve.dedupe = [require.resolve('react'), require.resolve('react-dom')];
+  // TODO: This issue may have been fixed via plugin-react.
+  // config.resolve.dedupe = [
+  //   require.resolve('react'), require.resolve('react-dom')
+  // ];
 
   // Prevents https://github.com/vitejs/vite/issues/813.
-  config.optimizeDeps = {
-    include: [require.resolve('react')]
-  };
+  // TODO: This issue may have been fixed via plugin-react.
+  // config.optimizeDeps = {
+  //   include: [require.resolve('react')]
+  // };
 
 
   // ----- Environment ---------------------------------------------------------
@@ -78,18 +83,23 @@ export default createViteConfigurationPreset(async ({
 
   // ----- Plugins -------------------------------------------------------------
 
-  // Enable fast in-band TypeScript and ESLint support using separate worker
-  // threads.
-  config.plugins.push(checkerPlugin({
-    typescript: true,
-    eslint: {
-      files: [path.resolve(pkg.rootDir, SRC_DIR)],
-      extensions: EXTENSIONS_WITH_DOT
+  config.plugins.push(reactPlugin({
+    babel: {
+      babelrc: true,
+      configFile: true
     }
   }));
 
-  // Enable React Fast Refresh.
-  config.plugins.push(reactRefreshPlugin());
+  // Enable fast TypeScript and ESLint support using separate worker threads.
+  config.plugins.push(checkerPlugin({
+    typescript: true,
+    eslint: {
+      files: [
+        path.resolve(pkg.rootDir, SRC_DIR)
+      ],
+      extensions: EXTENSIONS_WITH_DOT
+    }
+  }));
 
   // Add support for Linaria.
   // See: https://github.com/denn1s/vite-plugin-linaria
