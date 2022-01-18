@@ -10,6 +10,7 @@ import * as devcert from 'devcert';
 import checkerPlugin from 'vite-plugin-checker';
 // @ts-expect-error
 import linariaPlugin from 'vite-plugin-linaria';
+import svgrPlugin from 'vite-plugin-svgr';
 import tsconfigPathsPlugin from 'vite-tsconfig-paths';
 
 import log from 'lib/log';
@@ -112,6 +113,17 @@ export default createViteConfigurationPreset(async ({
   // See: https://github.com/aleclarson/vite-tsconfig-paths
   config.plugins.push(tsconfigPathsPlugin({
     projects: [pkg.rootDir]
+  }));
+
+  // Import SVG assets as React components.
+  config.plugins.push(svgrPlugin({
+    svgrOptions: {
+      // Replace SVG `width` and `height` value by `1em` in order to make SVG
+      // size inherit from text size.
+      icon: true,
+      // Memoize components.
+      memo: true
+    }
   }));
 
 
