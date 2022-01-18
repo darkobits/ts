@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.8.13](https://github.com/darkobits/ts/compare/v0.8.12...v0.8.13) (2022-01-18)
+
+
+### 🛠 Refactoring
+
+* **jest:** Disable Watchman. ([deca05e](https://github.com/darkobits/ts/commit/deca05e9bcd0154d6518d2e920063bb526612b4d))
+
 ### [0.8.12](https://github.com/darkobits/ts/compare/v0.8.11...v0.8.12) (2022-01-06)
 
 
