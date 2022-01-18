@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.7.19-beta.0](https://github.com/darkobits/tsx/compare/v0.7.18...v0.7.19-beta.0) (2022-01-18)
+
+
+### 🛠 Refactoring
+
+* Use @vitejs/plugin-react. ([c9204bc](https://github.com/darkobits/tsx/commit/c9204bc4704f6eca613ad6fc10dd0a88a4c71311))
+
 ### [0.7.18](https://github.com/darkobits/tsx/compare/v0.7.17...v0.7.18) (2022-01-06)
 
 
