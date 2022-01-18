@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.7.19-beta.1](https://github.com/darkobits/tsx/compare/v0.7.19-beta.0...v0.7.19-beta.1) (2022-01-18)
+
+
+### 🐞 Bug Fixes
+
+* **plugin-react:** Exclude node_modules. ([1716022](https://github.com/darkobits/tsx/commit/1716022ad11d5536be93c189498db5b5d215d396))
+
 ### [0.7.19-beta.0](https://github.com/darkobits/tsx/compare/v0.7.18...v0.7.19-beta.0) (2022-01-18)
 
 
