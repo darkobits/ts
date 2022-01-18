@@ -5,11 +5,10 @@ import {
   OUT_DIR,
   EXTENSIONS_WITH_DOT
 } from '@darkobits/ts/etc/constants';
-// import reactRefreshPlugin from '@vitejs/plugin-react-refresh';
 import reactPlugin from '@vitejs/plugin-react';
 import * as devcert from 'devcert';
 import checkerPlugin from 'vite-plugin-checker';
-// @ts-expect-error - No type declarations.
+// @ts-expect-error
 import linariaPlugin from 'vite-plugin-linaria';
 import tsconfigPathsPlugin from 'vite-tsconfig-paths';
 
