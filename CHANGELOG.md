@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.8.0-beta.0](https://github.com/darkobits/tsx/compare/v0.7.19-beta.4...v0.8.0-beta.0) (2022-01-18)
+
+
+### ✨ Features
+
+* **react:** Add `vite-plugin-svgr`. ([4b42ac0](https://github.com/darkobits/tsx/commit/4b42ac0b60e71383c7704c1f54a34213de8bbbcd))
+
 ### [0.7.19-beta.4](https://github.com/darkobits/tsx/compare/v0.7.19-beta.3...v0.7.19-beta.4) (2022-01-18)
 
 
