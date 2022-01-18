@@ -1,4 +1,3 @@
-
 module.exports = api => {
   const target = api.caller(caller => caller && caller.target);
 
@@ -16,7 +15,6 @@ module.exports = api => {
       ['@babel/preset-env', {
         useBuiltIns: 'entry',
         corejs: 3,
-        targets: { node: '14' },
         // Do not transpile import() statements. This will allow packages that
         // publish CommonJS to import ES Modules.
         exclude: ['@babel/plugin-proposal-dynamic-import']

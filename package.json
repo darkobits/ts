@@ -37,17 +37,17 @@
     "vite": "^2.7.2"
   },
   "dependencies": {
-    "@babel/plugin-transform-runtime": "^7.16.7",
+    "@babel/plugin-transform-runtime": "^7.16.8",
     "@babel/preset-react": "^7.16.7",
     "@darkobits/chex": "^1.0.2",
     "@darkobits/log": "^2.0.0-beta.16",
     "@darkobits/ts": "^0.8.12",
     "@linaria/babel-preset": "^3.0.0-beta.15",
-    "@vitejs/plugin-react": "^1.1.4",
+    "@vitejs/plugin-react": "1.0.8",
     "bytes": "^3.1.1",
     "deepmerge": "^4.2.2",
     "devcert": "^1.2.0",
-    "dotenv": "^10.0.0",
+    "dotenv": "^14.2.0",
     "fs-extra": "^10.0.0",
     "get-port": "^5.1.1",
     "is-ci": "^3.0.1",
@@ -59,7 +59,7 @@
     "vite-plugin-checker": "^0.3.4",
     "vite-plugin-inspect": "^0.3.13",
     "vite-plugin-linaria": "^1.0.0",
-    "vite-plugin-pwa": "^0.11.12",
+    "vite-plugin-pwa": "^0.11.13",
     "vite-tsconfig-paths": "^3.3.17"
   },
   "devDependencies": {
