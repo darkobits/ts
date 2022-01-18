@@ -86,7 +86,10 @@ export default createViteConfigurationPreset(async ({
   config.plugins.push(reactPlugin({
     babel: {
       babelrc: true,
-      configFile: true
+      configFile: true,
+      exclude: [
+        /node_modules/g
+      ]
     }
   }));
 
