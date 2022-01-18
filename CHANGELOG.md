@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.7.19](https://github.com/darkobits/tsx/compare/v0.7.18...v0.7.19) (2022-01-18)
+
+
+### 🛠 Refactoring
+
+* Use @vitejs/plugin-react. ([c9204bc](https://github.com/darkobits/tsx/commit/c9204bc4704f6eca613ad6fc10dd0a88a4c71311))
+
+
+### 🏗 Chores
+
+* **deps:** Update dependencies. ([33d76f4](https://github.com/darkobits/tsx/commit/33d76f43d41b76317e83da065e2e4e39586b6cbc))
+
+
+### 🐞 Bug Fixes
+
+* **plugin-react:** Exclude node_modules. ([3efdbf0](https://github.com/darkobits/tsx/commit/3efdbf01d339273a4dd8a945cfbbf47a191a5a48))
+* Update Babel config. ([2a3c015](https://github.com/darkobits/tsx/commit/2a3c0150bfe247b7231b200c07fefa2ccb5e5afa))
+* Use `plugin-react@1.0.5`. ([f498fad](https://github.com/darkobits/tsx/commit/f498fadddba89d4d8a23bbfc86973f357a99728b))
+* Use `plugin-react@1.0.8` ([cbba508](https://github.com/darkobits/tsx/commit/cbba5084ccf0e94ad0caefee3558895b3c69b103))
+
+
+### ✨ Features
+
+* **react:** Add `vite-plugin-svgr`. ([bf75584](https://github.com/darkobits/tsx/commit/bf7558435da749639813bde46d4a3b5f42417092))
+
 ### [0.7.18](https://github.com/darkobits/tsx/compare/v0.7.17...v0.7.18) (2022-01-06)
 
 
