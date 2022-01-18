@@ -28,5 +28,9 @@ export default (userConfig = {}) => merge({
       functions: 80,
       lines: 80
     }
-  }
+  },
+  // Watchman started causing issues with M1 / Monterey. This dependency is
+  // difficult to debug, and disabling it does not seem to entail performance
+  // degradations for small/medium projects.
+  watchman: false
 }, userConfig);
