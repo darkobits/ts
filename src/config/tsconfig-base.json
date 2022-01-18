@@ -20,7 +20,8 @@
       // dependencies, this is included here so that consumers who use this
       // plugin do not have to re-declare "types" => "vite/client" in their
       // configuration.
-      "vite-plugin-pwa/client"
+      "vite-plugin-pwa/client",
+      "vite-plugin-svgr/client"
     ]
   }
 }
