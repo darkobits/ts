@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.7.19-beta.3](https://github.com/darkobits/tsx/compare/v0.7.19-beta.2...v0.7.19-beta.3) (2022-01-18)
+
+
+### 🐞 Bug Fixes
+
+* Update Babel config. ([81d9baa](https://github.com/darkobits/tsx/commit/81d9baa9f32413d7c72981463d01c0b4476c2f83))
+
 ### [0.7.19-beta.2](https://github.com/darkobits/tsx/compare/v0.7.19-beta.1...v0.7.19-beta.2) (2022-01-18)
 
 
