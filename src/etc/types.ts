@@ -4,9 +4,19 @@ import type merge from 'deepmerge';
 import type ms from 'ms';
 import type { UserConfig } from 'vite';
 
+type BaseBuildOptions = NonNullable<UserConfig['build']>;
+type BaseBuildRollupOptions = NonNullable<BaseBuildOptions['rollupOptions']>;
+type BaseBuildRollupOutputOptions = NonNullable<BaseBuildRollupOptions['output']>;
+type BaseBuildRollupPluginsOptions = NonNullable<BaseBuildRollupOptions['plugins']>;
 
-export interface ViteBuildConfiguration extends NonNullable<UserConfig['build']> {
+export interface ViteBuildRollupOptions extends BaseBuildRollupOptions {
+  output: BaseBuildRollupOutputOptions;
+  plugins: BaseBuildRollupPluginsOptions;
+}
+
+export interface ViteBuildConfiguration extends BaseBuildOptions {
   outDir: string;
+  rollupOptions: ViteBuildRollupOptions;
 }
 
 export interface ViteConfiguration extends UserConfig {

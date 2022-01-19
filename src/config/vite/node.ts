@@ -30,9 +30,7 @@ export default createViteConfigurationPreset(({ config, mode, pkg }) => {
 
   config.build.lib.fileName = path.basename(config.build.lib.entry);
 
-  config.build.rollupOptions = {
-    external: Object.keys(pkg.json.dependencies ?? [])
-  };
+  config.build.rollupOptions.external = Object.keys(pkg.json.dependencies ?? []);
 
 
   // ----- Environment ---------------------------------------------------------

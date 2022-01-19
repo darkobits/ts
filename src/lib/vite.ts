@@ -37,7 +37,11 @@ const runTime = log.createTimer();
 function generateViteConfigurationScaffold(): ViteConfiguration {
   return {
     build: {
-      outDir: ''
+      outDir: '',
+      rollupOptions: {
+        output: {},
+        plugins: []
+      }
     },
     plugins: [],
     resolve: {},

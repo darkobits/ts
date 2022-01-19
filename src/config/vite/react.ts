@@ -40,15 +40,13 @@ export default createViteConfigurationPreset(async ({
   // Creates bundles for each production dependency by name and version. Assets
   // and application code are named using hashes.
   if (isProduction) {
-    config.build.rollupOptions = {
-      output: {
-        entryFileNames: '[name]-[hash].js',
-        assetFileNames: 'assets/[name]-[hash][extname]',
-        chunkFileNames: '[name]-[hash].js',
-        manualChunks: rawId => {
-          const id = rawId.replace(/\0/g, '');
-          if (id.includes('node_modules')) return 'vendor';
-        }
+    config.build.rollupOptions.output = {
+      entryFileNames: '[name]-[hash].js',
+      assetFileNames: 'assets/[name]-[hash][extname]',
+      chunkFileNames: '[name]-[hash].js',
+      manualChunks: rawId => {
+        const id = rawId.replace(/\0/g, '');
+        if (id.includes('node_modules')) return 'vendor';
       }
     };
   }
