@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.8.0](https://github.com/darkobits/tsx/compare/v0.7.21...v0.8.0) (2022-01-19)
+
+
+### ✨ Features
+
+* Add `manualChunksMap` helper. ([2773863](https://github.com/darkobits/tsx/commit/27738635678ab3746c8b6759dd8cc49d271f068c))
+
 ### [0.7.21](https://github.com/darkobits/tsx/compare/v0.7.20...v0.7.21) (2022-01-19)
 
 
