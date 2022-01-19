@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.7.20](https://github.com/darkobits/tsx/compare/v0.7.19...v0.7.20) (2022-01-19)
+
+
+### 🛠 Refactoring
+
+* Update Vite configuration scaffold. ([eed6946](https://github.com/darkobits/tsx/commit/eed69463f3659df570ca5f2f1168f3eadde5ba78))
+
 ### [0.7.19](https://github.com/darkobits/tsx/compare/v0.7.18...v0.7.19) (2022-01-18)
 
 
