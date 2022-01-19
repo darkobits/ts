@@ -70,3 +70,29 @@ export function readDotenvUp(cwd?: string) {
 
   return result.parsed;
 }
+
+
+export interface ManualChunksSpec {
+  name: string;
+  include: Array<string>;
+}
+
+
+/**
+ * Provided an ordered set of chunk name / include pattern specs, returns a
+ * function that can be assigned to the value of `manualChunks` in a Vite
+ * configuration object to perform code splitting.
+ */
+export function generateManualChunksMap(specs: Array<ManualChunksSpec>) {
+  return (rawId: string) => {
+    const id = rawId.replace(/\0/g, '');
+
+    for (const spec of specs) {
+      for (const include of spec.include) {
+        if (id.includes(include)) {
+          return spec.name;
+        }
+      }
+    }
+  };
+}
