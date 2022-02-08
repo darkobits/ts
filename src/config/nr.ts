@@ -1,5 +1,3 @@
-import { createBabelNodeCommand } from '@darkobits/nr/dist/lib/commands';
-
 import {
   EXTENSIONS_WITH_DOT,
   SRC_DIR,
@@ -10,7 +8,13 @@ import type { ConfigurationFactory } from '@darkobits/nr/dist/etc/types';
 
 
 export default function(userConfigFactory?: ConfigurationFactory): ConfigurationFactory {
-  return async ({ createCommand, createNodeCommand, createScript, isCI }) => {
+  return async ({
+    createCommand,
+    createNodeCommand,
+    createBabelNodeCommand,
+    createScript,
+    isCI
+  }) => {
     // ----- Build: Babel Commands ---------------------------------------------
 
     const babelFlags = {
@@ -259,7 +263,13 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
     });
 
     if (typeof userConfigFactory === 'function') {
-      await userConfigFactory({ createCommand, createNodeCommand, createScript, isCI });
+      await userConfigFactory({
+        createCommand,
+        createNodeCommand,
+        createBabelNodeCommand,
+        createScript,
+        isCI
+      });
     }
   };
 }
