@@ -1,9 +1,10 @@
+import { createBabelNodeCommand } from '@darkobits/nr/dist/lib/commands';
+
 import {
   EXTENSIONS_WITH_DOT,
   SRC_DIR,
   OUT_DIR
 } from 'etc/constants';
-import { createBabelNodeCommand } from 'lib/utils';
 
 import type { ConfigurationFactory } from '@darkobits/nr/dist/etc/types';
 
@@ -75,7 +76,9 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       'del', [`${OUT_DIR}/**/*.spec.*`, `${OUT_DIR}/**/*.test.*`]
     ]);
 
-    createBabelNodeCommand('link-bins', [require.resolve('etc/scripts/link-bins')]);
+    // createBabelNodeCommand('link-bins', [
+    //   require.resolve('etc/scripts/link-bins')
+    // ]);
 
 
     // ----- Lint Commands -----------------------------------------------------
@@ -98,7 +101,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       timing: true,
       run: [
         ['babel', 'ts', 'eslint'],
-        ['cleanup', 'link-bins']
+        ['cleanup'/* , 'link-bins' */]
       ]
     });
 

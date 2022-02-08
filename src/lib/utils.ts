@@ -2,8 +2,6 @@ import path from 'path';
 
 import env from '@darkobits/env';
 import { dirname } from '@darkobits/fd-name';
-import { createNodeCommand } from '@darkobits/nr/dist/lib/commands';
-import merge from 'deepmerge';
 import { getBinPathSync } from 'get-bin-path';
 import ms from 'ms';
 import readPkgUp, { NormalizedPackageJson } from 'read-pkg-up';
@@ -155,21 +153,4 @@ export function doUpdateNotification(pkg: readPkgUp.NormalizedPackageJson) {
       `Run ${log.chalk.bold('{updateCommand}')} to update from ${log.chalk.gray('{currentVersion}')} ➤ ${log.chalk.green('{latestVersion}')}. ✨`
     ].join('\n')
   });
-}
-
-
-/**
- * Using the same signature of `nr#createNodeCommand`, creates a command that
- * invokes Node with our pre-configured @babel/register script, ensuring any
- * Babel features enabled in the host project are available when parsing
- * configuration files.
- */
-export function createBabelNodeCommand(...params: Parameters<typeof createNodeCommand>) {
-  const [name, args, opts] = params;
-
-  return createNodeCommand(name, args, merge({
-    execaOptions: {
-      nodeOptions: ['--require', require.resolve('etc/babel-register')]
-    }
-  }, opts ?? {}));
 }
