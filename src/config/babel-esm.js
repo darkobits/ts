@@ -1,7 +1,4 @@
-const path = require('path');
-
 const { resolvePath } = require('babel-plugin-module-resolver');
-const readPkgUp = require('read-pkg-up');
 
 const { EXTENSIONS_WITH_DOT } = require('../etc/constants');
 
@@ -21,40 +18,16 @@ function customResolvePath(sourcePath, currentFile, opts) {
   // Handle import identifiers for node_modules packages and files
   // therein.
   if (resolvedPath === null) {
-    try {
-      // Get the absolute path require() would use to load the file.
-      const requirePath = require.resolve(sourcePath);
-
-      // This will usually be the case for Node built-ins. Return identifier
-      // as-is.
-      if (requirePath === sourcePath) {
-        return sourcePath;
-      }
-
-      // Load the package.json for that package.
-      const pkg = readPkgUp.sync( { cwd: path.dirname(requirePath) });
-
-      // If the import identifier is the bare package name, return it as-is.
-      if (sourcePath === pkg.packageJson.name) {
-        return sourcePath;
-      }
-
-      // Otherwise, return the remainder of the absolute path including
-      // and after the original import identifier, which will give us an
-      // appropriate file extension.
-      const fixedPath = requirePath.slice(requirePath.lastIndexOf(sourcePath));
-
-      return fixedPath;
-    } catch {
-      // eslint-disable-next-line unicorn/no-null
-      return null;
-    }
+    return sourcePath;
   }
 
   // This case will handle all files internal to the project.
   if (typeof resolvedPath === 'string') {
     return resolvedPath.replace(/\.\w{2}$/g, '.js');
   }
+
+  // eslint-disable-next-line unicorn/no-null
+  return null;
 }
 
 module.exports = TS_ENV === 'esm' ? {
