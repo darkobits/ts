@@ -21,8 +21,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       description: 'Compile the project with Vite.',
       run: [
         'rm-out-dir',
-        'vite-build',
-        'link-bins'
+        'vite-build'
       ]
     });
 
