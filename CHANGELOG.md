@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.8.17](https://github.com/darkobits/ts/compare/v0.8.16...v0.8.17) (2022-02-09)
+
+
+### 🐞 Bug Fixes
+
+* Update Babel resolver. ([24afea4](https://github.com/darkobits/ts/commit/24afea46fec3158b4b5211dcb7cd6ea236aa4e2a))
+
 ### [0.8.16](https://github.com/darkobits/ts/compare/v0.8.15...v0.8.16) (2022-02-09)
 
 
