@@ -3,7 +3,7 @@ const { EXTENSIONS_WITH_DOT } = require('../etc/constants');
 module.exports = {
   presets: [
     ['@babel/preset-env', {
-      targets: { node: '14' },
+      targets: { node: '16' },
       modules: 'cjs',
       // Do not transpile import() statements. This will allow packages that
       // publish CommonJS to import ES Modules.

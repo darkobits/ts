@@ -60,8 +60,10 @@ function customResolvePath(sourcePath, currentFile, opts) {
 module.exports = TS_ENV === 'esm' ? {
   presets: [
     ['@babel/preset-env', {
-      targets: { node: '14' },
+      targets: { node: '16' },
       modules: false,
+      // Do not transpile import() statements. This will allow packages that
+      // publish CommonJS to import ES Modules.
       exclude: ['@babel/plugin-proposal-dynamic-import']
     }],
     '@babel/preset-typescript'
@@ -79,5 +81,7 @@ module.exports = TS_ENV === 'esm' ? {
   ],
   comments: false,
   compact: false,
+  // Consider a file to be a "module" if import/export statements are present,
+  // or else consider it a "script".
   sourceType: 'unambiguous'
 } : cjsConfig;
