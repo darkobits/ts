@@ -1,9 +1,9 @@
 import path from 'path';
 
 import {
+  EXTENSIONS_WITH_DOT,
   SRC_DIR,
-  OUT_DIR,
-  EXTENSIONS_WITH_DOT
+  OUT_DIR
 } from '@darkobits/ts/etc/constants';
 import reactPlugin from '@vitejs/plugin-react';
 import * as devcert from 'devcert';
@@ -95,10 +95,7 @@ export default createViteConfigurationPreset(async ({
   config.plugins.push(checkerPlugin({
     typescript: true,
     eslint: {
-      files: [
-        path.resolve(pkg.rootDir, SRC_DIR)
-      ],
-      extensions: EXTENSIONS_WITH_DOT
+      lintCommand: `eslint ${SRC_DIR} --ext=${EXTENSIONS_WITH_DOT.join(',')}`
     }
   }));
 

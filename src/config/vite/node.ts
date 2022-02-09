@@ -1,9 +1,9 @@
 import path from 'path';
 
 import {
+  EXTENSIONS_WITH_DOT,
   SRC_DIR,
-  OUT_DIR,
-  EXTENSIONS_WITH_DOT
+  OUT_DIR
 } from '@darkobits/ts/etc/constants';
 import checkerPlugin from 'vite-plugin-checker';
 import tsconfigPathsPlugin from 'vite-tsconfig-paths';
@@ -48,8 +48,7 @@ export default createViteConfigurationPreset(({ config, mode, pkg }) => {
   config.plugins.push(checkerPlugin({
     typescript: true,
     eslint: {
-      files: [path.resolve(config.root, SRC_DIR)],
-      extensions: EXTENSIONS_WITH_DOT
+      lintCommand: `eslint ${SRC_DIR} --ext=${EXTENSIONS_WITH_DOT.join(',')}`
     }
   }));
 

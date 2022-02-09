@@ -1,11 +1,16 @@
 import { nr } from '@darkobits/ts';
 import { OUT_DIR } from '@darkobits/ts/etc/constants';
-import { createBabelNodeCommand } from '@darkobits/ts/lib/utils';
 
 import type { ConfigurationFactory } from '@darkobits/nr/dist/etc/types';
 
 export default function(userConfigFactory?: ConfigurationFactory): ConfigurationFactory {
-  return nr(async ({ createCommand, createNodeCommand, createScript, isCI }) => {
+  return nr(async ({
+    createCommand,
+    createNodeCommand,
+    createBabelNodeCommand,
+    createScript,
+    isCI
+  }) => {
     createCommand('rm-out-dir', ['del', [OUT_DIR]]);
     createBabelNodeCommand('vite-build', ['vite', ['build']]);
     createBabelNodeCommand('vite-watch', ['vite', ['build'], { watch: true }]);
@@ -52,7 +57,13 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
     });
 
     if (typeof userConfigFactory === 'function') {
-      await userConfigFactory({ createCommand, createNodeCommand, createScript, isCI });
+      await userConfigFactory({
+        createCommand,
+        createNodeCommand,
+        createBabelNodeCommand,
+        createScript,
+        isCI
+      });
     }
   });
 }
