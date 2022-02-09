@@ -2,7 +2,6 @@
 import path from 'path';
 
 import {
-  SRC_DIR,
   OUT_DIR,
   EXTENSIONS_WITH_DOT
 } from '@darkobits/ts/etc/constants';
@@ -40,7 +39,7 @@ export default createViteConfigurationPreset(({ config, mode, pkg }) => {
   config.plugins.push(checkerPlugin({
     typescript: true,
     eslint: {
-      lintCommand: `eslint ${SRC_DIR} --ext=${EXTENSIONS_WITH_DOT.join(',')}`
+      lintCommand: `eslint . --ext=${EXTENSIONS_WITH_DOT.join(',')}`
     }
   }));
 
