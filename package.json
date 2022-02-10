@@ -1,16 +1,15 @@
 {
   "name": "@darkobits/tsx",
   "version": "0.8.3",
+  "description": "TypeScript React boilerplate.",
   "author": "darkobits",
   "license": "WTFPL",
-  "description": "TypeScript React boilerplate.",
   "repository": {
     "type": "git",
     "url": "https://github.com/darkobits/tsx"
   },
   "engines": {
-    "node": ">=14",
-    "npm": ">=7"
+    "node": ">=16"
   },
   "engineStrict": true,
   "files": [
@@ -41,9 +40,9 @@
     "@babel/preset-react": "^7.16.7",
     "@darkobits/chex": "^1.0.2",
     "@darkobits/log": "^2.0.0-beta.16",
-    "@darkobits/ts": "^0.8.18",
+    "@darkobits/ts": "^0.8.20",
     "@linaria/babel-preset": "^3.0.0-beta.15",
-    "@vitejs/plugin-react": "1.1.4",
+    "@vitejs/plugin-react": "1.2.0",
     "bytes": "^3.1.2",
     "deepmerge": "^4.2.2",
     "devcert": "^1.2.0",
