@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.8.5-beta.4](https://github.com/darkobits/tsx/compare/v0.8.5-beta.3...v0.8.5-beta.4) (2022-02-10)
+
+
+### 🏗 Chores
+
+* Update dependencies. ([53c255c](https://github.com/darkobits/tsx/commit/53c255c2cf566d4e42f75457f7c3e9bdac37cc52))
+
 ### [0.8.5-beta.3](https://github.com/darkobits/tsx/compare/v0.8.5-beta.2...v0.8.5-beta.3) (2022-02-10)
 
 
