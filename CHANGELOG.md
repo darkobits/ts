@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.8.22](https://github.com/darkobits/ts/compare/v0.8.21...v0.8.22) (2022-02-10)
+
+
+### 🐞 Bug Fixes
+
+* Update Babel ESM resolver. ([e5c4dbd](https://github.com/darkobits/ts/commit/e5c4dbd4ad2c504b0d9f7022de0a661eb5c7198a))
+
 ### [0.8.21](https://github.com/darkobits/ts/compare/v0.8.20...v0.8.21) (2022-02-10)
 
 
