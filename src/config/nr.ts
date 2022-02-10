@@ -1,5 +1,5 @@
 import { nr } from '@darkobits/ts';
-import { OUT_DIR } from '@darkobits/ts/etc/constants.js';
+import { OUT_DIR } from '@darkobits/ts/etc/constants';
 
 import type { ConfigurationFactory } from '@darkobits/nr/dist/etc/types';
 
