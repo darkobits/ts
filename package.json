@@ -4,7 +4,6 @@
   "description": "TypeScript React boilerplate.",
   "author": "darkobits",
   "license": "WTFPL",
-  "type": "module",
   "repository": {
     "type": "git",
     "url": "https://github.com/darkobits/tsx"
