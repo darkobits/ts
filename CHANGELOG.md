@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.8.5-beta.1](https://github.com/darkobits/tsx/compare/v0.8.5-beta.0...v0.8.5-beta.1) (2022-02-10)
+
+
+### 🐞 Bug Fixes
+
+* Fix import path. ([d28480b](https://github.com/darkobits/tsx/commit/d28480bd08b0e196b38bfa3f287c931c349233a2))
+
 ### [0.8.5-beta.0](https://github.com/darkobits/tsx/compare/v0.8.4...v0.8.5-beta.0) (2022-02-10)
 
 
