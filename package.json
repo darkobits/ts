@@ -38,9 +38,9 @@
   "dependencies": {
     "@babel/plugin-transform-runtime": "^7.17.0",
     "@babel/preset-react": "^7.16.7",
-    "@darkobits/chex": "^1.0.2",
+    "@darkobits/chex": "^2.0.0",
     "@darkobits/log": "^2.0.0-beta.16",
-    "@darkobits/ts": "^0.8.20",
+    "@darkobits/ts": "^0.8.21",
     "@linaria/babel-preset": "^3.0.0-beta.15",
     "@vitejs/plugin-react": "1.2.0",
     "bytes": "^3.1.2",
