@@ -1,7 +1,6 @@
 const { resolvePath } = require('babel-plugin-module-resolver');
 
 const { EXTENSIONS_WITH_DOT } = require('../etc/constants');
-
 const cjsConfig = require('./babel');
 
 const { TS_ENV } = process.env;

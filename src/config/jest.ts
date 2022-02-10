@@ -9,7 +9,6 @@ const ALWAYS_IGNORE = [
   `<rootDir>/${OUT_DIR}`
 ];
 
-
 export default (userConfig = {}) => merge({
   testEnvironment: 'node',
   testMatch: ['<rootDir>/src/**/*.spec.*'],
