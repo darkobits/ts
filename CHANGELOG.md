@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.8.5-beta.0](https://github.com/darkobits/tsx/compare/v0.8.4...v0.8.5-beta.0) (2022-02-10)
+
+
+### 🛠 Refactoring
+
+* Publish as ESM. ([8d198bf](https://github.com/darkobits/tsx/commit/8d198bf80977e0dc372ee6884373fe578b43cce5))
+
 ### [0.8.4](https://github.com/darkobits/tsx/compare/v0.8.3...v0.8.4) (2022-02-10)
 
 
