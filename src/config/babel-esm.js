@@ -13,6 +13,12 @@ const { TS_ENV } = process.env;
  * import other files in the local package or files within other packages.
  */
 function customResolvePath(sourcePath, currentFile, opts) {
+  // Do not attempt to resolve internal, data, and file URL schemes.
+  // See: https://nodejs.org/api/esm.html#urls
+  if (sourcePath.startsWith('node:') || sourcePath.startsWith('data:') || sourcePath.startsWith('file:')) {
+    return sourcePath;
+  }
+
   const resolvedPath = resolvePath(sourcePath, currentFile, opts);
 
   // Handle import identifiers for node_modules packages and files
