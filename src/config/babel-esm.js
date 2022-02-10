@@ -1,3 +1,5 @@
+const path = require('path');
+
 const { resolvePath } = require('babel-plugin-module-resolver');
 
 const { EXTENSIONS_WITH_DOT } = require('../etc/constants');
@@ -28,6 +30,12 @@ function customResolvePath(sourcePath, currentFile, opts) {
 
   // This case will handle all files internal to the project.
   if (typeof resolvedPath === 'string') {
+    // Add extensions to imports without them.
+    if (path.extname(resolvedPath) === '') {
+      return `${resolvedPath}.js`;
+    }
+
+    // Change extensions to .js for imports with extensions.
     return resolvedPath.replace(/\.\w{2}$/g, '.js');
   }
 
