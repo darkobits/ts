@@ -26,10 +26,9 @@ module.exports = {
       config: require.resolve('./src/config/changelog-preset')
     }],
     '@semantic-release/npm',
+    '@semantic-release/github',
     ['@semantic-release/git', {
       message: 'chore(release): ${nextRelease.version}\n[skip ci]'
     }]
-    // We do not need to release to GitHub.
-    // '@semantic-release/github'
   ]
 }
