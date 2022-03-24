@@ -240,7 +240,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       group: 'Dependency Management',
       description: 'Check for newer versions of installed dependencies.',
       run: [
-        createCommand('update-check', ['npm-check-updates'], {
+        createNodeCommand('npm-check-updates', ['npm-check-updates', { peer: true }], {
           execaOptions: { stdio: 'inherit' }
         })
       ]
