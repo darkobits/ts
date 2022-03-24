@@ -1,3 +1,12 @@
+### [0.8.28-beta.3](https://github.com/darkobits/ts/compare/v0.8.28-beta.2...v0.8.28-beta.3) (2022-03-24)
+
+
+### 🏗 Chores
+
+* **babel:** Update Babel configuration. ([eacdb72](https://github.com/darkobits/ts/commit/eacdb7203a5f137c47d5b8a823d74070cde3e343))
+* **deps:** Update dependencies. ([7a58901](https://github.com/darkobits/ts/commit/7a58901d3eba5744dbdfbe0ea01711a6ab089e46))
+* Misc. cleanup. ([9692eb2](https://github.com/darkobits/ts/commit/9692eb22c6651b6d3751fec661187c8783ddd6bc))
+
 ### [0.8.28-beta.2](https://github.com/darkobits/ts/compare/v0.8.28-beta.1...v0.8.28-beta.2) (2022-03-24)
 
 
