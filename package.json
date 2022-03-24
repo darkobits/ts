@@ -44,11 +44,11 @@
     "conventional-changelog-conventionalcommits": "^4.6.3",
     "del-cli": "^3.0.1",
     "jest": "^27.5.1",
-    "npm-check-updates": "^12.5.3",
+    "npm-check-updates": "^12.5.4",
     "standard-version": "^9.3.2",
     "ts-node": "^10.7.0",
     "ttypescript": "^1.5.13",
-    "typescript": "^4.4.0"
+    "typescript": "^4.6.2"
   },
   "dependencies": {
     "@darkobits/chex": "^2.0.1",
