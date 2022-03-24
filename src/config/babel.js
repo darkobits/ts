@@ -16,7 +16,7 @@ module.exports = {
     'babel-plugin-transform-import-meta',
     ['@babel/plugin-proposal-decorators', { legacy: true, loose: true }],
     ['babel-plugin-module-resolver', {
-      cwd: 'packagejson',
+      cwd: 'babelrc',
       root: ['./src'],
       extensions: EXTENSIONS_WITH_DOT
     }]

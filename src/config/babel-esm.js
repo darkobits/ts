@@ -107,7 +107,7 @@ module.exports = TS_ENV === 'esm' ? {
     'babel-plugin-add-module-exports',
     ['@babel/plugin-proposal-decorators', { legacy: true, loose: true }],
     ['babel-plugin-module-resolver', {
-      cwd: 'packagejson',
+      cwd: 'babelrc',
       root: ['./src'],
       extensions: EXTENSIONS_WITH_DOT,
       stripExtensions: [],
