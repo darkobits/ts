@@ -1,3 +1,10 @@
+### [0.8.28-beta.2](https://github.com/darkobits/ts/compare/v0.8.28-beta.1...v0.8.28-beta.2) (2022-03-24)
+
+
+### 🏗 Chores
+
+* **release:** Update release config. ([bf4af73](https://github.com/darkobits/ts/commit/bf4af73f2971729976400ee8b126e55572b05dfd))
+
 ### [0.8.28-beta.1](https://github.com/darkobits/ts/compare/v0.8.27...v0.8.28-beta.1) (2022-03-24)
 
 
