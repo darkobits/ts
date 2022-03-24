@@ -88,7 +88,6 @@ typings/
 .next
 
 # Build artifacts
-dist
+/dist
 
-NOTES.md
-/.re-pack
+/NOTES.md

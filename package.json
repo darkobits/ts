@@ -17,9 +17,11 @@
     "dist"
   ],
   "main": "dist/index.js",
+  "exports": {
+    "*": "./dist/*.js"
+  },
   "scripts": {
     "prepare": "nr prepare",
-    "prepublishOnly": "re-pack guard",
     "help": "nr --scripts"
   },
   "peerDependencies": {
@@ -45,7 +47,6 @@
     "del-cli": "^3.0.1",
     "jest": "^27.5.1",
     "npm-check-updates": "^12.5.4",
-    "standard-version": "^9.3.2",
     "ts-node": "^10.7.0",
     "ttypescript": "^1.5.13",
     "typescript": "^4.6.2"
@@ -54,18 +55,19 @@
     "@darkobits/chex": "^2.0.1",
     "@darkobits/fd-name": "^0.1.4",
     "@darkobits/log": "^2.0.0-beta.16",
+    "@semantic-release/changelog": "^6.0.1",
+    "@semantic-release/git": "^10.0.1",
     "deepmerge": "^4.2.2",
-    "errno": "^1.0.0",
     "fs-extra": "^10.0.1",
     "get-bin-path": "5.1.0",
     "ms": "^2.1.3",
     "read-pkg-up": "7.0.1",
     "resolve-from": "^5.0.0",
     "resolve-pkg": "^2.0.0",
+    "semantic-release": "^19.0.2",
     "update-notifier": "^5.1.0"
   },
   "devDependencies": {
-    "@darkobits/re-pack": "^0.1.12",
     "@types/faker": "^5.5.9",
     "@types/fs-extra": "^9.0.13",
     "@types/ms": "^0.7.31",

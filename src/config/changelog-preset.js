@@ -13,6 +13,5 @@ module.exports = config({
     {type: 'refactor', section: '🛠 Refactoring'},
     {type: 'style', section: '🎨 Style'},
     {type: 'test', section: '🚦 Tests'}
-  ],
-  releaseCommitMessageFormat: '🚀 chore(release): {{currentTag}}'
+  ]
 });
