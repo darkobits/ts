@@ -15,6 +15,8 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
     createScript,
     isCI
   }) => {
+    const commands: Record<string, any> = {};
+
     // ----- Build: Babel Commands ---------------------------------------------
 
     const babelFlags = {
@@ -26,12 +28,12 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       deleteDirOnStart: true
     };
 
-    const babel = createCommand('babel', ['babel', [SRC_DIR], babelFlags], {
+    commands.babel = createCommand('babel', ['babel', [SRC_DIR], babelFlags], {
       prefix: chalk => chalk.bgYellow.black(' Babel '),
       execaOptions: {env: { TS_ENV: 'esm' } }
     });
 
-    const babelWatch = createCommand('babel', ['babel', [SRC_DIR], {
+    commands.babel.watch = createCommand('babel.watch', ['babel', [SRC_DIR], {
       ...babelFlags,
       watch: true,
       verbose: true
@@ -47,7 +49,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       pretty: true
     };
 
-    const ts = createCommand('ts', ['ttsc', {
+    commands.ts = createCommand('ts', ['ttsc', {
       ...tsFlags,
       emitDeclarationOnly: true
     }], {
@@ -55,7 +57,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       preserveArguments: true
     });
 
-    const tsWatch = createCommand('ts', ['ttsc', {
+    commands.ts.watch = createCommand('ts.watch', ['ttsc', {
       ...tsFlags,
       emitDeclarationOnly: true,
       watch: true,
@@ -68,7 +70,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
 
     // ----- Build: Misc. Commands ---------------------------------------------
 
-    const cleanup = createCommand('cleanup', [
+    commands.cleanup = createCommand('cleanup', [
       'del', [`${OUT_DIR}/**/*.spec.*`, `${OUT_DIR}/**/*.test.*`]
     ]);
 
@@ -80,9 +82,9 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       format: require.resolve('eslint-codeframe-formatter')
     };
 
-    const lint = createBabelNodeCommand('eslint', ['eslint', [SRC_DIR], eslintFlags]);
+    commands.lint = createBabelNodeCommand('eslint', ['eslint', [SRC_DIR], eslintFlags]);
 
-    const lintFix = createBabelNodeCommand('eslint', ['eslint', [SRC_DIR], { ...eslintFlags, fix: true }]);
+    commands.lint.fix = createBabelNodeCommand('eslint.fix', ['eslint', [SRC_DIR], { ...eslintFlags, fix: true }]);
 
 
     // ----- Build Scripts -----------------------------------------------------
@@ -92,8 +94,8 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       description: 'Lint, type-check, and compile the project.',
       timing: true,
       run: [
-        [babel, ts, lint],
-        cleanup
+        [commands.babel, commands.ts, commands.lint],
+        commands.cleanup
       ]
     });
 
@@ -101,7 +103,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       group: 'Build',
       description: 'Continuously type-check, and compile the project.',
       run: [
-        [babelWatch, tsWatch]
+        [commands.babel.watch, commands.ts.watch]
       ]
     });
 
@@ -122,7 +124,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       description: 'Run unit tests in watch mode.',
       run: [
         createBabelNodeCommand('jest', ['jest', { watch: true }], {
-          // This command involves user interaction, so we need to
+          // This command involves user interaction so we need to use 'inherit'.
           execaOptions: { stdio: 'inherit' }
         })
       ]
@@ -154,14 +156,14 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       group: 'Lint',
       description: 'Lint the project.',
       timing: true,
-      run: [lint]
+      run: [commands.lint]
     });
 
     createScript('lint.fix', {
       group: 'Lint',
       description: 'Lint the project and automatically fix any fixable errors.',
       timing: true,
-      run: [lintFix]
+      run: [commands.lint.fix]
     });
 
 

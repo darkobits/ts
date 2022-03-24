@@ -89,5 +89,6 @@ typings/
 
 # Build artifacts
 /dist
+/.re-pack
 
 /NOTES.md
