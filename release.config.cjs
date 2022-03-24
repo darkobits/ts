@@ -25,7 +25,11 @@ module.exports = {
       // preset: 'conventionalcommits',
       config: require.resolve('./src/config/changelog-preset')
     }],
-    '@semantic-release/npm',
+    ['@semantic-release/npm', {
+      // Do not use `npm publish` to publish this package. We will call
+      // `nr publish` via CI directly.
+      npmPublish: false
+    }],
     '@semantic-release/github',
     ['@semantic-release/git', {
       message: 'chore(release): ${nextRelease.version}\n[skip ci]'
