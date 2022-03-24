@@ -1,3 +1,10 @@
+### [0.8.28-beta.4](https://github.com/darkobits/ts/compare/v0.8.28-beta.3...v0.8.28-beta.4) (2022-03-24)
+
+
+### 🐞 Bug Fixes
+
+* Update publish workflow. ([6a9a2dc](https://github.com/darkobits/ts/commit/6a9a2dc881a5f9a93833e372d8ba5ee68023db85))
+
 ### [0.8.28-beta.3](https://github.com/darkobits/ts/compare/v0.8.28-beta.2...v0.8.28-beta.3) (2022-03-24)
 
 
