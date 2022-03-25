@@ -1,6 +1,11 @@
 // Enable debugging.
 // require('debug').enable('semantic-release:*');
 
+const {
+  NPM_TOKEN,
+  GH_TOKEN
+} = process.env;
+
 module.exports = {
   branches: [
     { name: 'master', channel: 'latest' },
@@ -9,13 +14,12 @@ module.exports = {
   plugins: [
     ['@semantic-release/commit-analyzer', {
       preset: 'conventionalcommits',
-      // config: require.resolve('./src/config/changelog-preset'),
       // Note: These rules are applied in addition to the default release rules,
       // and do not overwrite them.
       releaseRules: [
         { type: 'chore', release: 'patch' },
         { type: 'refactor', release: 'patch' },
-        { type: 'style', release: 'minor' },
+        { type: 'style', release: 'minor' }
       ]
     }],
     ['@semantic-release/changelog', {
@@ -23,16 +27,19 @@ module.exports = {
     }],
     ['@semantic-release/release-notes-generator', {
       // preset: 'conventionalcommits',
-      config: require.resolve('./src/config/changelog-preset')
+      config: require.resolve('./changelog-preset')
     }],
-    ['@semantic-release/npm', {
-      // Do not use `npm publish` to publish this package. We will call
-      // `nr publish` via CI directly.
-      npmPublish: false
-    }],
-    '@semantic-release/github',
+    // Conditionally add the NPM plugin if NPM_TOKEN is present.
+    NPM_TOKEN ? '@semantic-release/npm' : undefined,
+    // Conditionally add the GitHub plugin if GH_TOKEN is present.
+    GH_TOKEN ? '@semantic-release/github' : undefined,
+    // Responsible for creating a release commit containing changes to
+    // package.json, CHANGELOG.md, etc. This commit will be tagged and pushed
+    // back to the remote. Without this plugin, semantic-release will simply
+    // tag the commit at HEAD and changes to all files updated by the release
+    // will be discarded.
     ['@semantic-release/git', {
       message: 'chore(release): ${nextRelease.version}\n[skip ci]'
     }]
-  ]
-}
+  ].filter(Boolean)
+};
