@@ -186,6 +186,76 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
     });
 
 
+    // ----- Bump Scripts ------------------------------------------------------
+
+    const standardVersionCmd = 'standard-version';
+
+    interface CreateReleaseScriptOptions {
+      releaseType?: 'first' | 'major' | 'minor' | 'patch' | 'beta';
+      description: string;
+      args?: any;
+    }
+
+    const createReleaseScript = ({ releaseType, args, description }: CreateReleaseScriptOptions) => {
+      createScript(releaseType ? `bump.${releaseType}` : 'bump', {
+        group: 'Bump',
+        description: `Generate a change log entry and tagged commit for ${description}.`,
+        run: [
+          createBabelNodeCommand(`standard-version-${releaseType ?? 'default'}`, [
+            standardVersionCmd, { preset: require.resolve('config/changelog-preset'), ...args }
+          ])
+        ]
+      });
+    };
+
+    createReleaseScript({
+      description: 'a release'
+    });
+
+    createReleaseScript({
+      releaseType: 'beta',
+      description: 'a beta release',
+      args: { prerelease: 'beta' }
+    });
+
+    createReleaseScript({
+      releaseType: 'first',
+      description: 'the first release',
+      args: { firstRelease: true }
+    });
+
+    createReleaseScript({
+      releaseType: 'major',
+      description: 'a major release',
+      args: { releaseAs: 'major' }
+    });
+
+    createReleaseScript({
+      releaseType: 'minor',
+      description: 'a minor release',
+      args: { releaseAs: 'minor' }
+    });
+
+    createReleaseScript({
+      releaseType: 'patch',
+      description: 'a patch release',
+      args: { releaseAs: 'patch' }
+    });
+
+
+    // ----- Dependency Management ---------------------------------------------
+
+    createScript('deps.check', {
+      group: 'Dependency Management',
+      description: 'Check for newer versions of installed dependencies.',
+      run: [
+        createCommand('update-check', ['npm-check-updates'], {
+          execaOptions: { stdio: 'inherit' }
+        })
+      ]
+    });
+
+
     // ----- Dependency Management ---------------------------------------------
 
     createScript('deps.check', {
