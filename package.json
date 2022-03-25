@@ -70,7 +70,7 @@
     "update-notifier": "^5.1.0"
   },
   "devDependencies": {
-    "@darkobits/re-pack": "^1.0.2",
+    "@darkobits/re-pack": "^1.0.3",
     "@types/faker": "^5.5.9",
     "@types/fs-extra": "^9.0.13",
     "@types/ms": "^0.7.31",
