@@ -95,7 +95,7 @@ paths relative to the `tsconfig.json` in which they were defined.
 ```json
 // tsconfig.json
 {
-  "extends": "@darkobits/ts/tsconfig.json",
+  "extends": "@darkobits/ts",
   "include": ["src"],
   "compilerOptions": {
     "baseUrl": "src",
@@ -137,8 +137,8 @@ style. To configure ESLint, create `.eslintrc.js` in your project root. Then,
 ```js
 // .eslintrc.js
 module.exports = {
-  extends: require('@darkobits/ts').eslint,
-}
+  extends: 'plugin:@darkobits/ts'
+};
 ```
 
 !> As of ESLint 7, an ESLint configuration file **must** be authored using
