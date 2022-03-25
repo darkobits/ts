@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.9.0-beta.1](https://github.com/darkobits/ts/compare/v0.9.0-beta.0...v0.9.0-beta.1) (2022-03-25)
+
+
+### 🐞 Bug Fixes
+
+* Fix release script invocation. ([01b2e21](https://github.com/darkobits/ts/commit/01b2e21293bff18aa51e6ec74c98bd703fac946f))
+
 ## [0.9.0-beta.0](https://github.com/darkobits/ts/compare/v0.8.28-beta.6...v0.9.0-beta.0) (2022-03-25)
 
 
