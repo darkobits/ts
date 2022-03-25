@@ -1,3 +1,5 @@
+# This is disabled because re-pack's call to `npm publish` is not picking up
+# NPM_TOKEN from the environment, resulting in an authorization error.
 name: ci
 on:
   - push
