@@ -154,3 +154,20 @@ export function doUpdateNotification(pkg: readPkgUp.NormalizedPackageJson) {
     ].join('\n')
   });
 }
+
+
+/**
+ * Utility to extract the "true" default export from a module when importing
+ * CJS from ESM or vice versa, where in some cases the default export is not
+ * configured correctly and may wind up being at
+ * <default imported module>.default.default.
+ */
+export function getDefaultExport<T extends object>(value: T): T {
+  let result = Reflect.get(value, 'default');
+
+  while (Reflect.has(result, 'default')) {
+    result = Reflect.get(result, 'default');
+  }
+
+  return result;
+}
