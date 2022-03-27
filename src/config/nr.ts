@@ -173,8 +173,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       description: 'Use semantic-release to create a release from a CI environment.',
       group: 'Release',
       run: [
-        // TODO: --ci is a temporary hack here. Fix `nr` argument passing.
-        createCommand('semantic-release', ['semantic-release', { ci: true }])
+        createCommand('semantic-release', ['semantic-release'])
       ]
     });
 
