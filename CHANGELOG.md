@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.9.2](https://github.com/darkobits/ts/compare/v0.9.1...v0.9.2) (2022-03-28)
+
+
+### 🛠 Refactoring
+
+* **babel:** Update Babel ESM configuration. ([e5e740a](https://github.com/darkobits/ts/commit/e5e740a7d09c1466d5f60d140d7d84d5f0ed6722))
+
 ### [0.9.1](https://github.com/darkobits/ts/compare/v0.9.0...v0.9.1) (2022-03-27)
 
 
