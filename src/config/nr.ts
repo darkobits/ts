@@ -13,6 +13,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
     createNodeCommand,
     createBabelNodeCommand,
     createScript,
+    createTask,
     isCI
   }) => {
     const commands: Record<string, any> = {};
@@ -249,19 +250,6 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       group: 'Dependency Management',
       description: 'Check for newer versions of installed dependencies.',
       run: [
-        createCommand('update-check', ['npm-check-updates'], {
-          execaOptions: { stdio: 'inherit' }
-        })
-      ]
-    });
-
-
-    // ----- Dependency Management ---------------------------------------------
-
-    createScript('deps.check', {
-      group: 'Dependency Management',
-      description: 'Check for newer versions of installed dependencies.',
-      run: [
         createNodeCommand('npm-check-updates', ['npm-check-updates', { peer: true }], {
           execaOptions: { stdio: 'inherit' }
         })
@@ -288,6 +276,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
         createNodeCommand,
         createBabelNodeCommand,
         createScript,
+        createTask,
         isCI
       });
     }
