@@ -37,7 +37,7 @@
     "@babel/register": "^7.17.7",
     "@babel/runtime": "^7.17.8",
     "@darkobits/eslint-plugin": "^0.2.4",
-    "@darkobits/nr": "^0.10.0",
+    "@darkobits/nr": "^0.10.1",
     "@types/jest": "^27.4.1",
     "@types/node": "^17.0.23",
     "@zerollup/ts-transform-paths": "^1.7.18",
