@@ -2,6 +2,8 @@ import merge from 'deepmerge';
 
 import { EXTENSIONS, SRC_DIR, OUT_DIR } from 'etc/constants';
 
+import type { Config } from '@jest/types';
+
 
 // Paths we always want Jest to ignore.
 const ALWAYS_IGNORE = [
@@ -9,9 +11,9 @@ const ALWAYS_IGNORE = [
   `<rootDir>/${OUT_DIR}`
 ];
 
-export default (userConfig = {}) => merge({
+export default (userConfig: Config.InitialOptions = {}) => merge({
   testEnvironment: 'node',
-  testMatch: ['<rootDir>/src/**/*.spec.*'],
+  testMatch: [`<rootDir>/${SRC_DIR}/**/*.spec.*`],
   testPathIgnorePatterns: ALWAYS_IGNORE,
   clearMocks: true,
   collectCoverageFrom: [

@@ -1,4 +1,5 @@
-import { jest } from './src';
+import jest from './src/config/jest';
+
 
 export default jest({
   coveragePathIgnorePatterns: [
