@@ -13,8 +13,8 @@
     // Specify a list of built-in API groups to include in the project.
     "lib": [ "ESNext" ],
 
-    // Allow features like dynamic import.
-    "module": "ESNext",
+    // This lets us use .ts configuration files for Saffron CLIs (re: nr).
+    "module": "commonjs",
 
     // Use Node's module resolution strategy.
     "moduleResolution": "node",
