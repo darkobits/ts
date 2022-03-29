@@ -1,15 +1,13 @@
 import path from 'path';
 
 import env from '@darkobits/env';
-import { dirname } from '@darkobits/fd-name';
-import { getBinPathSync } from 'get-bin-path';
 import ms from 'ms';
-import readPkgUp, { NormalizedPackageJson } from 'read-pkg-up';
-import resolvePkg from 'resolve-pkg';
 import updateNotifier from 'update-notifier';
 
 import { NpmConfigArgv } from 'etc/types';
 import log from 'lib/log';
+
+import type { NormalizedPackageJson } from 'read-pkg-up';
 
 export interface PkgInfo {
   json: NormalizedPackageJson;
@@ -25,8 +23,9 @@ export interface PkgInfo {
  * cannot be found, and that returns the root directory of the package rather
  * than the path to where package.json was found.
  */
-export function getPackageInfo(cwd?: string): PkgInfo {
-  const pkgInfo = cwd ? readPkgUp.sync({ cwd }) : readPkgUp.sync();
+export async function getPackageInfo(cwd?: string): Promise<PkgInfo> {
+  const { readPackageUp } = await import('read-pkg-up');
+  const pkgInfo = cwd ? await readPackageUp({ cwd }) : await readPackageUp();
 
   if (!pkgInfo) {
     throw new Error(`${log.prefix('getPackageInfo')} Unable to find a package.json for the project.`);
@@ -36,63 +35,6 @@ export function getPackageInfo(cwd?: string): PkgInfo {
     json: pkgInfo.packageJson,
     rootDir: path.dirname(pkgInfo.path)
   };
-}
-
-
-/**
- * Provided a package name and optional binary name, resolves the path to the
- * binary from this package (ensuring nested node_modules are traversed).
- *
- * @example
- *
- * "@babel/cli" places an executable script named "babel" in the local
- * node_modules/.bin folder when installed. Therefore, the following invocation:
- *
- * resolveBin('@babel/cli', 'babel')
- *
- * would return the absolute path to the Babel CLI.
- *
- * @example
- *
- * "standard-version" places an executable script named "standard-version" in
- * the local node_modules/.bin folder when installed. Therefore, the following
- * invocation:
- *
- * resolveBin('standard-version')
- *
- * would return the absolute path to the standard-version CLI.
- */
-export function resolveBin(pkgName: string, binName?: string) {
-  const name = binName ?? pkgName;
-  const ourDir = dirname();
-
-  if (!ourDir) {
-    throw new Error(`${log.prefix('resolveBin')} Unable to determine the current directory.`);
-  }
-
-  // Resolve the path to the package from our current directory. This will
-  // ensure that if the package is installed in a nested node_modules, we should
-  // still be able to find it.
-  const pkgPath = resolvePkg(pkgName, { cwd: ourDir });
-
-  if (!pkgPath) {
-    throw new Error(`${log.prefix('resolveBin')} Unable to determine the current package path.`);
-  }
-
-  // Resolve the path to the package's binary. If no additional "binName"
-  // argument was provided, we assume that the binary name matches the package
-  // name.
-  const binPath = getBinPathSync({ cwd: pkgPath, name });
-
-  if (!binPath) {
-    if (binName) {
-      throw new Error(`${log.prefix('resolveBin')} Unable to resolve path to binary ${log.chalk.green(binName)} from package ${log.chalk.green(pkgName)}`);
-    }
-
-    throw new Error(`${log.prefix('resolveBin')} Unable to resolve path to binary: ${log.chalk.green(pkgName)}`);
-  }
-
-  return { binPath, pkgPath };
 }
 
 
@@ -117,7 +59,7 @@ export function getNpmInfo() {
  * Provided a normalized package.json object, renders an update notification in
  * the terminal.
  */
-export function doUpdateNotification(pkg: readPkgUp.NormalizedPackageJson) {
+export function doUpdateNotification(pkg: NormalizedPackageJson) {
   const getStyledUpdateType = (updateType?: string) => {
     switch (updateType) {
       case 'major':

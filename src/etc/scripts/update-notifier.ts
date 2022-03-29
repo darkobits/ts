@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 import { dirname } from '@darkobits/fd-name';
-import readPkgUp from 'read-pkg-up';
 
 import { doUpdateNotification } from 'lib/utils';
 
@@ -14,6 +13,8 @@ import { doUpdateNotification } from 'lib/utils';
  * See: utils.ts / doUpdateNotification
  */
 async function updateNotifier() {
+  const { readPackageUp } = await import('read-pkg-up');
+
   const curDir = dirname();
 
   if (!curDir) {
@@ -22,7 +23,7 @@ async function updateNotifier() {
 
   // Start from the directory of this file rather than process.cwd(), or we will
   // wind up reading the host project's package.json, not our own.
-  const pkg = await readPkgUp({ cwd: curDir });
+  const pkg = await readPackageUp({ cwd: curDir });
 
   if (!pkg) {
     throw new Error('Unable to read package.json for @darkobits/ts.');

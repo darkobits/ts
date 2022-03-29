@@ -19,6 +19,10 @@
     // Use Node's module resolution strategy.
     "moduleResolution": "node",
 
+    // Allow JavaScript files to be included in type-checking, but do not throw
+    // errors.
+    "allowJs": true,
+
     // Allow default imports from modules with no default export. This does not
     // effect code emit, just type-checking.
     "allowSyntheticDefaultImports": true,
@@ -32,6 +36,9 @@
     // errors when such operators are used.
     // See: https://mariusschulz.com/blog/downlevel-iteration-for-es3-es5-in-typescript
     "downlevelIteration": true,
+
+    // Only emit declaration files; source files will be transpiled using Babel.
+    "emitDeclarationOnly": true,
 
     // Emit design-type metadata for decorated declarations in source.
     "emitDecoratorMetadata": true,

@@ -39,21 +39,17 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
 
     // ----- Build: TypeScript Commands ----------------------------------------
 
-    const tsFlags = {
-      pretty: true
-    };
-
     commands.ts = command('ts', ['ttsc', {
-      ...tsFlags,
-      emitDeclarationOnly: true
+      // emitDeclarationOnly: true,
+      pretty: true
     }], {
       prefix: chalk => chalk.bgBlue.white(' TS '),
       preserveArguments: true
     });
 
     commands.ts.watch = command('ts.watch', ['ttsc', {
-      ...tsFlags,
-      emitDeclarationOnly: true,
+      // emitDeclarationOnly: true,
+      pretty: true,
       watch: true,
       preserveWatchOutput: true
     }], {
@@ -117,7 +113,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       group: 'Test',
       description: 'Run unit tests in watch mode.',
       run: [
-        command.babel('jest', ['jest', { watch: true }], {
+        command.node('jest', ['jest', { watch: true }], {
           // This command involves user interaction so we need to use 'inherit'.
           execaOptions: { stdio: 'inherit' }
         })

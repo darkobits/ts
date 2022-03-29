@@ -67,7 +67,7 @@ async function createSymlink(binName: string, symlinkTarget: string, symlinkPath
  */
 async function linkBins() {
   try {
-    const pkg = getPackageInfo();
+    const pkg = await getPackageInfo();
 
     // If the host package does not declare any binaries, bail.
     if (!pkg.json.bin) {
