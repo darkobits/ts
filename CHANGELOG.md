@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.10.0](https://github.com/darkobits/ts/compare/v0.9.6...v0.10.0) (2022-03-29)
+
+
+### ⚠ BREAKING CHANGES
+
+* **deps:** This update includes a breaking change in the `nr` API. Consumers will need to update their `nr.config.js` files accordingly.
+
+### 🏗 Chores
+
+* **deps:** Update dependencies. ([da7fac5](https://github.com/darkobits/ts/commit/da7fac5c68a980c875ffc141fadfe52f98d6f7e2))
+
+
+### 🛠 Refactoring
+
+* Add typed Jest configuration. ([9f3035e](https://github.com/darkobits/ts/commit/9f3035e32654ba47359e4d29dcf283bb56657bee))
+
 ### [0.9.6](https://github.com/darkobits/ts/compare/v0.9.5...v0.9.6) (2022-03-29)
 
 
