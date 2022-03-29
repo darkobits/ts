@@ -1,4 +1,4 @@
-const { EXTENSIONS_WITH_DOT } = require('../etc/constants');
+const { EXTENSIONS_WITH_DOT, SRC_DIR } = require('../etc/constants');
 
 module.exports = {
   presets: [
@@ -14,10 +14,13 @@ module.exports = {
   plugins: [
     'babel-plugin-add-module-exports',
     'babel-plugin-transform-import-meta',
-    ['@babel/plugin-proposal-decorators', { legacy: true, loose: true }],
+    ['@babel/plugin-proposal-decorators', {
+      legacy: true,
+      loose: true
+    }],
     ['babel-plugin-module-resolver', {
       cwd: 'babelrc',
-      root: ['./src'],
+      root: [`./${SRC_DIR}`],
       extensions: EXTENSIONS_WITH_DOT
     }]
   ],

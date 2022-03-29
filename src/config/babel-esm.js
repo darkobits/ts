@@ -3,7 +3,7 @@ const path = require('path');
 
 const { resolvePath: pluginModuleResolver } = require('babel-plugin-module-resolver');
 
-const { EXTENSIONS_WITH_DOT } = require('../etc/constants');
+const { EXTENSIONS_WITH_DOT, SRC_DIR } = require('../etc/constants');
 
 const { NODE_ENV } = process.env;
 
@@ -19,10 +19,12 @@ function changeExtension(sourcePath, ext) {
 function customResolvePath(sourcePath, currentFile, opts) {
   // ----- Node Built-Ins ------------------------------------------------------
 
+  // ex: import path from 'path';
   if (Module.builtinModules.includes(sourcePath)) {
     return sourcePath;
   }
 
+  // ex: import path from 'node:path';
   if (sourcePath.startsWith('node:') && Module.builtinModules.includes(sourcePath.slice(5))) {
     return sourcePath;
   }
@@ -30,20 +32,22 @@ function customResolvePath(sourcePath, currentFile, opts) {
 
   // ----- URL Schemes ---------------------------------------------------------
 
-  if ( sourcePath.startsWith('data:') || sourcePath.startsWith('file:')) {
+  // ex: import foo from 'data:etc', import bar from 'file:etc';
+  if (sourcePath.startsWith('data:') || sourcePath.startsWith('file:')) {
     return sourcePath;
   }
 
 
   // ----- Internal Files ------------------------------------------------------
 
-  // Note: This will be `null` if importing from outside the package.
+  // Note: This will return `null` if importing from outside the package.
   const resolvedInternalPath = pluginModuleResolver(sourcePath, currentFile, opts);
 
   if (resolvedInternalPath) {
-    // Because this plugin was designed prior to ESM, when file extensions were
-    // not required in import specifiers, we need to manually add them to the
-    // final specifier.
+    // Because babel-plugin-module-resolver was designed prior to ESM, when file
+    // extensions were not required in import specifiers, we need to manually
+    // add them to the final specifier. This is not the most robust logic, but
+    // should handle most cases until a better solution is available.
     return changeExtension(resolvedInternalPath, '.js');
   }
 
@@ -51,7 +55,7 @@ function customResolvePath(sourcePath, currentFile, opts) {
   // ----- External Packages / Files -------------------------------------------
 
   /**
-   * With the introduction of conditional exports (ie: export maps), it is
+   * With the introduction of conditional exports (re: export maps), it is
    * impossible to know how a package's author has configured path rewrites for
    * files within their package. And, there currently appears to be no way to
    * interrogate this behavior programmatically, so for now we will just leave
@@ -77,7 +81,7 @@ module.exports = {
     ['@babel/plugin-proposal-decorators', { legacy: true, loose: true }],
     ['babel-plugin-module-resolver', {
       cwd: 'babelrc',
-      root: ['./src'],
+      root: [`./${SRC_DIR}`],
       extensions: EXTENSIONS_WITH_DOT,
       // Because we are transpiling to native ESM, we don't want to strip any
       // extensions from import specifiers.

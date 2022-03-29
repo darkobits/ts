@@ -34,11 +34,11 @@ To define additional package scripts, pass a function to `nr`:
 // nr.config.js
 import { nr } from '@darkobits/ts';
 
-export default nr(({ createCommand, createScript }) => {
-  createScript('awesome', {
+export default nr(({ command, script }) => {
+  script('awesome', {
     description: 'Do awesome things.',
     run: [
-      createCommand('awesome-cmd', ['awesome', { sauce: true }])
+      command('awesome-cmd', ['awesome', { sauce: true }])
     ]
   })
 });

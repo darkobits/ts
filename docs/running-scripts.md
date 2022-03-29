@@ -55,11 +55,11 @@ after the `build` script. These scripts are not run with `build.watch`.
 // nr.config.js
 import { nr } from '@darkobits/nr';
 
-export default nr(({ createCommand, createScript }) => {
-  createScript('postbuild', {
+export default nr(({ command, script }) => {
+  script('postbuild', {
     description: 'Runs after the "build" script.',
     run: [
-      createCommand('cleanup', [
+      command('cleanup', [
         // Runs del .cache --force
         'del', ['.cache'], { force: true }
       ])
@@ -161,11 +161,11 @@ after any `bump*` scripts.
 // nr.config.js
 import { nr } from '@darkobits/nr';
 
-export default nr(({ createCommand, createScript }) => {
-  createScript('postbump', {
+export default nr(({ command, script }) => {
+  script('postbump', {
     description: 'Runs after any "bump" scripts.',
     run: [
-      createCommand('cleanup', [
+      command('cleanup', [
         // Runs del .cache --force
         'del', ['.cache'], { force: true }
       ])

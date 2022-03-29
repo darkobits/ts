@@ -1,30 +1,30 @@
 import { nr } from './src';
 
-export default nr(({ createCommand, createScript }) => {
-  createScript('docs', {
+export default nr(({ command, script }) => {
+  script('docs', {
     description: 'Start a local Docsify server that serves our documentation.',
     run: [
-      createCommand('docsify', ['docsify', ['serve', 'docs']])
+      command('docsify', ['docsify', ['serve', 'docs']])
     ]
   });
 
-  createScript('publish', {
+  script('publish', {
     group: 'Release',
     description: 'Publish the package using re-pack.',
     run: [
-      createCommand('re-pack', ['re-pack', ['publish']])
+      command('re-pack', ['re-pack', ['publish']])
     ]
   });
 
   // N.B. nr will automatically run this for us after the 'build' script is run.
-  createScript('postbuild', {
+  script('postbuild', {
     group: 'Build',
     description: 'Re-pack the project after building.',
     run: [
       // Remove the 'documentation' folder created by Docsify's postinstall
       // script on fresh installs.
-      createCommand('rm.docsify', ['del', ['documentation']]),
-      createCommand('re-pack', ['re-pack'])
+      command('rm.docsify', ['del', ['documentation']]),
+      command('re-pack', ['re-pack'])
     ]
   });
 });

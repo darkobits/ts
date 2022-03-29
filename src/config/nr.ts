@@ -4,18 +4,11 @@ import {
   OUT_DIR
 } from 'etc/constants';
 
-import type { ConfigurationFactory } from '@darkobits/nr/dist/etc/types';
+import type { ConfigurationFactory } from '@darkobits/nr';
 
 
 export default function(userConfigFactory?: ConfigurationFactory): ConfigurationFactory {
-  return async ({
-    createCommand,
-    createNodeCommand,
-    createBabelNodeCommand,
-    createScript,
-    createTask,
-    isCI
-  }) => {
+  return async ({ command, script, task, isCI }) => {
     const commands: Record<string, any> = {};
 
     // ----- Build: Babel Commands ---------------------------------------------
@@ -29,12 +22,12 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       deleteDirOnStart: true
     };
 
-    commands.babel = createCommand('babel', ['babel', [SRC_DIR], babelFlags], {
+    commands.babel = command('babel', ['babel', [SRC_DIR], babelFlags], {
       prefix: chalk => chalk.bgYellow.black(' Babel '),
       execaOptions: {env: { TS_ENV: 'esm' } }
     });
 
-    commands.babel.watch = createCommand('babel.watch', ['babel', [SRC_DIR], {
+    commands.babel.watch = command('babel.watch', ['babel', [SRC_DIR], {
       ...babelFlags,
       watch: true,
       verbose: true
@@ -50,7 +43,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       pretty: true
     };
 
-    commands.ts = createCommand('ts', ['ttsc', {
+    commands.ts = command('ts', ['ttsc', {
       ...tsFlags,
       emitDeclarationOnly: true
     }], {
@@ -58,7 +51,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       preserveArguments: true
     });
 
-    commands.ts.watch = createCommand('ts.watch', ['ttsc', {
+    commands.ts.watch = command('ts.watch', ['ttsc', {
       ...tsFlags,
       emitDeclarationOnly: true,
       watch: true,
@@ -71,7 +64,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
 
     // ----- Build: Misc. Commands ---------------------------------------------
 
-    commands.cleanup = createCommand('cleanup', [
+    commands.cleanup = command('cleanup', [
       'del', [`${OUT_DIR}/**/*.spec.*`, `${OUT_DIR}/**/*.test.*`]
     ]);
 
@@ -83,14 +76,14 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       format: require.resolve('eslint-codeframe-formatter')
     };
 
-    commands.lint = createBabelNodeCommand('eslint', ['eslint', [SRC_DIR], eslintFlags]);
+    commands.lint = command.babel('eslint', ['eslint', [SRC_DIR], eslintFlags]);
 
-    commands.lint.fix = createBabelNodeCommand('eslint.fix', ['eslint', [SRC_DIR], { ...eslintFlags, fix: true }]);
+    commands.lint.fix = command.babel('eslint.fix', ['eslint', [SRC_DIR], { ...eslintFlags, fix: true }]);
 
 
     // ----- Build Scripts -----------------------------------------------------
 
-    createScript('build', {
+    script('build', {
       group: 'Build',
       description: 'Lint, type-check, and compile the project.',
       timing: true,
@@ -100,7 +93,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       ]
     });
 
-    createScript('build.watch', {
+    script('build.watch', {
       group: 'Build',
       description: 'Continuously type-check, and compile the project.',
       run: [
@@ -111,40 +104,40 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
 
     // ----- Testing Scripts ---------------------------------------------------
 
-    createScript('test', {
+    script('test', {
       group: 'Test',
       description: 'Run unit tests.',
       timing: true,
       run: [
-        createBabelNodeCommand('jest', ['jest'])
+        command.babel('jest', ['jest'])
       ]
     });
 
-    createScript('test.watch', {
+    script('test.watch', {
       group: 'Test',
       description: 'Run unit tests in watch mode.',
       run: [
-        createBabelNodeCommand('jest', ['jest', { watch: true }], {
+        command.babel('jest', ['jest', { watch: true }], {
           // This command involves user interaction so we need to use 'inherit'.
           execaOptions: { stdio: 'inherit' }
         })
       ]
     });
 
-    createScript('test.coverage', {
+    script('test.coverage', {
       group: 'Test',
       description: 'Run unit tests and generate a coverage report.',
       timing: true,
       run: [
-        createBabelNodeCommand('jest', ['jest', { coverage: true }])
+        command.babel('jest', ['jest', { coverage: true }])
       ]
     });
 
-    createScript('test.passWithNoTests', {
+    script('test.passWithNoTests', {
       group: 'Test',
       description: 'Run unit tests, but do not fail if no tests exist.',
       run: [
-        createBabelNodeCommand('jest', ['jest', { passWithNoTests: true }], {
+        command.babel('jest', ['jest', { passWithNoTests: true }], {
           preserveArguments: true
         })
       ]
@@ -153,14 +146,14 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
 
     // ----- Lint Scripts ------------------------------------------------------
 
-    createScript('lint', {
+    script('lint', {
       group: 'Lint',
       description: 'Lint the project.',
       timing: true,
       run: [commands.lint]
     });
 
-    createScript('lint.fix', {
+    script('lint.fix', {
       group: 'Lint',
       description: 'Lint the project and automatically fix any fixable errors.',
       timing: true,
@@ -170,19 +163,19 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
 
     // ----- Release Scripts ---------------------------------------------------
 
-    createScript('release', {
+    script('release', {
       description: 'Use semantic-release to create a release from a CI environment.',
       group: 'Release',
       run: [
-        createCommand('semantic-release', ['semantic-release'])
+        command('semantic-release', ['semantic-release'])
       ]
     });
 
-    createScript('release.local', {
+    script('release.local', {
       description: 'Use semantic-release to create a release locally.',
       group: 'Release',
       run: [
-        createCommand('semantic-release', ['semantic-release', { ci: false }])
+        command('semantic-release', ['semantic-release', { ci: false }])
       ]
     });
 
@@ -198,11 +191,11 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
     }
 
     const createReleaseScript = ({ releaseType, args, description }: CreateReleaseScriptOptions) => {
-      createScript(releaseType ? `bump.${releaseType}` : 'bump', {
+      script(releaseType ? `bump.${releaseType}` : 'bump', {
         group: 'Bump',
         description: `Generate a change log entry and tagged commit for ${description}.`,
         run: [
-          createBabelNodeCommand(`standard-version-${releaseType ?? 'default'}`, [
+          command.babel(`standard-version-${releaseType ?? 'default'}`, [
             standardVersionCmd, { preset: require.resolve('config/changelog-preset'), ...args }
           ])
         ]
@@ -246,11 +239,11 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
 
     // ----- Dependency Management ---------------------------------------------
 
-    createScript('deps.check', {
+    script('deps.check', {
       group: 'Dependency Management',
       description: 'Check for newer versions of installed dependencies.',
       run: [
-        createNodeCommand('npm-check-updates', ['npm-check-updates', { peer: true }], {
+        command.node('npm-check-updates', ['npm-check-updates', { peer: true }], {
           execaOptions: { stdio: 'inherit' }
         })
       ]
@@ -259,24 +252,22 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
 
     // ----- Lifecycles --------------------------------------------------------
 
-    createScript('prepare', {
+    script('prepare', {
       group: 'Lifecycle',
       description: 'Run after "npm install" to ensure the project builds correctly and tests are passing.',
       timing: true,
       run: isCI ? [] : [
         'script:build',
         'script:test.passWithNoTests',
-        createBabelNodeCommand('update-notifier', [require.resolve('etc/scripts/update-notifier')])
+        command.babel('update-notifier', [require.resolve('etc/scripts/update-notifier')])
       ]
     });
 
     if (typeof userConfigFactory === 'function') {
       await userConfigFactory({
-        createCommand,
-        createNodeCommand,
-        createBabelNodeCommand,
-        createScript,
-        createTask,
+        command,
+        script,
+        task,
         isCI
       });
     }
