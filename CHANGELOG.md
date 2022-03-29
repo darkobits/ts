@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.9.5](https://github.com/darkobits/ts/compare/v0.9.4...v0.9.5) (2022-03-29)
+
+
+### 🐞 Bug Fixes
+
+* Fix build configuration. ([6b7ea08](https://github.com/darkobits/ts/commit/6b7ea084d43c420d89acf40f2952822b140a3688))
+
 ### [0.9.4](https://github.com/darkobits/ts/compare/v0.9.3...v0.9.4) (2022-03-29)
 
 
