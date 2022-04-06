@@ -40,7 +40,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
     // ----- Build: TypeScript Commands ----------------------------------------
 
     commands.ts = command('ts', ['ttsc', {
-      // emitDeclarationOnly: true,
+      emitDeclarationOnly: true,
       pretty: true
     }], {
       prefix: chalk => chalk.bgBlue.white(' TS '),
@@ -48,7 +48,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
     });
 
     commands.ts.watch = command('ts.watch', ['ttsc', {
-      // emitDeclarationOnly: true,
+      emitDeclarationOnly: true,
       pretty: true,
       watch: true,
       preserveWatchOutput: true

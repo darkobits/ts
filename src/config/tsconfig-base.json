@@ -38,7 +38,11 @@
     "downlevelIteration": true,
 
     // Only emit declaration files; source files will be transpiled using Babel.
-    "emitDeclarationOnly": true,
+    // NOTE: This must be disabled here and instead passed as a command line
+    // argument in scripts where we want to use it because other downstream
+    // tools may try to invoke the compiler with flags like `noEmit` that will
+    // throw an error if this option is also present.
+    // "emitDeclarationOnly": true,
 
     // Emit design-type metadata for decorated declarations in source.
     "emitDecoratorMetadata": true,
