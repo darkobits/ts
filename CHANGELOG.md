@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.10.4](https://github.com/darkobits/ts/compare/v0.10.3...v0.10.4) (2022-04-06)
+
+
+### 🐞 Bug Fixes
+
+* **tsconfig:** Move `emitDeclarationOnly` back to script definitions. ([c9eac5d](https://github.com/darkobits/ts/commit/c9eac5de6eb95f2a6a262201a40c0966c5223e30))
+
 ### [0.10.3](https://github.com/darkobits/ts/compare/v0.10.2...v0.10.3) (2022-04-06)
 
 
