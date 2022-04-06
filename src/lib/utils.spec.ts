@@ -1,39 +1,45 @@
-// import path from 'path';
+import path from 'path';
 
 import env from '@darkobits/env';
-// import faker from '@faker-js/faker';
-// import readPkgUp from 'read-pkg-up';
+import faker from '@faker-js/faker';
 
-import { getNpmInfo } from 'lib/utils';
+import {
+  getNpmInfo,
+  getPackageInfo
+} from 'lib/utils';
 
 jest.mock('@darkobits/env');
 jest.mock('@darkobits/fd-name');
-jest.mock('read-pkg-up');
 
-// Note: This function cannot be tested at this time because it uses a dynamic
-// import statement to load 'read-pkg-up', and troubleshooting Jest on this
-// issue is not worth the effort. Re-visit when Jest's ESM support improves.
-// describe.skip('getPackageInfo', () => {
-//   const readPkgUpMock = readPkgUp as jest.Mocked<typeof readPkgUp>;
-//   const pkgName = faker.lorem.word();
-//   const pkgPath = faker.system.directoryPath();
 
-//   beforeEach(() => {
-//     readPkgUpMock.sync.mockReturnValue({
-//       packageJson: {
-//         name: pkgName
-//       },
-//       path: path.join(pkgPath, 'package.json')
-//     });
-//   });
+describe('getPackageInfo', () => {
+  const pkgName = faker.lorem.word();
+  const pkgPath = faker.system.directoryPath();
 
-//   it('should return the contents of the nearest package.json', () => {
-//     const result = getPackageInfo();
-//     expect(result.json.name).toEqual(pkgName);
-//     expect(result.rootDir).toEqual(pkgPath);
-//     expect(readPkgUpMock.sync).toHaveBeenCalled();
-//   });
-// });
+  const readPkgUpMock = {
+    readPackageUp: jest.fn(async () => {
+      return {
+        packageJson: {
+          name: pkgName
+        },
+        path: path.join(pkgPath, 'package.json')
+      };
+    })
+  };
+
+
+  beforeEach(() => {
+    jest.doMock('read-pkg-up', () => readPkgUpMock);
+  });
+
+  it('should return the contents of the nearest package.json', async () => {
+    const result = await getPackageInfo();
+    expect(result.json.name).toEqual(pkgName);
+    expect(result.rootDir).toEqual(pkgPath);
+    expect(readPkgUpMock.readPackageUp).toHaveBeenCalled();
+  });
+});
+
 
 describe('getNpmInfo', () => {
   const envMock = env as jest.Mocked<typeof env> & jest.MockedFunction<typeof env>;
