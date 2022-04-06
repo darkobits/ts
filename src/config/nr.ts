@@ -113,7 +113,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       group: 'Test',
       description: 'Run unit tests in watch mode.',
       run: [
-        command.node('jest', ['jest', { watch: true }], {
+        command.babel('jest', ['jest', { watch: true }], {
           // This command involves user interaction so we need to use 'inherit'.
           execaOptions: { stdio: 'inherit' }
         })
