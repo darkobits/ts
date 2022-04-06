@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.10.3](https://github.com/darkobits/ts/compare/v0.10.2...v0.10.3) (2022-04-06)
+
+
+### 🐞 Bug Fixes
+
+* **babel:** Transform dynamic imports when testing. ([3832b75](https://github.com/darkobits/ts/commit/3832b75d724e8a001b5ad403fdab6446dbce8362))
+
 ### [0.10.2](https://github.com/darkobits/ts/compare/v0.10.1...v0.10.2) (2022-04-06)
 
 
