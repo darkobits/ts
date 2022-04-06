@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.10.2](https://github.com/darkobits/ts/compare/v0.10.1...v0.10.2) (2022-04-06)
+
+
+### 🐞 Bug Fixes
+
+* Use `command.babel` for script `test.watch`. ([311af96](https://github.com/darkobits/ts/commit/311af962e1187c0f0c53f7f80043c1937e56ef98))
+
 ### [0.10.1](https://github.com/darkobits/ts/compare/v0.10.0...v0.10.1) (2022-03-29)
 
 
