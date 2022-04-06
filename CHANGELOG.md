@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.10.6](https://github.com/darkobits/ts/compare/v0.10.5...v0.10.6) (2022-04-06)
+
+
+### 🐞 Bug Fixes
+
+* Remove exports map. ([25b1b14](https://github.com/darkobits/ts/commit/25b1b14912c38da61fff23c29909a15d8a2787e5))
+
 ### [0.10.5](https://github.com/darkobits/ts/compare/v0.10.4...v0.10.5) (2022-04-06)
 
 
