@@ -4,15 +4,21 @@ on:
   - pull_request
 env:
   FORCE_COLOR: 3
+concurrency:
+  group: ${{ github.ref }}
+  # Never cancel builds on master. This way, we can more easily figure out
+  # which build/commit broke it.
+  # cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
+  cancel-in-progress: true
 jobs:
   ci-cd:
     name: CI/CD
     runs-on: ubuntu-latest
     steps:
-      - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.9.1
-        with:
-          access_token: ${{ github.token }}
+      # - name: Cancel Previous Runs
+      #   uses: styfle/cancel-workflow-action@0.9.1
+      #   with:
+      #     access_token: ${{ github.token }}
 
       - name: Clone Repository
         uses: actions/checkout@v2
