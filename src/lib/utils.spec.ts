@@ -1,12 +1,13 @@
 import path from 'path';
 
 import env from '@darkobits/env';
-import faker from '@faker-js/faker';
+import { faker } from '@faker-js/faker';
 
 import {
   getNpmInfo,
   getPackageInfo
 } from 'lib/utils';
+
 
 jest.mock('@darkobits/env');
 jest.mock('@darkobits/fd-name');
@@ -26,7 +27,6 @@ describe('getPackageInfo', () => {
       };
     })
   };
-
 
   beforeEach(() => {
     jest.doMock('read-pkg-up', () => readPkgUpMock);
