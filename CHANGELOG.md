@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.10.7-beta.1](https://github.com/darkobits/ts/compare/v0.10.7-beta.0...v0.10.7-beta.1) (2022-07-29)
+
+
+### 🐞 Bug Fixes
+
+* Add `jest-environment-jsdom` and `jest-jasmine2` to `peerDependencies` ([51564e8](https://github.com/darkobits/ts/commit/51564e862ba5bcf602dee08966901e6b3e0adb11))
+
 ## [0.10.7-beta.0](https://github.com/darkobits/ts/compare/v0.10.6...v0.10.7-beta.0) (2022-07-29)
 
 
