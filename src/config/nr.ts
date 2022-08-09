@@ -127,16 +127,6 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       ]
     });
 
-    script('test.passWithNoTests', {
-      group: 'Test',
-      description: 'Run unit tests, but do not fail if no tests exist.',
-      run: [
-        command.babel('jest', ['jest', { passWithNoTests: true }], {
-          preserveArguments: true
-        })
-      ]
-    });
-
 
     // ----- Lint Scripts ------------------------------------------------------
 
@@ -252,7 +242,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       timing: true,
       run: isCI ? [] : [
         'script:build',
-        'script:test.passWithNoTests',
+        'script:test',
         command.babel('update-notifier', [require.resolve('etc/scripts/update-notifier')])
       ]
     });

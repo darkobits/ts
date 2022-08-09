@@ -11,7 +11,8 @@ const ALWAYS_IGNORE = [
   `<rootDir>/${OUT_DIR}`
 ];
 
-export default (userConfig: Config.InitialOptions = {}) => merge({
+
+export default (userConfig: Config.InitialOptions = {}) => merge<Config.InitialOptions>({
   testEnvironment: 'node',
   testMatch: [`<rootDir>/${SRC_DIR}/**/*.spec.*`],
   testPathIgnorePatterns: ALWAYS_IGNORE,
@@ -21,7 +22,6 @@ export default (userConfig: Config.InitialOptions = {}) => merge({
     '!**/node_modules/**'
   ],
   coveragePathIgnorePatterns: ALWAYS_IGNORE,
-  moduleFileExtensions: EXTENSIONS,
   coverageThreshold: {
     global: {
       statements: 80,
@@ -30,6 +30,9 @@ export default (userConfig: Config.InitialOptions = {}) => merge({
       lines: 80
     }
   },
+  moduleFileExtensions: EXTENSIONS,
+  // Exit without error if Jest could not find any test files to run.
+  passWithNoTests: true,
   // Watchman started causing issues with M1 / Monterey. This dependency is
   // difficult to debug, and disabling it does not seem to entail performance
   // degradations for small/medium projects.
