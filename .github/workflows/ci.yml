@@ -1,11 +1,6 @@
 name: ci
 on:
-  push:
-    # Don't run an additional job when a tag is pushed; this always occurs
-    # coincident with a push of the commit to which the tag points or the commit
-    # to which the tag points has already been pushed.
-    tags-ignore:
-      - '**'
+  - push
   - pull_request
 env:
   FORCE_COLOR: 3
@@ -18,6 +13,8 @@ concurrency:
 jobs:
   ci:
     name: CI
+    # Skip tags. This 1-liner is equivalent to ~10LOC to do the same in `on`.
+    if: github.event.ref_type != 'tag'
     runs-on: ubuntu-latest
     steps:
       - name: Clone
