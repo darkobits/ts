@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.10.7-beta.3](https://github.com/darkobits/ts/compare/v0.10.7-beta.2...v0.10.7-beta.3) (2022-08-09)
+
+
+### 🏗 Chores
+
+* Skip tags in CI. ([ab357c3](https://github.com/darkobits/ts/commit/ab357c3cc96d7a9be9e9d4631c6346b199c8b4a3))
+
+
+### 🐞 Bug Fixes
+
+* Update types in Jest config. ([5e83af5](https://github.com/darkobits/ts/commit/5e83af571bae6a87d26d583437de1525f1ba4078))
+
 ## [0.10.7-beta.2](https://github.com/darkobits/ts/compare/v0.10.7-beta.1...v0.10.7-beta.2) (2022-08-09)
 
 
