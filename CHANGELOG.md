@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.10.7-beta.2](https://github.com/darkobits/ts/compare/v0.10.7-beta.1...v0.10.7-beta.2) (2022-08-09)
+
+
+### 🏗 Chores
+
+* **deps:** Update dependencies. ([975ea5f](https://github.com/darkobits/ts/commit/975ea5fd36b6648ed434ad19b577dd6140b3428a))
+* Miscellaneous cleanup. ([7bbd9af](https://github.com/darkobits/ts/commit/7bbd9af28b3e4d8cd8f9f5da1b55d66f020a059b))
+* Update CI configuration. ([e14cb04](https://github.com/darkobits/ts/commit/e14cb04f5fc259b329256698e88f2d68ce18a055))
+
+
+### 🛠 Refactoring
+
+* Refactor update notification logic. ([b3187e0](https://github.com/darkobits/ts/commit/b3187e08eb1ffb733de8b2a073c6cda0c2fd7786))
+* Remove `test.passWithNoTests` script. ([3f942df](https://github.com/darkobits/ts/commit/3f942dfbf2cc35bd159ea104f236d41436ca5d7d))
+
 ## [0.10.7-beta.1](https://github.com/darkobits/ts/compare/v0.10.7-beta.0...v0.10.7-beta.1) (2022-07-29)
 
 
