@@ -23,8 +23,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
     };
 
     commands.babel = command('babel', ['babel', [SRC_DIR], babelFlags], {
-      prefix: chalk => chalk.bgYellow.black(' Babel '),
-      execaOptions: {env: { TS_ENV: 'esm' } }
+      prefix: chalk => chalk.bgYellow.black(' Babel ')
     });
 
     commands.babel.watch = command('babel.watch', ['babel', [SRC_DIR], {
@@ -32,8 +31,7 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       watch: true,
       verbose: true
     }], {
-      prefix: chalk => chalk.bgYellow.black(' Babel '),
-      execaOptions: {env: { TS_ENV: 'esm' } }
+      prefix: chalk => chalk.bgYellow.black(' Babel ')
     });
 
 

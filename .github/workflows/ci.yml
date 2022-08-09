@@ -7,38 +7,28 @@ env:
 concurrency:
   group: ${{ github.ref }}
   # Never cancel builds on master. This way, we can more easily figure out
-  # which build/commit broke it.
-  # cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
-  cancel-in-progress: true
+  # which build/commit broke it. Replace with `true` to always cancel
+  # in-progress jobs.
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
 jobs:
-  ci-cd:
-    name: CI/CD
+  ci:
+    name: CI
     runs-on: ubuntu-latest
     steps:
-      # - name: Cancel Previous Runs
-      #   uses: styfle/cancel-workflow-action@0.9.1
-      #   with:
-      #     access_token: ${{ github.token }}
-
-      - name: Clone Repository
+      - name: Clone
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
-
-      - name: Set Up Node
+      - name: Prepare
         uses: actions/setup-node@v2
         with:
           node-version: 16
           cache: npm
-
-      - name: Prepare
-        run: npm ci
-
+      - name: Install
+        run: npm clean-install --ignore-scripts
       - name: Build
         run: npx nr build
-
       - name: Test
-        run: npx nr test.coverage
-
-      - name: Upload Coverage Report
-        run: bash <(curl -s https://codecov.io/bash)
+        run: |
+          npx nr test.coverage
+          bash <(curl -s https://codecov.io/bash)

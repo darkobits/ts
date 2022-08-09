@@ -69,9 +69,11 @@ module.exports = {
   presets: [
     ['@babel/preset-env', {
       targets: { node: '16' },
+      // We still have to use CJS when testing because Jest's support for ESM is
+      // still incomplete.
       modules: NODE_ENV === 'test' ? 'cjs' : false,
       // Do not transpile import() statements. This will allow packages that
-      // publish CommonJS to import ES Modules.
+      // publish CommonJS to import ES Modules using `await import()`.
       exclude: ['@babel/plugin-proposal-dynamic-import']
     }],
     '@babel/preset-typescript'
@@ -80,6 +82,8 @@ module.exports = {
     'babel-plugin-add-module-exports',
     ['@babel/plugin-proposal-decorators', { legacy: true, loose: true }],
     ['babel-plugin-module-resolver', {
+      // Treat the `src` directory adjacent to the resolved Babel configuration
+      // file as a module resolution root.
       cwd: 'babelrc',
       root: [`./${SRC_DIR}`],
       extensions: EXTENSIONS_WITH_DOT,
