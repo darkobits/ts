@@ -12,7 +12,11 @@ const ALWAYS_IGNORE = [
 ];
 
 
-export default (userConfig: Config.InitialOptions = {}) => merge<Config.InitialOptions>({
+// Note: Having this function return `any` prevents a TS9006 declaration emit
+// error for consumers because Config.InitialOptions uses a private type.
+// However, we can still use it to type our config parameter to provide
+// type safety to consumers.
+export default (userConfig: Config.InitialOptions = {}) => merge<any>({
   testEnvironment: 'node',
   testMatch: [`<rootDir>/${SRC_DIR}/**/*.spec.*`],
   testPathIgnorePatterns: ALWAYS_IGNORE,
