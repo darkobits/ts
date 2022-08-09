@@ -2,30 +2,27 @@ import path from 'path';
 
 import env from '@darkobits/env';
 import ms from 'ms';
-import updateNotifier from 'update-notifier';
 
-import { NpmConfigArgv } from 'etc/types';
+import { GetDefault, NpmConfigArgv, PkgInfo } from 'etc/types';
 import log from 'lib/log';
 
 import type { NormalizedPackageJson } from 'read-pkg-up';
 
-export interface PkgInfo {
-  json: NormalizedPackageJson;
-  rootDir: string;
-}
 
 /**
- * Synchronously searches for a directory containing a package.json starting
- * from process.cwd() or the provided directory. Returns an object containing
- * a normalized package.json manifest and the root directory of the project.
+ * Searches for a directory containing a package.json starting from
+ * `process.cwd()` or the provided directory. Returns an object containing a
+ * normalized package.json manifest and the root directory of the project.
  *
- * Basically a wrapper for readPkgUp that handles throwing if a package.json
- * cannot be found, and that returns the root directory of the package rather
- * than the path to where package.json was found.
+ * Basically a wrapper for read-pkg-up that:
+ * - Throws if a package.json cannot be found.
+ * - Returns the root directory of the package rather than the path to its
+ *   package.json.
  */
 export async function getPackageInfo(cwd?: string): Promise<PkgInfo> {
+  // Note: This package is ESM.
   const { readPackageUp } = await import('read-pkg-up');
-  const pkgInfo = cwd ? await readPackageUp({ cwd }) : await readPackageUp();
+  const pkgInfo = await readPackageUp(cwd ? { cwd } : undefined);
 
   if (!pkgInfo) {
     throw new Error(`${log.prefix('getPackageInfo')} Unable to find a package.json for the project.`);
@@ -56,10 +53,30 @@ export function getNpmInfo() {
 
 
 /**
+ * Utility to extract the "true" default export from a module when importing
+ * CJS from ESM or vice versa, where in some cases the default export is not
+ * configured correctly and may wind up being at
+ * <default imported module>.default.default.
+ */
+export function getDefaultExport<T extends Record<string, any>>(value: T): GetDefault<T> {
+  let result = Reflect.get(value, 'default');
+
+  while (Reflect.has(result, 'default')) {
+    result = Reflect.get(result, 'default');
+  }
+
+  return result;
+}
+
+
+/**
  * Provided a normalized package.json object, renders an update notification in
  * the terminal.
  */
-export function doUpdateNotification(pkg: NormalizedPackageJson) {
+export async function showUpdateNotification(pkg: NormalizedPackageJson) {
+  // Note: This package is ESM.
+  const updateNotifier = getDefaultExport(await import('update-notifier'));
+
   const getStyledUpdateType = (updateType?: string) => {
     switch (updateType) {
       case 'major':
@@ -82,7 +99,7 @@ export function doUpdateNotification(pkg: NormalizedPackageJson) {
     pkg,
     updateCheckInterval: ms('1 second'),
     shouldNotifyInNpmScript: true,
-    distTag: 'beta'
+    distTag: 'latest'
   });
 
   const styledUpdateType = getStyledUpdateType(notifier.update?.type);
@@ -95,21 +112,4 @@ export function doUpdateNotification(pkg: NormalizedPackageJson) {
       `Run ${log.chalk.bold('{updateCommand}')} to update from ${log.chalk.gray('{currentVersion}')} ➤ ${log.chalk.green('{latestVersion}')}. ✨`
     ].join('\n')
   });
-}
-
-
-/**
- * Utility to extract the "true" default export from a module when importing
- * CJS from ESM or vice versa, where in some cases the default export is not
- * configured correctly and may wind up being at
- * <default imported module>.default.default.
- */
-export function getDefaultExport<T extends object>(value: T): T {
-  let result = Reflect.get(value, 'default');
-
-  while (Reflect.has(result, 'default')) {
-    result = Reflect.get(result, 'default');
-  }
-
-  return result;
 }
