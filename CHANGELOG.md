@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.10.7-beta.6](https://github.com/darkobits/ts/compare/v0.10.7-beta.5...v0.10.7-beta.6) (2022-08-10)
+
+
+### 🏗 Chores
+
+* **eslint-plugin:** Remove explicit dependency on this package. ([a7cd8cd](https://github.com/darkobits/ts/commit/a7cd8cd16cc10f7ae8e47bbe61e3a72aff5265a2))
+
 ## [0.10.7-beta.5](https://github.com/darkobits/ts/compare/v0.10.7-beta.4...v0.10.7-beta.5) (2022-08-10)
 
 
