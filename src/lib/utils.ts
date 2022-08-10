@@ -85,8 +85,8 @@ export async function showUpdateNotification(pkg: NormalizedPackageJson) {
         return log.chalk.green.bold(updateType);
       case 'patch':
         return log.chalk.cyanBright(updateType);
-      case 'alpha':
-      case 'beta':
+      // case 'alpha':
+      // case 'beta':
       default:
         return log.chalk.magentaBright(updateType);
     }
