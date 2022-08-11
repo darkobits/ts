@@ -3,6 +3,7 @@ import {
   SRC_DIR,
   OUT_DIR
 } from 'etc/constants';
+import log from 'lib/log';
 
 import type { ConfigurationFactory } from '@darkobits/nr';
 
@@ -240,7 +241,16 @@ export default function(userConfigFactory?: ConfigurationFactory): Configuration
       group: 'Lifecycle',
       description: 'Run after "npm install" to ensure the project builds correctly and tests are passing.',
       timing: true,
-      run: isCI ? [] : [
+      run: isCI ? [
+        // Don't run our prepare script in CI environments, giving consumers
+        // the granularity to build and/or test their project in discreet steps.
+        task('skip-prepare', () => {
+          log.verbose(log.prefix('prepare'), [
+            'CI environment detected.',
+            `Skipping ${log.chalk.bold.green('prepare')} script.`
+          ].join(' '));
+        })
+      ] : [
         'script:build',
         'script:test',
         command.babel('update-notifier', [require.resolve('etc/scripts/update-notifier')])
