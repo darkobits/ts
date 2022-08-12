@@ -248,7 +248,7 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
       // Don't run our prepare script in CI environments, giving consumers
       // the granularity to build and/or test their project in discreet steps.
       task('skip-prepare', () => {
-        log.verbose(log.prefix('prepare'), [
+        log.info(log.prefix('prepare'), [
           'CI environment detected.',
           `Skipping ${log.chalk.bold.green('prepare')} script.`
         ].join(' '));
@@ -260,7 +260,8 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
     ]
   });
 
+
   if (typeof userConfig === 'function') {
-    await userConfig({ command, task, script, isCI  });
+    await userConfig(ctx);
   }
 };
