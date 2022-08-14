@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.10.7-beta.11](https://github.com/darkobits/ts/compare/v0.10.7-beta.10...v0.10.7-beta.11) (2022-08-14)
+
+
+### 🏗 Chores
+
+* **deps:** Update dependencies. ([bf28890](https://github.com/darkobits/ts/commit/bf28890b9b3d5fe9eeedfbb2a54f4fc4dcb2d8b8))
+
 ## [0.10.7-beta.10](https://github.com/darkobits/ts/compare/v0.10.7-beta.9...v0.10.7-beta.10) (2022-08-14)
 
 
