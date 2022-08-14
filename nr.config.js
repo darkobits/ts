@@ -17,7 +17,7 @@ export default nr(({ command, script }) => {
   });
 
   // N.B. nr will automatically run this for us after the 'build' script is run.
-  script('postbuild', {
+  script('postBuild', {
     group: 'Build',
     description: 'Re-pack the project after building.',
     run: [

@@ -1,10 +1,4 @@
-// Enable debugging.
-// require('debug').enable('semantic-release:*');
-
-const {
-  NPM_TOKEN,
-  GH_TOKEN
-} = process.env;
+const { NPM_TOKEN, GH_TOKEN } = process.env;
 
 module.exports = {
   branches: [

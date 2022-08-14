@@ -43,7 +43,7 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
     pretty: true
   }], {
     prefix: chalk => chalk.bgBlue.white(' TS '),
-    preserveArguments: true
+    preserveArgumentCasing: true
   });
 
   command('ts.watch', ['ttsc', {
@@ -53,7 +53,7 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
     preserveWatchOutput: true
   }], {
     prefix: chalk => chalk.bgBlue.white(' TS '),
-    preserveArguments: true
+    preserveArgumentCasing: true
   });
 
 
