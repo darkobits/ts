@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.10.7-beta.10](https://github.com/darkobits/ts/compare/v0.10.7-beta.9...v0.10.7-beta.10) (2022-08-14)
+
+
+### 🏗 Chores
+
+* Add dependency on `eslint-codeframe-formatter`. ([432fdc6](https://github.com/darkobits/ts/commit/432fdc656f228fcff0aef9c023c4f9b2321b9a7b))
+* **deps:** Update dependencies. ([393fbaf](https://github.com/darkobits/ts/commit/393fbaf75470e0474a32917ed0163012432b8a7d))
+
+
+### 🛠 Refactoring
+
+* Reorganize `nr` scripts. ([31618c8](https://github.com/darkobits/ts/commit/31618c844c29b4185874e0cdc219e0ba78c85839))
+
 ## [0.10.7-beta.9](https://github.com/darkobits/ts/compare/v0.10.7-beta.8...v0.10.7-beta.9) (2022-08-12)
 
 
