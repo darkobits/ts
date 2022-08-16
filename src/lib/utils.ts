@@ -36,6 +36,8 @@ export async function getPackageInfo(cwd?: string): Promise<PkgInfo> {
 
 
 /**
+ * @unused
+ *
  * If called during the invocation of an NPM lifecycle, returns information
  * about the lifecycle event.
  */
@@ -91,9 +93,6 @@ export async function showUpdateNotification(pkg: NormalizedPackageJson) {
         return log.chalk.magentaBright(updateType);
     }
   };
-
-  // TODO: Remove once this is working reliably.
-  log.silly('Running update notifier.');
 
   const notifier = updateNotifier({
     pkg,
