@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.11.0-beta.0](https://github.com/darkobits/ts/compare/v0.10.7-beta.11...v0.11.0-beta.0) (2022-08-16)
+
+
+### ✨ Features
+
+* **scripts:** Add `bin` script. ([8b78540](https://github.com/darkobits/ts/commit/8b78540d63bb4d6d8c580d06085f118a11e26783))
+
 ## [0.10.7-beta.11](https://github.com/darkobits/ts/compare/v0.10.7-beta.10...v0.10.7-beta.11) (2022-08-14)
 
 
