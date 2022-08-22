@@ -1,7 +1,7 @@
 import path from 'node:path';
 
 import {
-  EXTENSIONS_WITH_DOT,
+  EXTENSIONS,
   SRC_DIR,
   OUT_DIR
 } from 'etc/constants';
@@ -18,43 +18,40 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
   // ----- Build: Babel Commands -----------------------------------------------
 
   const babelFlags = {
-    extensions: EXTENSIONS_WITH_DOT.join(','),
-    ignore: '**/*.d.ts',
     outDir: OUT_DIR,
+    extensions: EXTENSIONS.join(','),
+    ignore: '**/*.d.ts',
     copyFiles: true,
     sourceMaps: true,
-    deleteDirOnStart: true
+    deleteDirOnStart: true,
+    verbose: true
   };
 
   command('babel', ['babel', [SRC_DIR], babelFlags], {
     prefix: chalk => chalk.bgYellow.black(' Babel ')
   });
 
-  command('babel.watch', ['babel', [SRC_DIR], {
-    ...babelFlags,
-    watch: true,
-    verbose: true
-  }], {
+  command('babel.watch', ['babel', [SRC_DIR], { ...babelFlags, watch: true }], {
     prefix: chalk => chalk.bgYellow.black(' Babel ')
   });
 
 
   // ----- Build: TypeScript Commands ------------------------------------------
 
-  command('ts', ['ttsc', {
+  const tsFlags = {
+    outDir: OUT_DIR,
+    declaration: true,
     emitDeclarationOnly: true,
-    pretty: true
-  }], {
+    pretty: true,
+    preserveWatchOutput: true
+  };
+
+  command('ts', ['ttsc', tsFlags], {
     prefix: chalk => chalk.bgBlue.white(' TS '),
     preserveArgumentCasing: true
   });
 
-  command('ts.watch', ['ttsc', {
-    emitDeclarationOnly: true,
-    pretty: true,
-    watch: true,
-    preserveWatchOutput: true
-  }], {
+  command('ts.watch', ['ttsc', { ...tsFlags, watch: true }], {
     prefix: chalk => chalk.bgBlue.white(' TS '),
     preserveArgumentCasing: true
   });
@@ -70,8 +67,8 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
   // ----- Lint Commands -------------------------------------------------------
 
   const eslintFlags = {
-    ext: EXTENSIONS_WITH_DOT.join(','),
-    format: require.resolve('eslint-codeframe-formatter')
+    ext: EXTENSIONS.join(','),
+    format: 'codeframe'
   };
 
   command.babel('eslint', ['eslint', [SRC_DIR], eslintFlags]);

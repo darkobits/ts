@@ -1,4 +1,4 @@
-const { EXTENSIONS_WITH_DOT, SRC_DIR } = require('../etc/constants');
+const { EXTENSIONS, SRC_DIR } = require('../etc/constants');
 
 const { NODE_ENV } = process.env;
 
@@ -27,7 +27,7 @@ module.exports = {
     ['babel-plugin-module-resolver', {
       cwd: 'babelrc',
       root: [`./${SRC_DIR}`],
-      extensions: EXTENSIONS_WITH_DOT
+      extensions: EXTENSIONS
     }]
   ],
   comments: false,

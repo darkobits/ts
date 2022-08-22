@@ -27,9 +27,6 @@
     // effect code emit, just type-checking.
     "allowSyntheticDefaultImports": true,
 
-    // Emit declaration files.
-    "declaration": true,
-
     // Adds support for ES2015 iteration semantics such as the spread operator
     // when compiling to older targets. Because we don't actually use TypeScript
     // for compilation, this setting has the effect of suppressing TypeScript

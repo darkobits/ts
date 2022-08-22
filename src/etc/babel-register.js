@@ -1,3 +1,3 @@
-const { EXTENSIONS_WITH_DOT } = require('./constants');
+const { EXTENSIONS } = require('./constants');
 
-require('@babel/register')({ extensions: [...EXTENSIONS_WITH_DOT, '.json'] });
+require('@babel/register')({ extensions: [...EXTENSIONS, '.json'] });

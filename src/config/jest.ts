@@ -5,8 +5,10 @@ import { EXTENSIONS, SRC_DIR, OUT_DIR } from 'etc/constants';
 import type { Config } from '@jest/types';
 
 
+const bareExtensions = EXTENSIONS.map(ext => ext.replace(/^\./, ''));
+
 // Paths we always want Jest to ignore.
-const ALWAYS_IGNORE = [
+const ignorePatterns = [
   '/node_modules/',
   `<rootDir>/${OUT_DIR}`
 ];
@@ -18,14 +20,16 @@ const ALWAYS_IGNORE = [
 // type safety to consumers.
 export default (userConfig: Config.InitialOptions = {}) => merge<any>({
   testEnvironment: 'node',
-  testMatch: [`<rootDir>/${SRC_DIR}/**/*.spec.*`],
-  testPathIgnorePatterns: ALWAYS_IGNORE,
+  testMatch: [
+    `<rootDir>/${SRC_DIR}/**/*.spec.*`
+  ],
+  testPathIgnorePatterns: ignorePatterns,
   clearMocks: true,
   collectCoverageFrom: [
-    `<rootDir>/${SRC_DIR}/**/*.{${[...EXTENSIONS, 'node'].join(',')}}`,
+    `<rootDir>/${SRC_DIR}/**/*.{${[...bareExtensions, 'node'].join(',')}}`,
     '!**/node_modules/**'
   ],
-  coveragePathIgnorePatterns: ALWAYS_IGNORE,
+  coveragePathIgnorePatterns: ignorePatterns,
   coverageThreshold: {
     global: {
       statements: 80,
@@ -34,7 +38,7 @@ export default (userConfig: Config.InitialOptions = {}) => merge<any>({
       lines: 80
     }
   },
-  moduleFileExtensions: EXTENSIONS,
+  moduleFileExtensions: bareExtensions,
   // Exit without error if Jest could not find any test files to run.
   passWithNoTests: true,
   // Watchman started causing issues with M1 / Monterey. This dependency is

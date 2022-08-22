@@ -3,7 +3,7 @@ const path = require('path');
 
 const { resolvePath: pluginModuleResolver } = require('babel-plugin-module-resolver');
 
-const { EXTENSIONS_WITH_DOT, SRC_DIR } = require('../etc/constants');
+const { EXTENSIONS, SRC_DIR } = require('../etc/constants');
 
 const { NODE_ENV } = process.env;
 
@@ -86,7 +86,7 @@ module.exports = {
       // file as a module resolution root.
       cwd: 'babelrc',
       root: [`./${SRC_DIR}`],
-      extensions: EXTENSIONS_WITH_DOT,
+      extensions: EXTENSIONS,
       // Because we are transpiling to native ESM, we don't want to strip any
       // extensions from import specifiers.
       stripExtensions: NODE_ENV === 'test' ? undefined : [],
