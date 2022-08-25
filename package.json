@@ -44,7 +44,7 @@
     "jest": "^28.1.3",
     "ts-node": "^10.9.1",
     "ttypescript": "^1.5.13",
-    "typescript": "^4.7.4"
+    "typescript": "~4.7.4"
   },
   "dependencies": {
     "@darkobits/chex": "^2.0.1",
