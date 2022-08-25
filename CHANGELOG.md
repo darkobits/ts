@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.12.0](https://github.com/darkobits/ts/compare/v0.11.0...v0.12.0) (2022-08-25)
+
+
+### ⚠ BREAKING CHANGES
+
+* **deps:** 
+
+### 🐞 Bug Fixes
+
+* **deps:** Pin `typescript` to version `4.7.x`. ([b93225e](https://github.com/darkobits/ts/commit/b93225ef2060c9a43d6f7fa19124aeb099774b03))
+
+
+### 🏗 Chores
+
+* **deps:** Update dependencies. ([cfb6986](https://github.com/darkobits/ts/commit/cfb6986eafe8151ff03fbabec45e4aca260fda23)), closes [/github.com/facebook/jest/blob/main/CHANGELOG.md#2900](https://github.com/darkobits//github.com/facebook/jest/blob/main/CHANGELOG.md/issues/2900)
+
 ## [0.11.0](https://github.com/darkobits/ts/compare/v0.11.0-beta.1...v0.11.0) (2022-08-25)
 
 ## [0.11.0-beta.1](https://github.com/darkobits/ts/compare/v0.11.0-beta.0...v0.11.0-beta.1) (2022-08-22)
