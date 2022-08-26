@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.12.1](https://github.com/darkobits/ts/compare/v0.12.0...v0.12.1) (2022-08-26)
+
+
+### ✨ Features
+
+* Add `jestEsm` configuration preset. ([1a4605e](https://github.com/darkobits/ts/commit/1a4605ec96a7c6934f0947432fbe2bf7a6468001))
+
+
+### 🏗 Chores
+
+* Remove ESLint configuration deprecation warning. ([a501ad7](https://github.com/darkobits/ts/commit/a501ad7d871366671c7fb513bc17198da4b49e59))
+
 ## [0.12.0](https://github.com/darkobits/ts/compare/v0.11.0...v0.12.0) (2022-08-25)
 
 
