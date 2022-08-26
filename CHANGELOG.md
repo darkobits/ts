@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.12.2](https://github.com/darkobits/ts/compare/v0.12.1...v0.12.2) (2022-08-26)
+
+
+### 🐞 Bug Fixes
+
+* Revert to Jest 28. ([47a8388](https://github.com/darkobits/ts/commit/47a83889dccf598c5d1493a773f076b190529d86))
+
 ## [0.12.1](https://github.com/darkobits/ts/compare/v0.12.0...v0.12.1) (2022-08-26)
 
 
