@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.12.4](https://github.com/darkobits/ts/compare/v0.12.3...v0.12.4) (2022-09-12)
+
+
+### 🐞 Bug Fixes
+
+* Remove experimental VM modules flag from test scripts. ([f515cba](https://github.com/darkobits/ts/commit/f515cba60847c5a3bfceced89d6af7b820f6f10e))
+
 ## [0.12.3](https://github.com/darkobits/ts/compare/v0.12.2...v0.12.3) (2022-09-12)
 
 
