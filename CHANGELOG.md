@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.12.3](https://github.com/darkobits/ts/compare/v0.12.2...v0.12.3) (2022-09-12)
+
+
+### 🐞 Bug Fixes
+
+* `jest-esm` preset transforms all code to CJS. ([07e7585](https://github.com/darkobits/ts/commit/07e7585a2924ab6c7dfbb782c0e3a4a4e61d1c93))
+
 ## [0.12.2](https://github.com/darkobits/ts/compare/v0.12.1...v0.12.2) (2022-08-26)
 
 
