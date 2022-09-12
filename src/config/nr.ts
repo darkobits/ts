@@ -104,11 +104,7 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
     description: 'Run unit tests using Jest.',
     timing: true,
     run: [
-      command.babel('jest', ['jest'], {
-        execaOptions: {
-          nodeOptions: ['--experimental-vm-modules']
-        }
-      })
+      command.babel('jest', ['jest'])
     ]
   });
 
@@ -119,8 +115,7 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
       command.babel('jest', ['jest', { watch: true }], {
         execaOptions: {
           // This command involves user interaction so we need to use 'inherit'.
-          stdio: 'inherit',
-          nodeOptions: ['--experimental-vm-modules']
+          stdio: 'inherit'
         }
       })
     ]
@@ -131,11 +126,7 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
     description: 'Run unit tests using Jest and generate a coverage report.',
     timing: true,
     run: [
-      command.babel('jest', ['jest', { coverage: true }], {
-        execaOptions: {
-          nodeOptions: ['--experimental-vm-modules']
-        }
-      })
+      command.babel('jest', ['jest', { coverage: true }])
     ]
   });
 
