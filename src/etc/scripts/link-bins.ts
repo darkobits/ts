@@ -76,11 +76,11 @@ async function linkBins() {
     }
 
     const npm = await chex('npm >=6.0.0');
-    const { stdout: npmBinDir } = await npm(['bin']);
+    const npmBinDir = path.join((await npm(['root'])).stdout, '.bin');
 
     log.silly(log.prefix('link-bins'), `NPM bin path: ${log.chalk.green(npmBinDir)}`);
 
-    await Promise.all(Object.entries(pkg.json?.bin).map(async ([binName, binPath]) => {
+    await Promise.all(Object.entries(pkg.json.bin).map(async ([binName, binPath]) => {
       const symlinkPath = path.join(npmBinDir, binName);
       const symlinkTarget = path.resolve(path.join(pkg.rootDir, binPath));
 
@@ -92,7 +92,7 @@ async function linkBins() {
       }
     }));
 
-    log.verbose(`Linked ${log.chalk.yellow(Object.entries(pkg.json?.bin).length)} package binaries.`);
+    log.verbose(`Linked ${log.chalk.yellow(Object.entries(pkg.json.bin).length)} package binaries.`);
   } catch (err) {
     log.error(err);
     process.exit(1);
