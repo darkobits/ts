@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.13.0](https://github.com/darkobits/ts/compare/v0.13.0-beta.0...v0.13.0) (2023-01-16)
+
+
+### 🛠 Refactoring
+
+* Make `link-bins` compatible with NPM 9. ([09f708e](https://github.com/darkobits/ts/commit/09f708e98b1df303fa13f7542439f13c4a79b55f))
+
+
+### 🏗 Chores
+
+* **deps:** Update dependencies. ([c0dbd7a](https://github.com/darkobits/ts/commit/c0dbd7afc85362a0e9f85e8c6575ed6558ecaaa0))
+* Update ci.yml. ([3a375cd](https://github.com/darkobits/ts/commit/3a375cdaca24b2dc38381e334386936ec7a7a55d))
+
+
+### 📖 Documentation
+
+* Update documentation to account for `npm bin` deprecation. ([18ac9d3](https://github.com/darkobits/ts/commit/18ac9d3472dcd5a9000e89f5fb225b531bde3e6f))
+* Update README. ([ef1691d](https://github.com/darkobits/ts/commit/ef1691d54c036f06cf7d987d08d7859bb0354229))
+
 ## [0.13.0-beta.0](https://github.com/darkobits/ts/compare/v0.12.4...v0.13.0-beta.0) (2023-01-16)
 
 
