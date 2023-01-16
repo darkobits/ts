@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.13.0-beta.0](https://github.com/darkobits/ts/compare/v0.12.4...v0.13.0-beta.0) (2023-01-16)
+
+
+### 🏗 Chores
+
+* **deps:** Update dependencies. ([a1e127b](https://github.com/darkobits/ts/commit/a1e127b501d500504ad010c9b14b00fb919f3705)), closes [/github.com/facebook/jest/blob/main/CHANGELOG.md#2900](https://github.com/darkobits//github.com/facebook/jest/blob/main/CHANGELOG.md/issues/2900)
+
 ## [0.12.4](https://github.com/darkobits/ts/compare/v0.12.3...v0.12.4) (2022-09-12)
 
 
@@ -40,7 +47,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### ⚠ BREAKING CHANGES
 
-* **deps:** 
+* **deps:**
 
 ### 🐞 Bug Fixes
 
@@ -724,7 +731,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### ⚠ BREAKING CHANGES
 
-* **deps:** 
+* **deps:**
 
 ### ✨ Features
 
