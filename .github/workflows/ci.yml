@@ -1,36 +1,41 @@
 name: ci
 on:
-  - push
-  - pull_request
+  push:
+    paths-ignore:
+      - '**.md'
+  pull_request:
+    paths-ignore:
+      - '**.md'
 env:
   FORCE_COLOR: 3
 concurrency:
-  group: ${{ github.ref }}
-  # Never cancel builds on master. This way, we can more easily figure out
-  # which build/commit broke it. Replace with `true` to always cancel
-  # in-progress jobs.
-  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
+  group: ${{ github.ref_name }}
+  # Only cancel concurrent builds when we are not on the default branch. This
+  # way, if a commit breaks the default branch, we can more easily determine
+  # which commit caused the failure.
+  cancel-in-progress: ${{ github.ref_name != github.repository.default_branch }}
 jobs:
   ci:
     name: CI
-    # Skip tags. This 1-liner is equivalent to ~10LOC to do the same in `on`.
-    if: github.event.ref_type != 'tag'
+    # Skip building tags; an identical job for the commit to which the tag
+    # points will be triggered anyway.
+    if: github.ref_type != 'tag'
     runs-on: ubuntu-latest
     steps:
-      - name: Clone
-        uses: actions/checkout@v2
+      - name: Clone Repository
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Prepare
-        uses: actions/setup-node@v2
+      - name: Setup Node
+        uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 18
           cache: npm
-      - name: Install
+      - name: Install Dependencies
         run: npm clean-install --ignore-scripts
-      - name: Build
+      - name: Build Project
         run: npx nr build
-      - name: Test
+      - name: Run Tests
         run: |
           npx nr test.coverage
           bash <(curl -s https://codecov.io/bash)
