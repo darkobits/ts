@@ -1,11 +1,5 @@
 {
   "compilerOptions": {
-    "plugins": [
-      // Ensures that paths in emitted declaration files are re-written
-      // properly.
-      {"transform": "@zerollup/ts-transform-paths"}
-    ],
-
     // Specify ECMAScript target version. Since we use Babel to transpile code,
     // this mostly impacts lib checks and helps suppress various errors.
     "target": "ESNext",

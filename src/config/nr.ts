@@ -46,15 +46,19 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
     preserveWatchOutput: true
   };
 
-  command('ts', ['ttsc', tsFlags], {
+  command('ts', ['tsc', tsFlags], {
     prefix: chalk => chalk.bgBlue.white(' TS '),
     preserveArgumentCasing: true
   });
 
-  command('ts.watch', ['ttsc', { ...tsFlags, watch: true }], {
+  command('ts.watch', ['tsc', { ...tsFlags, watch: true }], {
     prefix: chalk => chalk.bgBlue.white(' TS '),
     preserveArgumentCasing: true
   });
+
+  command('tsc-alias', ['tsc-alias', { project: 'tsconfig.json' }]);
+
+  command('tsc-alias.watch', ['tsc-alias', { project: 'tsconfig.json', watch: true }]);
 
 
   // ----- Build: Misc. Commands -----------------------------------------------
@@ -84,6 +88,7 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
     timing: true,
     run: [
       ['cmd:babel', 'cmd:ts', 'cmd:eslint'],
+      'cmd:tsc-alias',
       'cmd:clean-out-dir'
     ]
   });
@@ -92,7 +97,7 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
     group: 'Build',
     description: 'Continuously build and type-check the project using Babel and TypeScript.',
     run: [
-      ['cmd:babel.watch', 'cmd:ts.watch']
+      ['cmd:babel.watch', 'cmd:ts.watch', 'cmd:tsc-alias.watch']
     ]
   });
 
@@ -230,7 +235,11 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
     group: 'Dependency Management',
     description: 'Check for newer versions of installed dependencies.',
     run: [
-      command.node('npm-check-updates', ['npm-check-updates', { dep: 'prod,peer,dev' }], {
+      command.node('npm-check-updates', ['npm-check-updates', {
+        dep: 'prod,peer,dev',
+        format: 'group',
+        interactive: true
+      }], {
         execaOptions: { stdio: 'inherit' }
       })
     ]
