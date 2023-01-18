@@ -13,7 +13,7 @@ concurrency:
   # Only cancel concurrent builds when we are not on the default branch. This
   # way, if a commit breaks the default branch, we can more easily determine
   # which commit caused the failure.
-  cancel-in-progress: ${{ github.ref_name != github.repository.default_branch }}
+  cancel-in-progress: ${{ github.ref_name != github.event.repository.default_branch }}
 jobs:
   ci:
     name: CI
