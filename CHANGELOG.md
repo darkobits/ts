@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.13.1-beta.0](https://github.com/darkobits/ts/compare/v0.13.0...v0.13.1-beta.0) (2023-01-20)
+
+
+### 🏗 Chores
+
+* **deps:** Update dependencies. ([42fbf96](https://github.com/darkobits/ts/commit/42fbf96f320ec644f6e4a021f0857f0a5332294b))
+* Update `.cy.cml`. ([7feb7ba](https://github.com/darkobits/ts/commit/7feb7ba261a6b238a3d1c7f9157605c40a8e0d73))
+
 ## [0.13.0](https://github.com/darkobits/ts/compare/v0.13.0-beta.0...v0.13.0) (2023-01-16)
 
 
