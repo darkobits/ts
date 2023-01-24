@@ -106,18 +106,18 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
 
   script('test', {
     group: 'Test',
-    description: 'Run unit tests using Jest.',
+    description: 'Run unit tests using Vitest.',
     timing: true,
     run: [
-      command.babel('jest', ['jest'])
+      command('vitest', ['vitest', ['run']])
     ]
   });
 
   script('test.watch', {
     group: 'Test',
-    description: 'Run unit tests using Jest in watch mode.',
+    description: 'Run unit tests using Vitest in watch mode.',
     run: [
-      command.babel('jest', ['jest', { watch: true }], {
+      command('vitest-watch', ['vitest', { ui: true }], {
         execaOptions: {
           // This command involves user interaction so we need to use 'inherit'.
           stdio: 'inherit'
@@ -128,10 +128,10 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
 
   script('test.coverage', {
     group: 'Test',
-    description: 'Run unit tests using Jest and generate a coverage report.',
+    description: 'Run unit tests using Vitest and generate a coverage report.',
     timing: true,
     run: [
-      command.babel('jest', ['jest', { coverage: true }])
+      command('vitest-coverage', ['vitest', ['run'], { coverage: true }])
     ]
   });
 

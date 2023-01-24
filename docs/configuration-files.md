@@ -104,29 +104,33 @@ paths relative to the `tsconfig.json` in which they were defined.
 }
 ```
 
-## ![Jest](https://user-images.githubusercontent.com/441546/100515295-db747b00-312f-11eb-9368-7e58dfeef76c.png ':size=20') Jest :id=jest
+## ![Vitest](https://user-images.githubusercontent.com/441546/214199495-d2479d48-6180-493b-b5e2-5d3fa2b7d99c.png ':size=20') Vitest :id=vitest
 
-Jest is used for unit-testing your project. To configure Jest, create
-`jest.config.js` in your project root, then invoke the Jest configuration
+Vitest is used for unit-testing your project. To configure Vitest, create
+`vitest.config.js` in your project root, then invoke the Vitest configuration
 function from `ts`.
 
 ```js
-// jest.config.js
-import { jest } from '@darkobits/ts';
+// vitest.config.js
+import { vitest } from '@darkobits/ts';
 
-export default jest();
+export default vitest();
 ```
 
 To provide additional/custom configuration:
 
 ```js
-// jest.config.js
-import { jest } from '@darkobits/ts';
+// vitest.config.js
+import { vitest } from '@darkobits/ts';
 
-export default jest({
-  // Add your custom Jest configuration here.
+export default vitest({
+  test: {
+    // Add your custom Vitest configuration here.
+  }
 });
 ```
+
+For more information on configuring Vitest, consult the [Vitest configuration documentation](https://vitest.dev/config/).
 
 ## ![ESLint](https://user-images.githubusercontent.com/441546/100515367-72413780-3130-11eb-9242-76f2823274ce.png ':size=20') ESLint :id=eslint
 

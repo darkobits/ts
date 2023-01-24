@@ -69,9 +69,7 @@ module.exports = {
   presets: [
     ['@babel/preset-env', {
       targets: { node: '16' },
-      // We still have to use CJS when testing because Jest's support for ESM is
-      // still incomplete.
-      modules: NODE_ENV === 'test' ? 'cjs' : false,
+      modules: false,
       // Do not transpile import() statements. This will allow packages that
       // publish CommonJS to import ES Modules using `await import()`.
       exclude: ['@babel/plugin-proposal-dynamic-import']
@@ -89,8 +87,8 @@ module.exports = {
       extensions: EXTENSIONS,
       // Because we are transpiling to native ESM, we don't want to strip any
       // extensions from import specifiers.
-      stripExtensions: NODE_ENV === 'test' ? undefined : [],
-      resolvePath: NODE_ENV === 'test' ? pluginModuleResolver : customResolvePath
+      stripExtensions: [],
+      resolvePath: customResolvePath
     }]
   ],
   comments: false,

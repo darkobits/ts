@@ -5,7 +5,7 @@ smoothly:
 
 * Transpilation with [Babel](https://babeljs.io/).
 * Type-checking and declaration file generation with [TypeScript](https://www.typescriptlang.org).
-* Unit testing with [Jest](https://jestjs.io/).
+* Unit testing with [Vitest](https://vitest.dev/).
 * Linting with [ESLint](https://eslint.org/).
 * Version and change log management with either:
   * [`standard-version`](https://github.com/conventional-changelog/standard-version) for manual releasing locally.

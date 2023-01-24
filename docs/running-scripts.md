@@ -70,7 +70,7 @@ export default nr(({ command, script }) => {
 
 ## Testing
 
-To run unit tests for your project with Jest, run:
+To run unit tests for your project with Vitest, run:
 
 ```
 npx nr test

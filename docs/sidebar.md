@@ -11,7 +11,7 @@
   - [`nr`](configuration-files#nr)
   - [Babel](configuration-files#babel)
   - [TypeScript](configuration-files#type-script)
-  - [Jest](configuration-files#jest)
+  - [Vitest](configuration-files#vitest)
   - [ESLint](configuration-files#eslint)
 - [Running Scripts](running-scripts)
   - [Building](running-scripts#building)

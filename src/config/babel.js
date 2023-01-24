@@ -9,11 +9,7 @@ module.exports = {
       modules: 'cjs',
       // Do not transpile import() statements. This will allow packages that
       // publish CommonJS to import ES Modules.
-      exclude: NODE_ENV === 'test'
-        // When testing with Jest, however, we still need to transform dynamic
-        // imports into require() statements.
-        ? []
-        : ['@babel/plugin-proposal-dynamic-import']
+      exclude: ['@babel/plugin-proposal-dynamic-import']
     }],
     '@babel/preset-typescript'
   ],
