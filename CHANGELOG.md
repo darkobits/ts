@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.13.1-beta.1](https://github.com/darkobits/ts/compare/v0.13.1-beta.0...v0.13.1-beta.1) (2023-01-24)
+
+
+### 🏗 Chores
+
+* Use TypeScript configuration files. ([b850ba2](https://github.com/darkobits/ts/commit/b850ba29883fe7eb72bb63258a4cd0fccbc5d82b))
+
+
+### 🛠 Refactoring
+
+* Migrate from Jest to Vitest. ([1a8bfce](https://github.com/darkobits/ts/commit/1a8bfceaf61bdceec31a61536c425e6b41259847))
+
 ## [0.13.1-beta.0](https://github.com/darkobits/ts/compare/v0.13.0...v0.13.1-beta.0) (2023-01-20)
 
 
