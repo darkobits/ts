@@ -1,19 +1,39 @@
 import merge from 'deepmerge';
 import tsConfigPathsPlugin from 'vite-tsconfig-paths';
 // eslint-disable-next-line import/no-unresolved
-import { defineConfig, UserConfigExport } from 'vitest/config';
+import { UserConfig, UserConfigExport } from 'vitest/config';
+
+// Relative path required here.
+import { SRC_DIR } from '../etc/constants';
 
 
-export default (userConfig?: UserConfigExport) => merge<UserConfigExport>(
-  defineConfig({
-    plugins: [
-      tsConfigPathsPlugin()
+const baseConfig: UserConfig = {
+  plugins: [
+    tsConfigPathsPlugin()
+  ],
+  test: {
+    include: [
+      `${SRC_DIR}/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}`
     ],
-    test: {
-      deps: {
-        interopDefault: true
-      }
+    deps: {
+      interopDefault: true
     }
-  }),
-  userConfig ?? {}
-);
+  }
+};
+
+
+export default async (userConfigExport?: UserConfigExport) => {
+  if (!userConfigExport) {
+    return baseConfig;
+  }
+
+  if (typeof userConfigExport === 'function') {
+    // @ts-expect-error - User configuration functions do not in fact require an
+    // argument.
+    const userConfigResult = await userConfigExport();
+
+    return merge(baseConfig, userConfigResult);
+  }
+
+  return merge(baseConfig, await userConfigExport);
+};
