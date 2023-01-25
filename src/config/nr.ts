@@ -1,12 +1,9 @@
-import path from 'path';
-
 import {
   EXTENSIONS,
   SRC_DIR,
   OUT_DIR
 } from 'etc/constants';
 import log from 'lib/log';
-import { getPackageInfo } from 'lib/utils';
 
 import type { ConfigurationFactory } from '@darkobits/nr';
 
@@ -264,38 +261,8 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
     ] : [
       'script:build',
       'script:test'
-      // N.B. This is broken and/or takes an exceedingly long time to run.
-      // command('update-notifier', ['ts-node', [
-      //   '--require', 'tsconfig-paths/register',
-      //   path.resolve(dirname() as string, '../etc/scripts/update-notifier')
-      // ]])
     ]
   });
-
-
-  // ----- Miscellaneous Scripts -----------------------------------------------
-
-  script('bin', {
-    group: 'Other',
-    description: 'Run the project\'s main executable script. Any arguments passed after "--" will be forwarded to the script.',
-    run: [
-      task('bin', async () => {
-        const pkg = await getPackageInfo();
-        if (!pkg) return log.error(log.prefix('bin'), 'Unable to find a package.json.');
-        if (!pkg.json.bin) return log.error(log.prefix('bin'), 'Package does not define any binaries.');
-
-        // N.B. Even if the package defines its binary in string form,
-        // normalization means we will always get "bin" in object form.
-        const [binName, binPath] = Object.entries(pkg.json.bin as Record<string, string>)[0];
-        const args = process.argv.includes('--') ? process.argv.slice(process.argv.indexOf('--') + 1) : [];
-        const cmd = command.node('bin', [path.resolve(binPath), args]);
-
-        log.info(log.prefix('bin'), `Executing ${log.chalk.bold(binName)} at ${log.chalk.green(binPath)}.`);
-        await cmd();
-      })
-    ]
-  });
-
 
   if (typeof userConfig === 'function') {
     await userConfig(context);

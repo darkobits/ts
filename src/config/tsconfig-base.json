@@ -57,6 +57,9 @@
     "sourceMap": false,
 
     // Enable all strict options.
-    "strict": true
+    "strict": true,
+
+    // Remove comments in output files.
+    "removeComments": true
   }
 }
