@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.13.1](https://github.com/darkobits/ts/compare/v0.13.1-beta.4...v0.13.1) (2023-01-25)
+
+
+### 🏗 Chores
+
+* Remove unused configuration file. ([6688031](https://github.com/darkobits/ts/commit/66880314b8e05f1c4a02ed07acb012e175cd0a1e))
+
 ## [0.13.1-beta.4](https://github.com/darkobits/ts/compare/v0.13.1-beta.3...v0.13.1-beta.4) (2023-01-25)
 
 
