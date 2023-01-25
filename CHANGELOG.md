@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.13.6](https://github.com/darkobits/ts/compare/v0.13.5...v0.13.6) (2023-01-25)
+
+
+### 🛠 Refactoring
+
+* Invoke `tsc` with `--build` to induce output logging. ([a5aef07](https://github.com/darkobits/ts/commit/a5aef07b4c1bc59c059baf09386f07bb9abcb7fc))
+
 ## [0.13.5](https://github.com/darkobits/ts/compare/v0.13.4...v0.13.5) (2023-01-25)
 
 
