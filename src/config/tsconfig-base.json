@@ -60,6 +60,9 @@
     "strict": true,
 
     // Remove comments in output files.
-    "removeComments": true
+    "removeComments": true,
+
+    // Emit .d.ts files.
+    "declaration": true
   }
 }

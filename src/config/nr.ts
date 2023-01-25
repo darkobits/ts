@@ -15,13 +15,12 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
   // ----- Build: TypeScript Commands ------------------------------------------
 
   const tsFlags = {
-    outDir: OUT_DIR,
-    declaration: true,
+    build: true,
     pretty: true,
     preserveWatchOutput: true
   };
 
-  command('ts', ['tsc', tsFlags], {
+  command('ts', ['tsc', { ...tsFlags, verbose: true }], {
     prefix: chalk => chalk.bgBlue.white(' TS '),
     preserveArgumentCasing: true
   });
