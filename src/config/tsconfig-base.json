@@ -1,14 +1,13 @@
 {
   "compilerOptions": {
-    // Specify ECMAScript target version. Since we use Babel to transpile code,
-    // this mostly impacts lib checks and helps suppress various errors.
+    // Specify ECMAScript target version.
     "target": "ESNext",
 
     // Specify a list of built-in API groups to include in the project.
     "lib": [ "ESNext" ],
 
     // This lets us use .ts configuration files for Saffron CLIs (re: nr).
-    "module": "commonjs",
+    "module": "CommonJS",
 
     // Use Node's module resolution strategy.
     "moduleResolution": "node",
@@ -28,18 +27,10 @@
     // See: https://mariusschulz.com/blog/downlevel-iteration-for-es3-es5-in-typescript
     "downlevelIteration": true,
 
-    // Only emit declaration files; source files will be transpiled using Babel.
-    // NOTE: This must be disabled here and instead passed as a command line
-    // argument in scripts where we want to use it because other downstream
-    // tools may try to invoke the compiler with flags like `noEmit` that will
-    // throw an error if this option is also present.
-    // "emitDeclarationOnly": true,
-
     // Emit design-type metadata for decorated declarations in source.
     "emitDecoratorMetadata": true,
 
-    // Emit '__importStar' and '__importDefault' helpers for runtime Babel
-    // ecosystem compatibility and enable '--allowSyntheticDefaultImports' for
+    // Emit '__importStar' and '__importDefault' helpers.
     // type system compatibility.
     "esModuleInterop": true,
 

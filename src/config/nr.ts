@@ -1,4 +1,4 @@
-import path from 'node:path';
+import path from 'path';
 
 import {
   EXTENSIONS,
@@ -15,33 +15,11 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
   const { command, task, script, isCI } = context;
 
 
-  // ----- Build: Babel Commands -----------------------------------------------
-
-  const babelFlags = {
-    outDir: OUT_DIR,
-    extensions: EXTENSIONS.join(','),
-    ignore: '**/*.d.ts',
-    copyFiles: true,
-    sourceMaps: true,
-    deleteDirOnStart: true,
-    verbose: true
-  };
-
-  command('babel', ['babel', [SRC_DIR], babelFlags], {
-    prefix: chalk => chalk.bgYellow.black(' Babel ')
-  });
-
-  command('babel.watch', ['babel', [SRC_DIR], { ...babelFlags, watch: true }], {
-    prefix: chalk => chalk.bgYellow.black(' Babel ')
-  });
-
-
   // ----- Build: TypeScript Commands ------------------------------------------
 
   const tsFlags = {
     outDir: OUT_DIR,
     declaration: true,
-    emitDeclarationOnly: true,
     pretty: true,
     preserveWatchOutput: true
   };
@@ -63,6 +41,10 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
 
   // ----- Build: Misc. Commands -----------------------------------------------
 
+  command('prepare-out-dir', [
+    'del', [OUT_DIR]
+  ]);
+
   command('clean-out-dir', [
     'del', [`${OUT_DIR}/**/*.spec.*`, `${OUT_DIR}/**/*.test.*`]
   ]);
@@ -75,19 +57,23 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
     format: 'codeframe'
   };
 
-  command.babel('eslint', ['eslint', [SRC_DIR], eslintFlags]);
+  command('eslint', ['eslint', [SRC_DIR], eslintFlags]);
 
-  command.babel('eslint.fix', ['eslint', [SRC_DIR], { ...eslintFlags, fix: true }]);
+  command('eslint.fix', ['eslint', [SRC_DIR], { ...eslintFlags, fix: true }]);
 
 
   // ----- Build Scripts -------------------------------------------------------
 
   script('build', {
     group: 'Build',
-    description: 'Build, type-check, and lint the project using Babel, TypeScript, and ESLint.',
+    description: 'Build, type-check, and lint the project using TypeScript and ESLint.',
     timing: true,
     run: [
-      ['cmd:babel', 'cmd:ts', 'cmd:eslint'],
+      [
+        'cmd:prepare-out-dir',
+        'cmd:eslint'
+      ],
+      'cmd:ts',
       'cmd:tsc-alias',
       'cmd:clean-out-dir'
     ]
@@ -95,9 +81,10 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
 
   script('build.watch', {
     group: 'Build',
-    description: 'Continuously build and type-check the project using Babel and TypeScript.',
+    description: 'Continuously build and type-check the project.',
     run: [
-      ['cmd:babel.watch', 'cmd:ts.watch', 'cmd:tsc-alias.watch']
+      'cmd:prepare-out-dir',
+      ['cmd:ts.watch', 'cmd:tsc-alias.watch']
     ]
   });
 
@@ -187,8 +174,8 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
       group: 'Bump',
       description: `Generate a change log entry and tagged commit for ${description}.`,
       run: [
-        command.babel(`standard-version-${releaseType ?? 'default'}`, [
-          standardVersionCmd, { preset: require.resolve('config/changelog-preset'), ...args }
+        command(`standard-version-${releaseType ?? 'default'}`, [
+          standardVersionCmd, { preset: require.resolve('./changelog-preset'), ...args }
         ])
       ]
     });
@@ -264,7 +251,10 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
     ] : [
       'script:build',
       'script:test',
-      command.babel('update-notifier', [require.resolve('etc/scripts/update-notifier')])
+      command('update-notifier', ['ts-node', [
+        '--require', 'tsconfig-paths/register',
+        require.resolve('etc/scripts/update-notifier')
+      ]])
     ]
   });
 

@@ -10,7 +10,6 @@ export default (userConfig?: UserConfigExport) => merge<UserConfigExport>(
       tsConfigPathsPlugin()
     ],
     test: {
-      // globals: true,
       deps: {
         interopDefault: true
       }

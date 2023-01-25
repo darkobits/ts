@@ -1,7 +1,5 @@
 import path from 'path';
 
-
-// import env from '@darkobits/env';
 import { faker } from '@faker-js/faker';
 import {
   describe,
@@ -11,17 +9,8 @@ import {
   afterEach,
   expect
 } from 'vitest';
-// import {
-//   vi
-// } from 'vitest';
-
-// import {
-//   getNpmInfo,
-//   getPackageInfo
-// } from 'lib/utils';
 
 
-// vi.mock('@darkobits/env');
 vi.mock('@darkobits/fd-name');
 
 
@@ -35,7 +24,7 @@ describe('getPackageInfo', () => {
   const pkgPath = faker.system.directoryPath();
 
   const readPkgUpMock = {
-    readPackageUp: vi.fn(async () => {
+    default: vi.fn(async () => {
       return {
         packageJson: {
           name: pkgName
@@ -55,7 +44,7 @@ describe('getPackageInfo', () => {
     const result = await getPackageInfo();
     expect(result.json.name).toEqual(pkgName);
     expect(result.rootDir).toEqual(pkgPath);
-    expect(readPkgUpMock.readPackageUp).toHaveBeenCalled();
+    expect(readPkgUpMock.default).toHaveBeenCalled();
   });
 });
 

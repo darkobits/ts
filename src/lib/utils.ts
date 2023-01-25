@@ -2,11 +2,10 @@ import path from 'path';
 
 import env from '@darkobits/env';
 import ms from 'ms';
+import readPkgUp, { type NormalizedPackageJson } from 'read-pkg-up';
 
 import { GetDefault, NpmConfigArgv, PkgInfo } from 'etc/types';
 import log from 'lib/log';
-
-import type { NormalizedPackageJson } from 'read-pkg-up';
 
 
 /**
@@ -20,9 +19,7 @@ import type { NormalizedPackageJson } from 'read-pkg-up';
  *   package.json.
  */
 export async function getPackageInfo(cwd?: string): Promise<PkgInfo> {
-  // Note: This package is ESM.
-  const { readPackageUp } = await import('read-pkg-up');
-  const pkgInfo = await readPackageUp(cwd ? { cwd } : undefined);
+  const pkgInfo = await readPkgUp(cwd ? { cwd } : undefined);
 
   if (!pkgInfo) {
     throw new Error(`${log.prefix('getPackageInfo')} Unable to find a package.json for the project.`);
