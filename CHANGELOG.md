@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.13.8-beta.2](https://github.com/darkobits/ts/compare/v0.13.8-beta.1...v0.13.8-beta.2) (2023-01-25)
+
+
+### 🛠 Refactoring
+
+* Gracefully handle cases where `srcDir` and `outDir` are undefined. ([a3a9015](https://github.com/darkobits/ts/commit/a3a901564a4bd8d03b66245bf6d24dcfe2696cee))
+
 ## [0.13.8-beta.1](https://github.com/darkobits/ts/compare/v0.13.8-beta.0...v0.13.8-beta.1) (2023-01-25)
 
 
