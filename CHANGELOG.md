@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.13.8-beta.0](https://github.com/darkobits/ts/compare/v0.13.7...v0.13.8-beta.0) (2023-01-25)
+
+
+### 🛠 Refactoring
+
+* Imply source and output directories from `tsconfig.json`. ([4d6f2a4](https://github.com/darkobits/ts/commit/4d6f2a44be7c61f1c2f06e1af672246789cc3100))
+
 ## [0.13.7](https://github.com/darkobits/ts/compare/v0.13.6...v0.13.7) (2023-01-25)
 
 
