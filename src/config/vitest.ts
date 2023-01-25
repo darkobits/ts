@@ -4,25 +4,26 @@ import tsConfigPathsPlugin from 'vite-tsconfig-paths';
 import { UserConfig, UserConfigExport } from 'vitest/config';
 
 // Relative path required here.
-import { SRC_DIR } from '../etc/constants';
-
-
-const baseConfig: UserConfig = {
-  plugins: [
-    tsConfigPathsPlugin()
-  ],
-  test: {
-    include: [
-      `${SRC_DIR}/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}`
-    ],
-    deps: {
-      interopDefault: true
-    }
-  }
-};
+import { getSourceAndOutputDirectories } from '../lib/utils';
 
 
 export default async (userConfigExport?: UserConfigExport) => {
+  const { srcDir } = await getSourceAndOutputDirectories();
+
+  const baseConfig: UserConfig = {
+    plugins: [
+      tsConfigPathsPlugin()
+    ],
+    test: {
+      include: [
+        `${srcDir}/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}`
+      ],
+      deps: {
+        interopDefault: true
+      }
+    }
+  };
+
   if (!userConfigExport) {
     return baseConfig;
   }

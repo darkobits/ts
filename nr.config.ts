@@ -3,10 +3,13 @@ import path from 'path';
 import fs from 'fs-extra';
 
 import { nr } from './src';
-import { SRC_DIR, OUT_DIR } from './src/etc/constants';
+
+import { getSourceAndOutputDirectories } from './src/lib/utils';
 
 
-export default nr(({ command, task, script }) => {
+export default nr(async ({ command, task, script }) => {
+  const { srcDir, outDir } = await getSourceAndOutputDirectories();
+
   script('docs', {
     description: 'Start a local Docsify server that serves our documentation.',
     run: [
@@ -35,8 +38,8 @@ export default nr(({ command, task, script }) => {
       // flag, but is unsupported by the TypeScript compiler.
       task('copy-tsconfig-base', () => {
         fs.copyFile(
-          path.resolve(SRC_DIR, 'config', 'tsconfig-base.json'),
-          path.resolve(OUT_DIR, 'config', 'tsconfig-base.json')
+          path.resolve(srcDir, 'config', 'tsconfig-base.json'),
+          path.resolve(outDir, 'config', 'tsconfig-base.json')
         )
       }),
       // Finally, re-pack the output directory.

@@ -1,15 +1,13 @@
-import {
-  EXTENSIONS,
-  SRC_DIR,
-  OUT_DIR
-} from 'etc/constants';
-import log from 'lib/log';
+import { EXTENSIONS } from '../etc/constants';
+import log from '../lib/log';
+import { getSourceAndOutputDirectories } from '../lib/utils';
 
 import type { ConfigurationFactory } from '@darkobits/nr';
 
 
 export default (userConfig?: ConfigurationFactory): ConfigurationFactory => async context => {
   const { command, task, script, isCI } = context;
+  const { srcDir, outDir } = await getSourceAndOutputDirectories();
 
 
   // ----- Build: TypeScript Commands ------------------------------------------
@@ -38,11 +36,11 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
   // ----- Build: Misc. Commands -----------------------------------------------
 
   command('prepare-out-dir', [
-    'del', [OUT_DIR]
+    'del', [outDir]
   ]);
 
   command('clean-out-dir', [
-    'del', [`${OUT_DIR}/**/*.spec.*`, `${OUT_DIR}/**/*.test.*`]
+    'del', [`${outDir}/**/*.spec.*`, `${outDir}/**/*.test.*`]
   ]);
 
 
@@ -53,9 +51,9 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
     format: 'codeframe'
   };
 
-  command('eslint', ['eslint', [SRC_DIR], eslintFlags]);
+  command('eslint', ['eslint', [srcDir], eslintFlags]);
 
-  command('eslint.fix', ['eslint', [SRC_DIR], { ...eslintFlags, fix: true }]);
+  command('eslint.fix', ['eslint', [srcDir], { ...eslintFlags, fix: true }]);
 
 
   // ----- Lint Scripts --------------------------------------------------------
