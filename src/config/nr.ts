@@ -250,11 +250,12 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
       })
     ] : [
       'script:build',
-      'script:test',
-      command('update-notifier', ['ts-node', [
-        '--require', 'tsconfig-paths/register',
-        require.resolve('etc/scripts/update-notifier')
-      ]])
+      'script:test'
+      // N.B. This is broken and/or takes an exceedingly long time to run.
+      // command('update-notifier', ['ts-node', [
+      //   '--require', 'tsconfig-paths/register',
+      //   path.resolve(dirname() as string, '../etc/scripts/update-notifier')
+      // ]])
     ]
   });
 
