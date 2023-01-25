@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.13.1-beta.3](https://github.com/darkobits/ts/compare/v0.13.1-beta.2...v0.13.1-beta.3) (2023-01-25)
+
+
+### 🛠 Refactoring
+
+* Disable update notifier. ([e1cc63a](https://github.com/darkobits/ts/commit/e1cc63aded03851165ad0493fb3354c8cd83974a))
+
+
+### 🐞 Bug Fixes
+
+* Add `passWithNoTests` flag to Vitest calls. ([aff7ad5](https://github.com/darkobits/ts/commit/aff7ad5be1abf481e7e177ef5da7db2515695155))
+
 ## [0.13.1-beta.2](https://github.com/darkobits/ts/compare/v0.13.1-beta.1...v0.13.1-beta.2) (2023-01-25)
 
 
