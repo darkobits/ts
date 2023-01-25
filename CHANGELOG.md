@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.13.1-beta.4](https://github.com/darkobits/ts/compare/v0.13.1-beta.3...v0.13.1-beta.4) (2023-01-25)
+
+
+### 🛠 Refactoring
+
+* Move `tsconfig.json` to `config` folder. ([219539c](https://github.com/darkobits/ts/commit/219539ccf4786a865cd6a324624313af9acb1201))
+
 ## [0.13.1-beta.3](https://github.com/darkobits/ts/compare/v0.13.1-beta.2...v0.13.1-beta.3) (2023-01-25)
 
 
