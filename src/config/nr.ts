@@ -96,7 +96,11 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
     description: 'Run unit tests using Vitest.',
     timing: true,
     run: [
-      command('vitest', ['vitest', ['run']])
+      command('vitest', ['vitest', ['run'], {
+        passWithNoTests: true
+      }], {
+        preserveArgumentCasing: true
+      })
     ]
   });
 
@@ -104,7 +108,11 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
     group: 'Test',
     description: 'Run unit tests using Vitest in watch mode.',
     run: [
-      command('vitest-watch', ['vitest', { ui: true }], {
+      command('vitest-watch', ['vitest', {
+        ui: true,
+        passWithNoTests: true
+      }], {
+        preserveArgumentCasing: true,
         execaOptions: {
           // This command involves user interaction so we need to use 'inherit'.
           stdio: 'inherit'
@@ -118,7 +126,12 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
     description: 'Run unit tests using Vitest and generate a coverage report.',
     timing: true,
     run: [
-      command('vitest-coverage', ['vitest', ['run'], { coverage: true }])
+      command('vitest-coverage', ['vitest', ['run'], {
+        coverage: true,
+        passWithNoTests: true
+      }], {
+        preserveArgumentCasing: true
+      })
     ]
   });
 
