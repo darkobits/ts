@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.13.4](https://github.com/darkobits/ts/compare/v0.13.3...v0.13.4) (2023-01-25)
+
+
+### 🏗 Chores
+
+* **deps:** Update dependencies. ([606b025](https://github.com/darkobits/ts/commit/606b0256fbf5b4714296fa0d0b1e6ed8222b7d18))
+
+
+### 🐞 Bug Fixes
+
+* Handle Vitest config merging properly. ([3485cea](https://github.com/darkobits/ts/commit/3485cea420ec1c2e1a917fb3bbed7240d2e7eece))
+
 ## [0.13.3](https://github.com/darkobits/ts/compare/v0.13.2...v0.13.3) (2023-01-25)
 
 
