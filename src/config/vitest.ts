@@ -15,14 +15,18 @@ export default async (userConfigExport?: UserConfigExport) => {
       tsConfigPathsPlugin()
     ],
     test: {
-      include: [
-        `${srcDir}/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}`
-      ],
       deps: {
         interopDefault: true
       }
     }
   };
+
+  if (srcDir) {
+    // @ts-expect-error - We know baseConfig.test is defined.
+    baseConfig.test.include = [
+      `${srcDir}/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}`
+    ];
+  }
 
   if (!userConfigExport) {
     return baseConfig;

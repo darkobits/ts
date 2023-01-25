@@ -35,13 +35,17 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
 
   // ----- Build: Misc. Commands -----------------------------------------------
 
-  command('prepare-out-dir', [
-    'del', [outDir]
-  ]);
+  if (outDir) {
+    command('prepare-out-dir', [
+      'del', [outDir]
+    ]);
 
-  command('clean-out-dir', [
-    'del', [`${outDir}/**/*.spec.*`, `${outDir}/**/*.test.*`]
-  ]);
+    command('clean-out-dir', [
+      'del', [`${outDir}/**/*.spec.*`, `${outDir}/**/*.test.*`]
+    ]);
+  } else {
+    log.verbose(log.prefix('ts'), 'Unable to create build commands; outDir was undefined.');
+  }
 
 
   // ----- Lint Commands -------------------------------------------------------
@@ -51,9 +55,13 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
     format: 'codeframe'
   };
 
-  command('eslint', ['eslint', [srcDir], eslintFlags]);
+  if (srcDir) {
+    command('eslint', ['eslint', [srcDir], eslintFlags]);
 
-  command('eslint.fix', ['eslint', [srcDir], { ...eslintFlags, fix: true }]);
+    command('eslint.fix', ['eslint', [srcDir], { ...eslintFlags, fix: true }]);
+  } else {
+    log.verbose(log.prefix('ts'), 'Unable to create ESLint commands; srcDir was undefined.');
+  }
 
 
   // ----- Lint Scripts --------------------------------------------------------

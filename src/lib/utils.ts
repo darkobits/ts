@@ -5,29 +5,32 @@ import { find, parse } from 'tsconfck';
 import log from './log';
 
 
-export async function getSourceAndOutputDirectories() {
+export interface DirectoriesResult {
+  srcDir: string | undefined;
+  outDir: string | undefined;
+}
+
+
+export async function getSourceAndOutputDirectories(): Promise<DirectoriesResult> {
   try {
     const tsConfigPath = await find(path.resolve(process.cwd(), 'tsconfig.json'));
     const tsConfig = await parse(tsConfigPath);
 
     if (!tsConfig.tsconfigFile) {
-      throw new Error('Could not find tsconfig.json.');
+      return {
+        srcDir: undefined,
+        outDir: undefined
+      };
     }
 
-    if (!tsConfig.tsconfig?.compilerOptions?.baseUrl) {
-      throw new Error('tsconfig.json must define compilerOptions.baseUrl');
-    }
+    const srcDir = tsConfig.tsconfig?.compilerOptions?.baseUrl
+      ? path.relative(
+        path.dirname(tsConfig.tsconfigFile),
+        tsConfig.tsconfig?.compilerOptions?.baseUrl
+      )
+      : undefined;
 
-    const srcDir = path.relative(
-      path.dirname(tsConfig.tsconfigFile),
-      tsConfig.tsconfig?.compilerOptions?.baseUrl
-    );
-
-    const outDir = tsConfig.tsconfig?.compilerOptions?.outDir;
-
-    if (!outDir) {
-      throw new Error('tsconfig.json must define compilerOptions.outDir');
-    }
+    const outDir = tsConfig.tsconfig?.compilerOptions?.outDir ?? undefined;
 
     log.verbose('srcDir', srcDir);
     log.verbose('outDir', outDir);
