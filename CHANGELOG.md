@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.13.5](https://github.com/darkobits/ts/compare/v0.13.4...v0.13.5) (2023-01-25)
+
+
+### 🐞 Bug Fixes
+
+* **tsconfig:** Relocate `tsconfig.json` to package root. ([cfc205c](https://github.com/darkobits/ts/commit/cfc205c80be6fe802cb4752337c5ec784db8db10))
+
 ## [0.13.4](https://github.com/darkobits/ts/compare/v0.13.3...v0.13.4) (2023-01-25)
 
 
