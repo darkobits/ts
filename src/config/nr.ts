@@ -58,6 +58,40 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
   command('eslint.fix', ['eslint', [SRC_DIR], { ...eslintFlags, fix: true }]);
 
 
+  // ----- Lint Scripts --------------------------------------------------------
+
+  /**
+   * Hacky way to produce some sort of output from ESLint because, by default,
+   * it won't output anything if no errors are found.
+   */
+  const lintTimer = log.createTimer();
+
+  task('eslint-log', () => {
+    // eslint-disable-next-line no-console
+    console.log(log.chalk.bgMagenta(' ESLint '), log.chalk.dim(`Done in ${lintTimer}.`));
+  });
+
+  script('lint', {
+    group: 'Lint',
+    description: 'Lint the project using ESLint.',
+    // timing: true,
+    run: [
+      'cmd:eslint',
+      'task:eslint-log'
+    ]
+  });
+
+  script('lint.fix', {
+    group: 'Lint',
+    description: 'Lint the project using ESLint and automatically fix any fixable errors.',
+    // timing: true,
+    run: [
+      'cmd:eslint.fix',
+      'task:eslint-log'
+    ]
+  });
+
+
   // ----- Build Scripts -------------------------------------------------------
 
   script('build', {
@@ -65,13 +99,15 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
     description: 'Build, type-check, and lint the project using TypeScript and ESLint.',
     timing: true,
     run: [
+      'cmd:prepare-out-dir',
       [
-        'cmd:prepare-out-dir',
-        'cmd:eslint'
+        'cmd:ts',
+        'script:lint'
       ],
-      'cmd:ts',
-      'cmd:tsc-alias',
-      'cmd:clean-out-dir'
+      [
+        'cmd:tsc-alias',
+        'cmd:clean-out-dir'
+      ]
     ]
   });
 
@@ -80,7 +116,10 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
     description: 'Continuously build and type-check the project.',
     run: [
       'cmd:prepare-out-dir',
-      ['cmd:ts.watch', 'cmd:tsc-alias.watch']
+      [
+        'cmd:ts.watch',
+        'cmd:tsc-alias.watch'
+      ]
     ]
   });
 
@@ -90,7 +129,6 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
   script('test', {
     group: 'Test',
     description: 'Run unit tests using Vitest.',
-    timing: true,
     run: [
       command('vitest', ['vitest', ['run'], {
         passWithNoTests: true
@@ -120,7 +158,6 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
   script('test.coverage', {
     group: 'Test',
     description: 'Run unit tests using Vitest and generate a coverage report.',
-    timing: true,
     run: [
       command('vitest-coverage', ['vitest', ['run'], {
         coverage: true,
@@ -129,23 +166,6 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
         preserveArgumentCasing: true
       })
     ]
-  });
-
-
-  // ----- Lint Scripts --------------------------------------------------------
-
-  script('lint', {
-    group: 'Lint',
-    description: 'Lint the project using ESLint.',
-    timing: true,
-    run: ['cmd:eslint']
-  });
-
-  script('lint.fix', {
-    group: 'Lint',
-    description: 'Lint the project using ESLint and automatically fix any fixable errors.',
-    timing: true,
-    run: ['cmd:eslint.fix']
   });
 
 
