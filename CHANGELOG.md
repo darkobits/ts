@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.13.1-beta.2](https://github.com/darkobits/ts/compare/v0.13.1-beta.1...v0.13.1-beta.2) (2023-01-25)
+
+
+### 🛠 Refactoring
+
+* Remove dependency on Babel. ([6d8e318](https://github.com/darkobits/ts/commit/6d8e31870306243146934b196eb3321ba0d699aa))
+
+
+### 🏗 Chores
+
+* **deps:** Update dependencies. ([a86ad57](https://github.com/darkobits/ts/commit/a86ad57ca121b8a411cae1e67e4c5d2a1e3c7983))
+
 ## [0.13.1-beta.1](https://github.com/darkobits/ts/compare/v0.13.1-beta.0...v0.13.1-beta.1) (2023-01-24)
 
 
