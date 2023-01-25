@@ -35,15 +35,20 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
 
   // ----- Build: Misc. Commands -----------------------------------------------
 
-  if (outDir) {
-    command('prepare-out-dir', [
+  const prepareOutDirCmd = outDir
+    ? command('prepare-out-dir', [
       'del', [outDir]
-    ]);
+    ])
+    : undefined;
 
-    command('clean-out-dir', [
-      'del', [`${outDir}/**/*.spec.*`, `${outDir}/**/*.test.*`]
-    ]);
-  } else {
+  const cleanOutDirCmd = outDir
+     ? command('clean-out-dir', [
+       'del', [`${outDir}/**/*.spec.*`, `${outDir}/**/*.test.*`]
+     ])
+    : undefined;
+
+
+  if (!outDir) {
     log.verbose(log.prefix('ts'), 'Unable to create build commands; outDir was undefined.');
   }
 
@@ -104,29 +109,31 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
     group: 'Build',
     description: 'Build, type-check, and lint the project using TypeScript and ESLint.',
     timing: true,
+    // @ts-expect-error
     run: [
-      'cmd:prepare-out-dir',
+      prepareOutDirCmd,
       [
         'cmd:ts',
         'script:lint'
       ],
       [
         'cmd:tsc-alias',
-        'cmd:clean-out-dir'
-      ]
-    ]
+        cleanOutDirCmd
+      ].filter(Boolean)
+    ].filter(Boolean)
   });
 
   script('build.watch', {
     group: 'Build',
     description: 'Continuously build and type-check the project.',
+    // @ts-expect-error
     run: [
-      'cmd:prepare-out-dir',
+      prepareOutDirCmd,
       [
         'cmd:ts.watch',
         'cmd:tsc-alias.watch'
       ]
-    ]
+    ].filter(Boolean)
   });
 
 
