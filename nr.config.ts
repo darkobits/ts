@@ -33,10 +33,12 @@ export default nr(({ command, task, script }) => {
       // Copies config/tsconfig-base.json from the source directory to the
       // output directory. This was previously handled by Babel's copyFiles
       // flag, but is unsupported by the TypeScript compiler.
-      task('copy-tsconfig-base', () => fs.copyFile(
-        path.resolve(SRC_DIR, 'config', 'tsconfig-base.json'),
-        path.resolve(OUT_DIR, 'config', 'tsconfig-base.json')
-      )),
+      task('copy-tsconfig-base', () => {
+        fs.copyFile(
+          path.resolve(SRC_DIR, 'config', 'tsconfig-base.json'),
+          path.resolve(OUT_DIR, 'config', 'tsconfig-base.json')
+        )
+      }),
       // Finally, re-pack the output directory.
       command('re-pack', ['re-pack'])
     ]

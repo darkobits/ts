@@ -23,7 +23,7 @@
     "help": "nr --scripts"
   },
   "peerDependencies": {
-    "@darkobits/nr": "^0.14.16-beta.2",
+    "@darkobits/nr": "^0.14.22",
     "@types/node": "^18.11.18",
     "@vitest/coverage-c8": "^0.28.1",
     "@vitest/ui": "^0.28.1",
@@ -61,8 +61,5 @@
     "@types/update-notifier": "^6.0.1",
     "docsify-cli": "^4.4.4",
     "docsify-darklight-theme": "^3.2.0"
-  },
-  "overrides": {
-    "@darkobits/saffron": "~0.30.0-beta.5"
   }
 }
