@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.13.8-beta.1](https://github.com/darkobits/ts/compare/v0.13.8-beta.0...v0.13.8-beta.1) (2023-01-25)
+
+
+### 🛠 Refactoring
+
+* Add exports for extensions and utility functions. ([cc8b350](https://github.com/darkobits/ts/commit/cc8b350cfad62745737224eb3ef4e266a0d9a103))
+
 ## [0.13.8-beta.0](https://github.com/darkobits/ts/compare/v0.13.7...v0.13.8-beta.0) (2023-01-25)
 
 
