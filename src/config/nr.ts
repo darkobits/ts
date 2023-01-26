@@ -48,7 +48,7 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
     : undefined;
 
   if (!outDir) {
-    log.verbose(log.prefix('ts'), 'Unable to create build commands; outDir was undefined.');
+    log.verbose(log.prefix('ts'), 'Unable to create certain build commands; "compilerOptions.outDir" is not defined in tsconfig.json.');
   }
 
 
@@ -59,13 +59,11 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
     format: 'codeframe'
   };
 
-  if (srcDir) {
-    command('eslint', ['eslint', [srcDir], eslintFlags]);
+  const lintRoot = srcDir ?? process.cwd();
 
-    command('eslint.fix', ['eslint', [srcDir], { ...eslintFlags, fix: true }]);
-  } else {
-    log.verbose(log.prefix('ts'), 'Unable to create ESLint commands; srcDir was undefined.');
-  }
+  command('eslint', ['eslint', [lintRoot], eslintFlags]);
+
+  command('eslint.fix', ['eslint', [lintRoot], { ...eslintFlags, fix: true }]);
 
 
   // ----- Lint Scripts --------------------------------------------------------
