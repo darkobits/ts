@@ -67,35 +67,24 @@ script `build.watch`, you only need to type `nr b.w`. ✨
 
 ?> Complete documentation for `nr` can be found [here](https://github.com/darkobits/nr).
 
-## ![Babel](https://user-images.githubusercontent.com/441546/100516407-80935180-3138-11eb-9a98-b9c0fdeb3014.png ':size=128') :id=babel
-
-Babel is used to transpile your code, while the TypeScript compiler is used for
-type-checking and for generating declaration files. To configure Babel, create
-`babel.config.js` in your project root and `extend` the `ts` base configuration.
-
-```js
-// babel.config.js
-module.exports = {
-  extends: require('@darkobits/ts').babel
-};
-```
-
-!> As of Babel 7, a Babel configuration file **must** be authored using CommonJS
-syntax.
-
 ## ![TypeScript](https://user-images.githubusercontent.com/441546/100515271-b122bd80-312f-11eb-9137-a3cae4ce8ef1.png ':size=22') TypeScript :id=type-script
 
-In your project root, create `tsconfig.json`. Then, `extend` the TypeScript
-configuration from `ts`.
+TypeScript is used to transpile and type-check your code. In your project root,
+create `tsconfig.json`. Then, `extend` the TypeScript configuration from `ts`.
 
 When configuring TypeScript, there are a few fields that _must_ be declared
 directly in your project's `tsconfig.json` because TypeScript resolves certain
 paths relative to the `tsconfig.json` in which they were defined.
 
+Additionally, `ts` uses the `baseUrl` and `outDir` options for several
+operations.
+
+As such, a minimal `tsconfig.json` should contain the following:
+
 ```json
 // tsconfig.json
 {
-  "extends": "@darkobits/ts",
+  "extends": "@darkobits/ts/tsconfig.json",
   "include": ["src"],
   "compilerOptions": {
     "baseUrl": "src",

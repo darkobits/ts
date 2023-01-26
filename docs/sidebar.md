@@ -9,7 +9,6 @@
   - [New Projects](install#new-projects)
 - [Configuration Files](configuration-files)
   - [`nr`](configuration-files#nr)
-  - [Babel](configuration-files#babel)
   - [TypeScript](configuration-files#type-script)
   - [Vitest](configuration-files#vitest)
   - [ESLint](configuration-files#eslint)

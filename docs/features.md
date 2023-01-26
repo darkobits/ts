@@ -3,8 +3,7 @@
 `ts` uses these incredible tools under the the hood to keep your project running
 smoothly:
 
-* Transpilation with [Babel](https://babeljs.io/).
-* Type-checking and declaration file generation with [TypeScript](https://www.typescriptlang.org).
+* Transpilation and type-checking with [TypeScript](https://www.typescriptlang.org).
 * Unit testing with [Vitest](https://vitest.dev/).
 * Linting with [ESLint](https://eslint.org/).
 * Version and change log management with either:

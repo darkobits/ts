@@ -47,7 +47,6 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
      ])
     : undefined;
 
-
   if (!outDir) {
     log.verbose(log.prefix('ts'), 'Unable to create build commands; outDir was undefined.');
   }

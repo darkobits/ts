@@ -1,23 +1,37 @@
 {
   "compilerOptions": {
-    // Specify ECMAScript target version.
+    // Enable all strict type checking options.
+    // See more: https://www.typescriptlang.org/tsconfig#stric
+    "strict": true,
+
+    // Set the JavaScript language version for emitted JavaScript and include
+    // compatible library declarations.
+    // See more: https://www.typescriptlang.org/tsconfig#target
     "target": "ESNext",
 
-    // Specify a list of built-in API groups to include in the project.
-    "lib": [ "ESNext" ],
+    // Specify a set of bundled library declaration files that describe the
+    // target runtime environment.
+    // See more: https://www.typescriptlang.org/tsconfig#lib
+    "lib": ["ESNext"],
 
-    // This lets us use .ts configuration files for Saffron CLIs (re: nr).
+    // Specify what module code is generated. For the foreseeable future,
+    // outputting CommonJS provides the best experience for downstream consumers
+    // regardless of whether they are authoring their packages using ESM syntax,
+    // TypeScript, or CommonJS.
+    // See more: https://www.typescriptlang.org/tsconfig#module
     "module": "CommonJS",
 
-    // Use Node's module resolution strategy.
+    // Specify how TypeScript looks-up a file from a given module specifier.
+    // See more: https://www.typescriptlang.org/tsconfig#moduleResolution
     "moduleResolution": "node",
 
-    // Allow JavaScript files to be included in type-checking, but do not throw
-    // errors.
+    // Allow JavaScript files to be a part of your program. Use the checkJS
+    // option to get errors from these files.
+    // See more: https://www.typescriptlang.org/tsconfig#allowJs
     "allowJs": true,
 
-    // Allow default imports from modules with no default export. This does not
-    // effect code emit, just type-checking.
+    // Allow 'import x from y' when a module doesn't have a default export.
+    // See more: https://www.typescriptlang.org/tsconfig#allowSyntheticDefaultImports
     "allowSyntheticDefaultImports": true,
 
     // Adds support for ES2015 iteration semantics such as the spread operator
@@ -27,42 +41,52 @@
     // See: https://mariusschulz.com/blog/downlevel-iteration-for-es3-es5-in-typescript
     "downlevelIteration": true,
 
-    // Emit design-type metadata for decorated declarations in source.
+    // Emit design-type metadata for decorated declarations in source files.
+    // See more: https://www.typescriptlang.org/tsconfig#emitDecoratorMetadata
     "emitDecoratorMetadata": true,
 
-    // Emit '__importStar' and '__importDefault' helpers.
-    // type system compatibility.
+    // Emit additional JavaScript to ease support for importing CommonJS
+    // modules. This enables allowSyntheticDefaultImports for type
+    // compatibility.
+    // See more: https://www.typescriptlang.org/tsconfig#esModuleInterop
     "esModuleInterop": true,
 
-    // Differentiate between `undefined` and non-existent object keys when
-    // type-checking.
+    // Differentiate between undefined and not present when type checking
+    // See more: https://www.typescriptlang.org/tsconfig#exactOptionalPropertyTypes
     "exactOptionalPropertyTypes": true,
 
-    // Enables experimental support for ES7 decorators.
+    // Enable experimental support for TC39 stage 2 draft decorators.
+    // See more: https://www.typescriptlang.org/tsconfig#experimentalDecorators
     "experimentalDecorators": true,
 
-    // Warn on expressions and declarations with an implied 'any' type.
+    // Enable error reporting for expressions and declarations with an implied
+    // any type.
+    // See more: https://www.typescriptlang.org/tsconfig#noImplicitAny
     "noImplicitAny": true,
 
-    // Report errors on unused locals.
+    // Enable error reporting when a local variables aren't read.
+    // See more: https://www.typescriptlang.org/tsconfig#noUnusedLocals
     "noUnusedLocals": true,
 
-    // Stylize errors and messages using color and context.
+    // Enable color and formatting in output to make compiler errors easier to
+    // read.
+    // See more: https://www.typescriptlang.org/tsconfig#pretty
     "pretty": true,
 
-    // Allow TypeScript to resolve JSON files.
+    // Enable importing .json files.
+    // See more: https://www.typescriptlang.org/tsconfig#resolveJsonModule
     "resolveJsonModule": true,
 
-    // Do not emit source maps.
+    // Create source map files for emitted JavaScript files.
+    // See more: https://www.typescriptlang.org/tsconfig#sourceMap
     "sourceMap": false,
 
-    // Enable all strict options.
-    "strict": true,
-
-    // Remove comments in output files.
+    // Disable emitting comments.
+    // See more: https://www.typescriptlang.org/tsconfig#removeComments
     "removeComments": true,
 
-    // Emit .d.ts files.
+    // Generate .d.ts files from TypeScript and JavaScript files in your project.
+    // See more: https://www.typescriptlang.org/tsconfig#declaration
     "declaration": true
   }
 }
