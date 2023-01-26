@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.13.8-beta.5](https://github.com/darkobits/ts/compare/v0.13.8-beta.4...v0.13.8-beta.5) (2023-01-26)
+
+
+### 🐞 Bug Fixes
+
+* **lint:** Use `cwd` if source root cannot be inferred. ([53e0a30](https://github.com/darkobits/ts/commit/53e0a3067910d3ad69ebfefc4925393d31f1077b))
+
 ## [0.13.8-beta.4](https://github.com/darkobits/ts/compare/v0.13.8-beta.3...v0.13.8-beta.4) (2023-01-26)
 
 
