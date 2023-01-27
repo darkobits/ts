@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.13.9](https://github.com/darkobits/ts/compare/v0.13.8...v0.13.9) (2023-01-27)
+
+
+### 🐞 Bug Fixes
+
+* **tsconfig:** Remove `removeComments`. ([66ff1a9](https://github.com/darkobits/ts/commit/66ff1a95110873dfacdc93d5f65b91fafd89be27))
+
 ## [0.13.8](https://github.com/darkobits/ts/compare/v0.13.8-beta.5...v0.13.8) (2023-01-26)
 
 ## [0.13.8-beta.5](https://github.com/darkobits/ts/compare/v0.13.8-beta.4...v0.13.8-beta.5) (2023-01-26)
