@@ -81,10 +81,6 @@
     // See more: https://www.typescriptlang.org/tsconfig#sourceMap
     "sourceMap": false,
 
-    // Disable emitting comments.
-    // See more: https://www.typescriptlang.org/tsconfig#removeComments
-    "removeComments": true,
-
     // Generate .d.ts files from TypeScript and JavaScript files in your project.
     // See more: https://www.typescriptlang.org/tsconfig#declaration
     "declaration": true
