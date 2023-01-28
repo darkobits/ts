@@ -23,17 +23,17 @@
     "help": "nr --scripts"
   },
   "peerDependencies": {
-    "@darkobits/nr": "^0.14.24",
+    "@darkobits/nr": "^0.14.25",
     "@types/node": "^18.11.18",
-    "@vitest/coverage-c8": "^0.28.2",
-    "@vitest/ui": "^0.28.2",
+    "@vitest/coverage-c8": "^0.28.3",
+    "@vitest/ui": "^0.28.3",
     "del-cli": "^5.0.0",
     "npm-check-updates": "^16.6.3",
     "tsc-alias": "^1.8.2",
     "tsconfck": "^2.0.2",
     "typescript": "~4.9.4",
     "vite-tsconfig-paths": "^4.0.5",
-    "vitest": "^0.28.2"
+    "vitest": "^0.28.3"
   },
   "dependencies": {
     "@darkobits/log": "^2.0.0-beta.16",

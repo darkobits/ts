@@ -1,6 +1,6 @@
 import path from 'path';
 
-import { find, parse } from 'tsconfck';
+import * as tsconfck from 'tsconfck';
 
 import log from './log';
 
@@ -11,11 +11,18 @@ export interface DirectoriesResult {
 }
 
 
+/**
+ * @private
+ *
+ * Attempts to infer the user's source and output directories
+ */
 export async function getSourceAndOutputDirectories(): Promise<DirectoriesResult> {
   try {
-    const tsConfigPath = await find(path.resolve(process.cwd(), 'tsconfig.json'));
-    const tsConfig = await parse(tsConfigPath);
+    const tsConfigPath = await tsconfck.find(path.resolve(process.cwd(), 'tsconfig.json'));
+    const tsConfig = await tsconfck.parse(tsConfigPath);
 
+    // No tsconfig.json file could be found. Return `undefined` for both
+    // directories.
     if (!tsConfig.tsconfigFile) {
       return {
         srcDir: undefined,
@@ -23,6 +30,11 @@ export async function getSourceAndOutputDirectories(): Promise<DirectoriesResult
       };
     }
 
+    // `tsconfck` will resolve `baseUrl` in parsed configurations to an absolute
+    // path, but we want the literal value, which is usually something like
+    // "src", a path relative to the tsconfig.json file itself. This operation
+    // returns the absolute path back to its original relative path. If the
+    // tsconfig.json file did not define a "baseUrl", use `undefined`.
     const srcDir = tsConfig.tsconfig?.compilerOptions?.baseUrl
       ? path.relative(
         path.dirname(tsConfig.tsconfigFile),
@@ -30,17 +42,16 @@ export async function getSourceAndOutputDirectories(): Promise<DirectoriesResult
       )
       : undefined;
 
+    // `tsconfck` does not resolve "outDir" to an absolute directory, so we can
+    // simply extract it from the configuration or used `undefined` if it isn't
+    // set.
     const outDir = tsConfig.tsconfig?.compilerOptions?.outDir ?? undefined;
-
-    log.verbose('srcDir', srcDir);
-    log.verbose('outDir', outDir);
 
     return {
       srcDir,
       outDir
     };
   } catch (err) {
-    log.error(log.prefix('getSourceAndOutputDirectories'), err);
-    throw err;
+    throw new Error(`${log.prefix('getSourceAndOutputDirectories')} ${err}`);
   }
 }
