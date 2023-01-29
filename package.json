@@ -47,7 +47,7 @@
     "standard-version": "^9.5.0"
   },
   "devDependencies": {
-    "@darkobits/eslint-plugin": "^0.2.10",
+    "@darkobits/eslint-plugin": "^0.2.12",
     "@darkobits/re-pack": "^1.0.9",
     "@types/fs-extra": "^11.0.1",
     "docsify-cli": "^4.4.4",
