@@ -59,7 +59,11 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
     format: 'codeframe'
   };
 
-  const lintRoot = srcDir ?? process.cwd();
+  // We need to use || here because srcDir may be an empty string, in which case
+  // we want to fall back to process.cwd(), and this will not happen with ??
+  // because empty strings are not considered nullish.
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+  const lintRoot = srcDir || process.cwd();
 
   command('eslint', ['eslint', [lintRoot], eslintFlags]);
 
