@@ -23,7 +23,7 @@
     "help": "nr --scripts"
   },
   "peerDependencies": {
-    "@darkobits/nr": "^0.14.27-beta.0",
+    "@darkobits/nr": "^0.14.27",
     "@types/node": "^18.11.18",
     "@vitest/coverage-c8": "^0.28.3",
     "@vitest/ui": "^0.28.3",
