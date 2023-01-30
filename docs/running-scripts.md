@@ -31,8 +31,8 @@ so each example will use the long form notation with `npx`.
 
 ## Building
 
-The build script will lint your project using ESLint, compile with Babel, and use TypeScript to
-type-check and emit type declaration files. These two processes are run in parallel.
+The build script will lint your project using ESLint and compile it using TypeScript to type-check and
+emit type declaration files. These two processes are run in parallel.
 
 To execute this script, run:
 
@@ -53,9 +53,9 @@ after the `build` script. These scripts are not run with `build.watch`.
 
 ```js
 // nr.config.js
-import { nr } from '@darkobits/nr';
+import { nr } from '@darkobits/ts';
 
-export default nr(({ command, script }) => {
+export default nr(({ script, command }) => {
   script('postbuild', {
     description: 'Runs after the "build" script.',
     run: [
@@ -111,7 +111,7 @@ To extend the `ts` configuration for it, create `release.config.js` in your proj
 ```js
 // release.config.js
 module.exports = {
-  extends: require('@darkobits/ts').release
+  extends: require('@darkobits/ts/config/semantic-release')
 };
 ```
 
@@ -159,9 +159,9 @@ after any `bump*` scripts.
 
 ```js
 // nr.config.js
-import { nr } from '@darkobits/nr';
+import { nr } from '@darkobits/ts';
 
-export default nr(({ command, script }) => {
+export default nr(({ script, command }) => {
   script('postbump', {
     description: 'Runs after any "bump" scripts.',
     run: [
@@ -176,11 +176,11 @@ export default nr(({ command, script }) => {
 
 ## NPM Lifecycles
 
-`ts` also provides a `prepare` script that will build and test the project and run any unit tests. The
-`prepare` lifecycle is designed to ensure that when a developer clones a repository for the first time
-and runs `npm install`, they can be confident that the project builds and its tests are passing. This
-gives the developer confidence that the project's tooling is configured correctly and that its source
-code is in a good working state.
+`ts` also provides a `prepare` script that will build and lint the project and run unit tests. The
+`prepare` lifecycle script is designed to ensure that when a developer clones a repository for the first
+time and runs `npm install`, they can be confident that the project builds and its tests are passing.
+This gives the developer confidence that the project's tooling is configured correctly and that its
+source code is in a good working state.
 
 To have NPM run this script as part of the "prepare" lifecycle, you _must_ create an alias in
 `package.json`:
