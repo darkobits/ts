@@ -1,4 +1,3 @@
-import vitest from './src/config/vitest';
-
+import { vitest } from './src';
 
 export default vitest();

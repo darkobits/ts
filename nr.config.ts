@@ -3,12 +3,19 @@ import path from 'path';
 import fs from 'fs-extra';
 
 import { nr } from './src';
-
 import { getSourceAndOutputDirectories } from './src/lib/utils';
 
 
 export default nr(async ({ command, task, script }) => {
   const { srcDir, outDir } = await getSourceAndOutputDirectories();
+
+  if (!srcDir) {
+    throw new Error('[nr.config.ts] Unable to infer source root.');
+  }
+
+  if (!outDir) {
+    throw new Error('[nr.config.ts] Unable to infer output directory.');
+  }
 
   script('docs', {
     description: 'Start a local Docsify server that serves our documentation.',
