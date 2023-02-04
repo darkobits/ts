@@ -10,9 +10,6 @@
     "baseUrl": "src",
     // Specify an output folder for all emitted files.
     // See more: https://www.typescriptlang.org/tsconfig#outDir
-    "outDir": "dist",
-    // Skip type-checking third-party modules.
-    // See more: https://www.typescriptlang.org/tsconfig#skipLibCheck
-    "skipLibCheck": true
+    "outDir": "dist"
   }
 }

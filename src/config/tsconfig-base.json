@@ -77,9 +77,13 @@
     // See more: https://www.typescriptlang.org/tsconfig#resolveJsonModule
     "resolveJsonModule": true,
 
+    // Skip type checking all .d.ts files in external dependencies.
+    // See more: https://www.typescriptlang.org/tsconfig#skipLibCheck
+    "skipLibCheck": true,
+
     // Create source map files for emitted JavaScript files.
     // See more: https://www.typescriptlang.org/tsconfig#sourceMap
-    "sourceMap": false,
+    "sourceMap": true,
 
     // Generate .d.ts files from TypeScript and JavaScript files in your project.
     // See more: https://www.typescriptlang.org/tsconfig#declaration
