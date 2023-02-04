@@ -6,8 +6,22 @@ import log from './log';
 
 
 export interface DirectoriesResult {
+  /**
+   * Sub-directory that contains the project's source files. Read from
+   * "compilerOptions.baseUrl" in tsconfig.json.
+   */
   srcDir: string | undefined;
+
+  /**
+   * Sub-directory to which output files should be written. Read from
+   * "compilerOptions.outDir" in tsconfig.json.
+   */
   outDir: string | undefined;
+
+  /**
+   * Path to the project's tsconfig.json file.
+   */
+  tsConfigPath: string | undefined;
 }
 
 
@@ -20,15 +34,6 @@ export async function getSourceAndOutputDirectories(): Promise<DirectoriesResult
   try {
     const tsConfigPath = await tsconfck.find(path.resolve(process.cwd(), 'tsconfig.json'));
     const tsConfig = await tsconfck.parse(tsConfigPath);
-
-    // No tsconfig.json file could be found. Return `undefined` for both
-    // directories.
-    if (!tsConfig.tsconfigFile) {
-      return {
-        srcDir: undefined,
-        outDir: undefined
-      };
-    }
 
     // `tsconfck` will resolve `baseUrl` in parsed configurations to an absolute
     // path, but we want the literal value, which is usually something like
@@ -45,11 +50,14 @@ export async function getSourceAndOutputDirectories(): Promise<DirectoriesResult
     // `tsconfck` does not resolve "outDir" to an absolute directory, so we can
     // simply extract it from the configuration or used `undefined` if it isn't
     // set.
-    const outDir = tsConfig.tsconfig?.compilerOptions?.outDir ?? undefined;
+    const outDir = tsConfig.tsconfigFile ?
+      tsConfig.tsconfig?.compilerOptions?.outDir
+      : undefined;
 
     return {
       srcDir,
-      outDir
+      outDir,
+      tsConfigPath
     };
   } catch (err) {
     throw new Error(`${log.prefix('getSourceAndOutputDirectories')} ${err}`);

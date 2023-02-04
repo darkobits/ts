@@ -3,22 +3,15 @@ import path from 'path';
 import fs from 'fs-extra';
 
 import { nr } from './src';
+import log from './src/lib/log';
 import { getSourceAndOutputDirectories } from './src/lib/utils';
 
 
 export default nr(async ({ command, task, script }) => {
   const { srcDir, outDir } = await getSourceAndOutputDirectories();
 
-  if (!srcDir) {
-    throw new Error('[nr.config.ts] Unable to infer source root.');
-  }
-
-  if (!outDir) {
-    throw new Error('[nr.config.ts] Unable to infer output directory.');
-  }
-
   script('docs', {
-    description: 'Start a local Docsify server that serves our documentation.',
+    description: `Start a local ${log.chalk.white.bold('Docsify')} server that serves our documentation.`,
     run: [
       command('docsify', ['docsify', ['serve', 'docs']])
     ]
@@ -26,7 +19,7 @@ export default nr(async ({ command, task, script }) => {
 
   script('publish', {
     group: 'Release',
-    description: 'Publish the package using re-pack.',
+    description: `Publish the package using ${log.chalk.white.bold('re-pack')}.`,
     run: [
       command('re-pack', ['re-pack', ['publish']])
     ]
@@ -44,6 +37,9 @@ export default nr(async ({ command, task, script }) => {
       // output directory. This was previously handled by Babel's copyFiles
       // flag, but is unsupported by the TypeScript compiler.
       task('copy-tsconfig-base', () => {
+        if (!srcDir) throw new Error('[ts:re-pack] Unable to infer source root.');
+        if (!outDir) throw new Error('[ts:re-pack] Unable to infer output directory.');
+
         fs.copyFile(
           path.resolve(srcDir, 'config', 'tsconfig-base.json'),
           path.resolve(outDir, 'config', 'tsconfig-base.json')
