@@ -1,55 +1,32 @@
 import { EXTENSIONS } from '../etc/constants';
 import log from '../lib/log';
-import { getSourceAndOutputDirectories } from '../lib/utils';
+import { getHostPackageInfo } from '../lib/utils';
 
 import type { ConfigurationFactory } from '@darkobits/nr';
 
 
 export default (userConfig?: ConfigurationFactory): ConfigurationFactory => async context => {
   const { command, task, script, isCI } = context;
-  const { srcDir, outDir } = await getSourceAndOutputDirectories();
+  const { srcDir, outDir, tsConfigPath } = await getHostPackageInfo();
 
 
-  // ----- Build: TypeScript Commands ------------------------------------------
+  // ----- Build Commands ------------------------------------------------------
 
-  const tsFlags = {
-    build: true,
-    pretty: true,
-    preserveWatchOutput: true
-  };
+  command('del-out-dir', ['del', [outDir]]);
 
-  command('ts', ['tsc', { ...tsFlags, verbose: true }], {
-    prefix: chalk => chalk.bgBlue.white(' TS '),
+  command('vite-build', ['vite', ['build']]);
+  command('vite-build-watch', ['vite', ['build'], { watch: true }]);
+
+  command('tsc', ['tsc', { emitDeclarationOnly: true }], {
     preserveArgumentCasing: true
   });
 
-  command('ts.watch', ['tsc', { ...tsFlags, watch: true }], {
-    prefix: chalk => chalk.bgBlue.white(' TS '),
+  command('tsc-watch', ['tsc', { emitDeclarationOnly: true, watch: true, preserveWatchOutput: true }], {
     preserveArgumentCasing: true
   });
 
-  command('tsc-alias', ['tsc-alias', { project: 'tsconfig.json' }]);
-
-  command('tsc-alias.watch', ['tsc-alias', { project: 'tsconfig.json', watch: true }]);
-
-
-  // ----- Build: Misc. Commands -----------------------------------------------
-
-  const prepareOutDirCmd = outDir
-    ? command('prepare-out-dir', [
-      'del', [outDir]
-    ])
-    : undefined;
-
-  const cleanOutDirCmd = outDir
-     ? command('clean-out-dir', [
-       'del', [`${outDir}/**/*.spec.*`, `${outDir}/**/*.test.*`]
-     ])
-    : undefined;
-
-  if (!outDir) {
-    log.verbose(log.prefix('ts'), 'Unable to create certain build commands; "compilerOptions.outDir" is not defined in tsconfig.json.');
-  }
+  command('tsc-alias', ['tsc-alias', { project: tsConfigPath }]);
+  command('tsc-alias-watch', ['tsc-alias', { project: tsConfigPath, watch: true }]);
 
 
   // ----- Lint Commands -------------------------------------------------------
@@ -66,7 +43,6 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
   const lintRoot = srcDir || process.cwd();
 
   command('eslint', ['eslint', [lintRoot], eslintFlags]);
-
   command('eslint.fix', ['eslint', [lintRoot], { ...eslintFlags, fix: true }]);
 
 
@@ -86,7 +62,6 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
   script('lint', {
     group: 'Lint',
     description: 'Lint the project using ESLint.',
-    // timing: true,
     run: [
       'cmd:eslint',
       'task:eslint-log'
@@ -96,7 +71,6 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
   script('lint.fix', {
     group: 'Lint',
     description: 'Lint the project using ESLint and automatically fix any fixable errors.',
-    // timing: true,
     run: [
       'cmd:eslint.fix',
       'task:eslint-log'
@@ -108,33 +82,29 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
 
   script('build', {
     group: 'Build',
-    description: 'Build, type-check, and lint the project using TypeScript and ESLint.',
+    description: 'Build, type-check, and lint the project.',
     timing: true,
-    // @ts-expect-error
     run: [
-      prepareOutDirCmd,
+      'cmd:del-out-dir',
       [
-        'cmd:ts',
-        'script:lint'
+        'cmd:vite-build',
+        'cmd:tsc'
       ],
-      [
-        'cmd:tsc-alias',
-        cleanOutDirCmd
-      ].filter(Boolean)
-    ].filter(Boolean)
+      'cmd:tsc-alias'
+    ]
   });
 
   script('build.watch', {
     group: 'Build',
     description: 'Continuously build and type-check the project.',
-    // @ts-expect-error
     run: [
-      prepareOutDirCmd,
+      'cmd:del-out-dir',
       [
-        'cmd:ts.watch',
-        'cmd:tsc-alias.watch'
+        'cmd:vite-build-watch',
+        'cmd:tsc-watch',
+        'cmd:tsc-alias-watch'
       ]
-    ].filter(Boolean)
+    ]
   });
 
 

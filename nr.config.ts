@@ -3,11 +3,11 @@ import path from 'path';
 import fs from 'fs-extra';
 
 import { nr } from './src';
-import { getSourceAndOutputDirectories } from './src/lib/utils';
+import { getHostPackageInfo } from './src/lib/utils';
 
 
 export default nr(async ({ command, task, script }) => {
-  const { srcDir, outDir } = await getSourceAndOutputDirectories();
+  const { srcDir, outDir } = await getHostPackageInfo();
 
   if (!srcDir) {
     throw new Error('[nr.config.ts] Unable to infer source root.');
@@ -32,7 +32,6 @@ export default nr(async ({ command, task, script }) => {
     ]
   });
 
-  // N.B. nr will automatically run this for us after the 'build' script is run.
   script('postBuild', {
     group: 'Build',
     description: 'Run various post-build tasks.',

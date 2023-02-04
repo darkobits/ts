@@ -1,6 +1,6 @@
 export { default as nr } from './config/nr';
-export { default as vitest } from './config/vitest';
+export { default as vite } from './config/vite';
 
 export { EXTENSIONS } from './etc/constants';
 
-export { getSourceAndOutputDirectories } from './lib/utils';
+export { getHostPackageInfo } from './lib/utils';
