@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.13.16-beta.0](https://github.com/darkobits/ts/compare/v0.13.15...v0.13.16-beta.0) (2023-02-04)
+
+
+### 🛠 Refactoring
+
+* Build with Vite. ([f038270](https://github.com/darkobits/ts/commit/f038270303b53569dc9d7035d32f406c36bf97a1))
+
 ## [0.13.15](https://github.com/darkobits/ts/compare/v0.13.14...v0.13.15) (2023-01-30)
 
 
