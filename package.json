@@ -24,18 +24,18 @@
   },
   "peerDependencies": {
     "@darkobits/nr": "^0.14.29",
-    "@types/node": "^18.11.18",
-    "@vitest/coverage-c8": "^0.28.3",
-    "@vitest/ui": "^0.28.3",
+    "@types/node": "^18.13.0",
+    "@vitest/coverage-c8": "^0.28.4",
+    "@vitest/ui": "^0.28.4",
     "del-cli": "^5.0.0",
-    "npm-check-updates": "^16.6.3",
+    "npm-check-updates": "^16.6.5",
     "ts-add-module-exports": "^1.0.0",
     "tsc-alias": "^1.8.2",
     "tsc-watch": "^6.0.0",
     "tsconfck": "^2.0.2",
-    "typescript": "~4.9.4",
+    "typescript": "~4.9.5",
     "vite-tsconfig-paths": "^4.0.5",
-    "vitest": "^0.28.3"
+    "vitest": "^0.28.4"
   },
   "dependencies": {
     "@darkobits/log": "^2.0.0-beta.16",
