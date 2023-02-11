@@ -36,6 +36,7 @@ jobs:
       - name: Build Project
         run: npx nr build
       - name: Run Tests
-        run: |
-          npx nr test.coverage
-          bash <(curl -s https://codecov.io/bash)
+        run: npx nr test
+        # run: |
+        #   npx nr test.coverage
+        #   bash <(curl -s https://codecov.io/bash)
