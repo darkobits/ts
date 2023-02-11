@@ -1,10 +1,12 @@
 import merge from 'deepmerge';
 import tsConfigPathsPlugin from 'vite-tsconfig-paths';
-// eslint-disable-next-line import/no-unresolved
-import { UserConfig, UserConfigExport } from 'vitest/config';
+
 
 // Relative path required here.
+import { BARE_EXTENSIONS, TEST_FILE_PATTERNS } from '../etc/constants';
 import { getSourceAndOutputDirectories } from '../lib/utils';
+
+import type { UserConfig, UserConfigExport } from 'vitest/config';
 
 
 export default async (userConfigExport?: UserConfigExport) => {
@@ -17,6 +19,9 @@ export default async (userConfigExport?: UserConfigExport) => {
     test: {
       deps: {
         interopDefault: true
+      },
+      coverage: {
+        all: true
       }
     }
   };
@@ -24,7 +29,12 @@ export default async (userConfigExport?: UserConfigExport) => {
   if (srcDir) {
     // @ts-expect-error - We know baseConfig.test is defined.
     baseConfig.test.include = [
-      `${srcDir}/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}`
+      `${srcDir}/**/*.{${TEST_FILE_PATTERNS.join(',')}}.{${BARE_EXTENSIONS.join(',')}}`
+    ];
+
+    // @ts-expect-error - We know baseConfig.test.coverage is defined.
+    baseConfig.test.coverage.include = [
+      `${srcDir}/**/*.{${BARE_EXTENSIONS.join(',')}}`
     ];
   }
 

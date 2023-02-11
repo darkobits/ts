@@ -1,4 +1,4 @@
-import { EXTENSIONS } from '../etc/constants';
+import { EXTENSIONS, TEST_FILE_PATTERNS } from '../etc/constants';
 import log from '../lib/log';
 import { getSourceAndOutputDirectories } from '../lib/utils';
 
@@ -18,9 +18,7 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
    * has been defined.
    */
   const prepareOutDir = outDir
-    ? command('prepare-out-dir', [
-      'del', [outDir]
-    ])
+    ? command('prepare-out-dir', ['del', [outDir]])
     : task('prepare-out-dir-warning', () => {
       log.warn(log.prefix('build'), 'Unable to remove output directory on build start; "compilerOptions.outDir" is not defined in tsconfig.json.');
     });
@@ -33,9 +31,7 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
    * user know that no output directory has been defined.
    */
   const cleanOutDir = outDir
-     ? command('clean-out-dir', [
-       'del', [`${outDir}/**/*.spec.*`, `${outDir}/**/*.test.*`]
-     ])
+    ? command('clean-out-dir', ['del', [`${outDir}/**/*.{${TEST_FILE_PATTERNS.join(',')}}.*`]])
     : task('clean-out-dir-warning', () => {
       log.warn(log.prefix('build'), 'Unable to clean-up output directory after build; "compilerOptions.outDir" is not defined in tsconfig.json.');
     });
