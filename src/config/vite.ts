@@ -3,12 +3,22 @@ import glob from 'fast-glob';
 import eslintPlugin from 'vite-plugin-eslint';
 // @ts-expect-error - Package has no type definitions.
 import noBundlePlugin from 'vite-plugin-no-bundle';
-import tsconfigPathsPlugin from 'vite-tsconfig-paths';
+import tsconfigPathsPluginExport from 'vite-tsconfig-paths';
 
 
 import { BARE_EXTENSIONS, TEST_FILE_PATTERNS } from '../etc/constants';
 import tscAliasPlugin from '../lib/tsc-alias-plugin';
 import { createViteConfigurationPreset } from '../lib/utils';
+
+
+/**
+ * This package has issues with its default export that sometimes only become
+ * apparent when consumers try to use this configuration preset. As such,
+ * manually resolve its default export.
+ */
+const tsconfigPathsPlugin: typeof tsconfigPathsPluginExport = Reflect.has(tsconfigPathsPluginExport, 'default')
+  ? Reflect.get(tsconfigPathsPluginExport, 'default')
+  : tsconfigPathsPluginExport;
 
 
 export const library = createViteConfigurationPreset(async context => {
