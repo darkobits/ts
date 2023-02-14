@@ -1,65 +1,109 @@
 import path from 'path';
 
-import * as tsconfck from 'tsconfck';
+import merge from 'deepmerge';
+import findUp from 'find-up';
+import readPkgUp from 'read-pkg-up';
+import * as tsConfCk from 'tsconfck';
 
 import log from './log';
 
+import type { PackageContext, CustomUserConfigExport, ConfigurationContext } from '../etc/types';
+import type { UserConfig, ConfigEnv } from 'vite';
 
-export interface DirectoriesResult {
-  /**
-   * Sub-directory that contains the project's source files. Read from
-   * "compilerOptions.baseUrl" in tsconfig.json.
-   */
-  srcDir: string | undefined;
 
-  /**
-   * Sub-directory to which output files should be written. Read from
-   * "compilerOptions.outDir" in tsconfig.json.
-   */
-  outDir: string | undefined;
+/**
+ * Infers information about the host package.
+ */
+export async function getPackageContext(): Promise<PackageContext> {
+  try {
+    const timer = log.createTimer();
 
-  /**
-   * Path to the project's tsconfig.json file.
-   */
-  tsConfigPath: string | undefined;
+    const root = process.env.VITE_ROOT ?? process.cwd();
+    log.verbose(log.prefix('getPackageContext'), log.chalk.bold('root'), root);
+
+    // Find and parse package.json.
+    const pkgResult = await readPkgUp({ cwd: root });
+    if (!pkgResult) throw new Error('[getPackageContext] Unable to find package.json.');
+    const packageJson = pkgResult.packageJson;
+    log.verbose(log.prefix('getPackageContext'), log.chalk.bold('packageJson'), log.chalk.green(pkgResult.path));
+
+    // Find tsconfig.json.
+    const tsConfigPath = await findUp('tsconfig.json', { cwd: root });
+    if (!tsConfigPath) throw new Error('[getPackageContext] Unable to find tsconfig.json');
+    log.verbose(log.prefix('getPackageContext'), log.chalk.bold('tsConfig'),  log.chalk.green(tsConfigPath));
+
+    // Parse tsconfig.json.
+    const { tsconfig: tsConfig } = await tsConfCk.parse(tsConfigPath);
+
+    // Infer source root.
+    const srcDir = tsConfig.compilerOptions.baseUrl;
+    if (!srcDir) throw new Error('[getPackageContext] "compilerOptions.baseUrl" must be set in tsconfig.json');
+    log.verbose(log.prefix('getPackageContext'), log.chalk.bold('srcDir'), log.chalk.green(srcDir));
+
+    // Infer output directory.
+    const outDir = tsConfig.compilerOptions.outDir;
+    if (!outDir) throw new Error('[getPackageContext] "compilerOptions.outDir" must be set in tsconfig.json');
+    log.verbose(log.prefix('getPackageContext'), log.chalk.bold('outDir'), log.chalk.green(path.resolve(root, outDir)));
+
+    log.verbose(log.prefix('getPackageContext'), `Done in ${timer}.`);
+
+    return {
+      root,
+      srcDir,
+      outDir,
+      tsConfigPath,
+      tsConfig,
+      packageJson
+    };
+  } catch (err) {
+    throw new Error(`${log.prefix('getPackageContext')} ${err}`);
+  }
 }
 
 
 /**
- * @private
+ * Used internally to create Vite configuration presets for different project
+ * types. Accepts a function that will be provided a ConfigurationContext
+ * object and returns a function that will be invoked by the user in their Vite
+ * configuration file (similar to Vite's defineConfig helper). This function may
+ * be invoked with zero arguments, a value, or a function. Like defineConfig,
+ * the provided value or function's return value will be resolved. Finally, the
+ * user-provided configuration will be merged with the base configuration for
+ * the preset and returned to Vite.
  *
- * Attempts to infer the user's source and output directories
+ * TODO: Implement Vite configuration scaffolds from tsx so users can access the
+ * base configuration object and modify it in-place.
  */
-export async function getSourceAndOutputDirectories(): Promise<DirectoriesResult> {
-  try {
-    const tsConfigPath = await tsconfck.find(path.resolve(process.cwd(), 'tsconfig.json'));
-    const tsConfig = await tsconfck.parse(tsConfigPath);
+export function createViteConfigurationPreset(baseConfigurationFactory: (context: ConfigurationContext) => UserConfig | Promise<UserConfig>) {
+  // N.B. This is the function that the user will invoke in their Vite
+  // configuration file and pass an optional value/function to set configuration
+  // overrides.
+  return (userConfigExport?: CustomUserConfigExport) => {
+    // N.B. This is the function that will ultimately be provided to Vite, which
+    // it will invoke with the default ConfigEnv type.
+    return async (configEnv: ConfigEnv) => {
+      const packageContext = await getPackageContext();
 
-    // `tsconfck` will resolve `baseUrl` in parsed configurations to an absolute
-    // path, but we want the literal value, which is usually something like
-    // "src", a path relative to the tsconfig.json file itself. This operation
-    // returns the absolute path back to its original relative path. If the
-    // tsconfig.json file did not define a "baseUrl", use `undefined`.
-    const srcDir = tsConfig.tsconfig?.compilerOptions?.baseUrl
-      ? path.relative(
-        path.dirname(tsConfig.tsconfigFile),
-        tsConfig.tsconfig?.compilerOptions?.baseUrl
-      )
-      : undefined;
+      const configurationContext: ConfigurationContext = {
+        ...configEnv,
+        ...packageContext
+      };
 
-    // `tsconfck` does not resolve "outDir" to an absolute directory, so we can
-    // simply extract it from the configuration or used `undefined` if it isn't
-    // set.
-    const outDir = tsConfig.tsconfigFile ?
-      tsConfig.tsconfig?.compilerOptions?.outDir
-      : undefined;
+      const baseConfig = await baseConfigurationFactory(configurationContext);
 
-    return {
-      srcDir,
-      outDir,
-      tsConfigPath
+      // User did not provide any configuration overrides.
+      if (!userConfigExport) {
+        return baseConfig;
+      }
+
+      // User provided a function that will return configuration overrides.
+      if (typeof userConfigExport === 'function') {
+        return merge(baseConfig,  await userConfigExport(configurationContext));
+      }
+
+      // User provided a value or a Promise that will resolve with configuration
+      // overrides.
+      return merge(baseConfig, await userConfigExport);
     };
-  } catch (err) {
-    throw new Error(`${log.prefix('getSourceAndOutputDirectories')} ${err}`);
-  }
+  };
 }

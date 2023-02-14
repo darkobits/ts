@@ -4,11 +4,11 @@ import fs from 'fs-extra';
 
 import { nr } from './src';
 import log from './src/lib/log';
-import { getSourceAndOutputDirectories } from './src/lib/utils';
+import { getPackageContext } from './src/lib/utils';
 
 
 export default nr(async ({ command, task, script }) => {
-  const { srcDir, outDir } = await getSourceAndOutputDirectories();
+  const { srcDir, outDir } = await getPackageContext();
 
   script('docs', {
     description: `Start a local ${log.chalk.white.bold('Docsify')} server that serves our documentation.`,

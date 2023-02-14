@@ -1,14 +1,14 @@
 /* eslint-disable unicorn/prefer-export-from */
 import nr from './config/nr';
-import vitest from './config/vitest';
+import * as vite from './config/vite';
 import { EXTENSIONS } from './etc/constants';
-import { getSourceAndOutputDirectories } from './lib/utils';
+import { getPackageContext } from './lib/utils';
 
 // This approach, rather than "export from" syntax, ensures TypeScript compiles
 // our code such that named imports in ESM consumers work as expected.
 export {
   nr,
-  vitest,
-  getSourceAndOutputDirectories,
+  vite,
+  getPackageContext,
   EXTENSIONS
 };
