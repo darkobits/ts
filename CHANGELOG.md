@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.14.0-beta.4](https://github.com/darkobits/ts/compare/v0.14.0-beta.3...v0.14.0-beta.4) (2023-02-14)
+
+
+### 🐞 Bug Fixes
+
+* Do not emit declaration files for test files. ([2ba4a52](https://github.com/darkobits/ts/commit/2ba4a5209bd1f72763f130fbe739ece98f117674))
+
 ## [0.14.0-beta.3](https://github.com/darkobits/ts/compare/v0.14.0-beta.2...v0.14.0-beta.3) (2023-02-14)
 
 
