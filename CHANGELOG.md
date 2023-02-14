@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.14.0-beta.3](https://github.com/darkobits/ts/compare/v0.14.0-beta.2...v0.14.0-beta.3) (2023-02-14)
+
+
+### 🐞 Bug Fixes
+
+* Fix plugin default imports. ([ae2c94b](https://github.com/darkobits/ts/commit/ae2c94be1ec3a8e39c7d1644e1ae3043353d4382))
+
 ## [0.14.0-beta.2](https://github.com/darkobits/ts/compare/v0.14.0-beta.1...v0.14.0-beta.2) (2023-02-14)
 
 
