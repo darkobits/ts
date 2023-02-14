@@ -1,8 +1,6 @@
 import path from 'path';
 
 import merge from 'deepmerge';
-import findUp from 'find-up';
-import readPkgUp from 'read-pkg-up';
 import * as tsConfCk from 'tsconfck';
 
 import log from './log';
@@ -18,11 +16,14 @@ export async function getPackageContext(): Promise<PackageContext> {
   try {
     const timer = log.createTimer();
 
+    const { readPackageUp } = await import('read-pkg-up');
+    const { findUp } = await import('find-up');
+
     const root = process.env.VITE_ROOT ?? process.cwd();
     log.verbose(log.prefix('getPackageContext'), log.chalk.bold('root'), root);
 
     // Find and parse package.json.
-    const pkgResult = await readPkgUp({ cwd: root });
+    const pkgResult = await readPackageUp({ cwd: root });
     if (!pkgResult) throw new Error('[getPackageContext] Unable to find package.json.');
     const packageJson = pkgResult.packageJson;
     log.verbose(log.prefix('getPackageContext'), log.chalk.bold('packageJson'), log.chalk.green(pkgResult.path));
