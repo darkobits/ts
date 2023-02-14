@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.14.0-beta.0](https://github.com/darkobits/ts/compare/v0.13.15...v0.14.0-beta.0) (2023-02-14)
+
+
+### ⚠ BREAKING CHANGES
+
+* Users should create a `vite.config.{js,cjs,ts}` file in their project root and use the `vite` export of this package to define a Vite configuration.
+
+### 🐞 Bug Fixes
+
+* Improve interop with ESM consumers. ([36bc6f2](https://github.com/darkobits/ts/commit/36bc6f26d20bdeeb492958b0de0957393a4911c3))
+
+
+### 🏗 Chores
+
+* **deps:** Update dependencies. ([dd4842f](https://github.com/darkobits/ts/commit/dd4842f6b81058f4b9eb305c256228f7599bed68))
+* **tests:** Don't collect coverage. ([c2c5a52](https://github.com/darkobits/ts/commit/c2c5a52520720e0fa63adb820b07445061e1a8c9))
+* **ts:** Emit source maps, skip lib check by default. ([4d194d9](https://github.com/darkobits/ts/commit/4d194d910f5f85155787e5ba6166038c2258e452))
+
+
+### 🛠 Refactoring
+
+* Build with Vite. ([9a3620e](https://github.com/darkobits/ts/commit/9a3620ed781bbca034136c95cf20188b7b14d890))
+* **test:** Update coverage reporting. ([fb732c7](https://github.com/darkobits/ts/commit/fb732c735752978965d7280020e30223532da217))
+* Update build scripts. ([97e2506](https://github.com/darkobits/ts/commit/97e2506a2d988a00323dd9eb41950f13b6ae096b))
+
 ## [0.13.15](https://github.com/darkobits/ts/compare/v0.13.14...v0.13.15) (2023-01-30)
 
 
