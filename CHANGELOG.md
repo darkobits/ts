@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.14.0-beta.6](https://github.com/darkobits/ts/compare/v0.14.0-beta.5...v0.14.0-beta.6) (2023-02-14)
+
+
+### 🐞 Bug Fixes
+
+* Preserve shebangs in files that have them. ([7ff2de6](https://github.com/darkobits/ts/commit/7ff2de6b6f7d1c43205f58a81fc700e1cba8c42c))
+
 ## [0.14.0-beta.5](https://github.com/darkobits/ts/compare/v0.14.0-beta.4...v0.14.0-beta.5) (2023-02-14)
 
 
