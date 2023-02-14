@@ -1,6 +1,7 @@
+// import commonJsPlugin from '@rollup/plugin-commonjs';
 import typescriptPlugin from '@rollup/plugin-typescript';
 import glob from 'fast-glob';
-import eslintPlugin from 'vite-plugin-eslint';
+import eslintPluginExport from 'vite-plugin-eslint';
 // @ts-expect-error - Package has no type definitions.
 import noBundlePlugin from 'vite-plugin-no-bundle';
 import tsconfigPathsPluginExport from 'vite-tsconfig-paths';
@@ -8,22 +9,23 @@ import tsconfigPathsPluginExport from 'vite-tsconfig-paths';
 
 import { BARE_EXTENSIONS, TEST_FILE_PATTERNS } from '../etc/constants';
 import tscAliasPlugin from '../lib/tsc-alias-plugin';
-import { createViteConfigurationPreset } from '../lib/utils';
+import {
+  createViteConfigurationPreset,
+  interopRequireDefault
+} from '../lib/utils';
 
 
-/**
- * This package has issues with its default export that sometimes only become
- * apparent when consumers try to use this configuration preset. As such,
- * manually resolve its default export.
- */
-const tsconfigPathsPlugin: typeof tsconfigPathsPluginExport = Reflect.has(tsconfigPathsPluginExport, 'default')
-  ? Reflect.get(tsconfigPathsPluginExport, 'default')
-  : tsconfigPathsPluginExport;
+// Fix default imports for problematic packages.
+const tsconfigPathsPlugin = interopRequireDefault(tsconfigPathsPluginExport, 'vite-tsconfig-paths');
+const eslintPlugin = interopRequireDefault(eslintPluginExport, 'vite-plugin-eslint');
 
 
 export const library = createViteConfigurationPreset(async context => {
   // Compute entries.
-  const entry = await glob(`${context.srcDir}/**/*.{${BARE_EXTENSIONS.join(',')}}`, { cwd: context.root });
+  const entry = await glob(`${context.srcDir}/**/*.{${BARE_EXTENSIONS.join(',')}}`, {
+    cwd: context.root,
+    ignore: [`**/*.{${TEST_FILE_PATTERNS.join(',')}}.*`]
+  });
   if (entry.length === 0) throw new Error(`[vite-config] No suitable entries found in ${context.srcDir}`);
 
   // Global source map setting used by various plug-ins below.
@@ -59,7 +61,12 @@ export const library = createViteConfigurationPreset(async context => {
       ]
     },
     plugins: [
-      // commonJsPlugin({ sourceMap }),
+      // commonJsPlugin({
+      //   sourceMap
+      //   // esmExternals: true,
+      //   // requireReturnsDefault: true,
+      //   // defaultIsModuleExports: 'auto'
+      // }),
       // This plugin allows Rollup to resolve and re-write import/require
       // statements in our source code.
       tsconfigPathsPlugin({ root: context.root }),

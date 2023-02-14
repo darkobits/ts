@@ -1,3 +1,5 @@
+import path from 'path';
+
 import { EXTENSIONS } from '../etc/constants';
 import log from '../lib/log';
 import { getPackageContext } from '../lib/utils';
@@ -156,7 +158,10 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
       description: `Generate a change log entry and tagged commit for ${description} using ${log.chalk.white.bold('standard-version')}.`,
       run: [
         command(`standard-version-${releaseType ?? 'default'}`, [
-          standardVersionCmd, { preset: require.resolve('./changelog-preset'), ...args }
+          standardVersionCmd, {
+            preset: path.resolve(__dirname, 'changelog-preset.js'),
+            ...args
+          }
         ])
       ]
     });

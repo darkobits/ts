@@ -1,3 +1,5 @@
+const path = require('path');
+
 const { NPM_TOKEN, GH_TOKEN } = process.env;
 
 module.exports = {
@@ -21,7 +23,7 @@ module.exports = {
     }],
     ['@semantic-release/release-notes-generator', {
       // preset: 'conventionalcommits',
-      config: require.resolve('./changelog-preset')
+      config: path.resolve(__dirname, 'changelog-preset.js')
     }],
     // Conditionally add the NPM plugin if NPM_TOKEN is present.
     NPM_TOKEN ? '@semantic-release/npm' : undefined,
