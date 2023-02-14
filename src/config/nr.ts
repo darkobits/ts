@@ -208,7 +208,7 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
     group: 'Dependency Management',
     description: `Check for newer versions of installed dependencies using ${log.chalk.white.bold('npm-check-updates')}.`,
     run: [
-      command.node('npm-check-updates', ['npm-check-updates', {
+      command('npm-check-updates', ['npm-check-updates', {
         dep: 'prod,peer,dev',
         format: 'group',
         interactive: true

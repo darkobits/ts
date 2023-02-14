@@ -23,15 +23,15 @@
     "help": "nr --scripts"
   },
   "peerDependencies": {
-    "@darkobits/nr": "^0.14.29",
+    "@darkobits/nr": "^0.14.30",
     "@types/node": "^18.13.0",
-    "@vitest/coverage-c8": "^0.28.4",
-    "@vitest/ui": "^0.28.4",
-    "npm-check-updates": "^16.6.5",
+    "@vitest/coverage-c8": "^0.28.5",
+    "@vitest/ui": "^0.28.5",
+    "npm-check-updates": "^16.7.4",
     "tsconfck": "^2.0.2",
     "typescript": "~4.9.5",
     "vite": "^4.1.1",
-    "vitest": "^0.28.4"
+    "vitest": "^0.28.5"
   },
   "dependencies": {
     "@darkobits/log": "^2.0.0-beta.16",
