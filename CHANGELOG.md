@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.14.0-beta.1](https://github.com/darkobits/ts/compare/v0.14.0-beta.0...v0.14.0-beta.1) (2023-02-14)
+
+
+### 🐞 Bug Fixes
+
+* Manually resolve default export for `vite-tsconfig-paths`. ([199996a](https://github.com/darkobits/ts/commit/199996a4eaaba143b84d4acd1788559071d62dc9))
+
 ## [0.14.0-beta.0](https://github.com/darkobits/ts/compare/v0.13.15...v0.14.0-beta.0) (2023-02-14)
 
 
