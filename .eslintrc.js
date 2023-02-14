@@ -1,9 +1,6 @@
 module.exports = {
   extends: 'plugin:@darkobits/ts',
-  ignorePatterns: [
-    'fixtures/**',
-    'dist/**'
-  ],
+  ignorePatterns: ['fixtures/**'],
   rules: {
     'no-irregular-whitespace': 'off'
   }
