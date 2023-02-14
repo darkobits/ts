@@ -3,6 +3,8 @@ import path from 'path';
 // import commonJsPlugin from '@rollup/plugin-commonjs';
 import typescriptPlugin from '@rollup/plugin-typescript';
 import glob from 'fast-glob';
+// @ts-expect-error - Package has no type definitions.
+import preserveShebangPlugin from 'rollup-plugin-preserve-shebang';
 import eslintPluginExport from 'vite-plugin-eslint';
 // @ts-expect-error - Package has no type definitions.
 import noBundlePluginExport from 'vite-plugin-no-bundle';
@@ -24,13 +26,14 @@ const noBundlePlugin = interopRequireDefault(noBundlePluginExport, 'vite-plugin-
 
 
 /**
- * Vite configuration preset suitable for publishing libraries to NPM.
+ * Vite configuration preset suitable for publishing libraries or CLIs to NPM.
  *
  * - Source files will not be bundled.
  * - `node_modules` will be externalized
  * - Output format (CJS or ESM) will be inferred from the `type` field in
  *   `package.json`.
  * - Source and output directories will be inferred from `tsconfig.json`.
+ * - Shebangs will be preserved in files that have them.
  */
 export const library = createViteConfigurationPreset(async context => {
   const SOURCE_FILES = [
@@ -123,7 +126,10 @@ export const library = createViteConfigurationPreset(async context => {
         // cache: true,
         failOnError: true,
         include: [SOURCE_FILES]
-      })
+      }),
+      // This plugin ensures shebangs are preserved in files that have them.
+      // This is needed when building CLIs.
+      preserveShebangPlugin()
     ]
   };
 });
