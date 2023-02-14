@@ -1,3 +1,5 @@
+import path from 'path';
+
 // import commonJsPlugin from '@rollup/plugin-commonjs';
 import typescriptPlugin from '@rollup/plugin-typescript';
 import glob from 'fast-glob';
@@ -31,10 +33,22 @@ const noBundlePlugin = interopRequireDefault(noBundlePluginExport, 'vite-plugin-
  * - Source and output directories will be inferred from `tsconfig.json`.
  */
 export const library = createViteConfigurationPreset(async context => {
+  const SOURCE_FILES = [
+    context.srcDir,
+    '**',
+    `*.{${BARE_EXTENSIONS.join(',')}}`
+  ].join(path.sep);
+
+  const TEST_FILES = [
+    context.srcDir,
+    '**',
+    `*.{${TEST_FILE_PATTERNS.join(',')}}.{${BARE_EXTENSIONS.join(',')}}`
+  ].join(path.sep);
+
   // Compute entries.
-  const entry = await glob(`${context.srcDir}/**/*.{${BARE_EXTENSIONS.join(',')}}`, {
+  const entry = await glob(SOURCE_FILES, {
     cwd: context.root,
-    ignore: [`**/*.{${TEST_FILE_PATTERNS.join(',')}}.*`]
+    ignore: [TEST_FILES]
   });
 
   if (entry.length === 0) throw new Error(`[vite-config] No suitable entries found in ${context.srcDir}`);
@@ -63,13 +77,9 @@ export const library = createViteConfigurationPreset(async context => {
       },
       coverage: {
         all: true,
-        include: [
-          `${context.srcDir}/**/*.{${BARE_EXTENSIONS.join(',')}}`
-        ]
+        include: entry
       },
-      include: [
-        `${context.srcDir}/**/*.{${TEST_FILE_PATTERNS.join(',')}}.{${BARE_EXTENSIONS.join(',')}}`
-      ]
+      include: [TEST_FILES]
     },
     plugins: [
       // commonJsPlugin({
@@ -88,6 +98,7 @@ export const library = createViteConfigurationPreset(async context => {
       // declaration files. It reads the project's tsconfig.json automatically,
       // so the below configuration is only overrides.
       typescriptPlugin({
+        exclude: [TEST_FILES],
         compilerOptions: {
           // Suppresses warnings from the plugin. Because we are only using this
           // plugin to output declaration files, this setting has no effect on
@@ -111,7 +122,7 @@ export const library = createViteConfigurationPreset(async context => {
       eslintPlugin({
         // cache: true,
         failOnError: true,
-        include: [`${context.srcDir}/**`]
+        include: [SOURCE_FILES]
       })
     ]
   };
