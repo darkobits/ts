@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.14.0-beta.2](https://github.com/darkobits/ts/compare/v0.14.0-beta.1...v0.14.0-beta.2) (2023-02-14)
+
+
+### 🐞 Bug Fixes
+
+* Fix various other default imports, remove `require.resolve`. ([bf1de88](https://github.com/darkobits/ts/commit/bf1de88e27f4642b59c038db0925502bc2e995d3))
+
 ## [0.14.0-beta.1](https://github.com/darkobits/ts/compare/v0.14.0-beta.0...v0.14.0-beta.1) (2023-02-14)
 
 
