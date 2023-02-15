@@ -8,8 +8,8 @@ import preserveShebangPlugin from 'rollup-plugin-preserve-shebang';
 import eslintPluginExport from 'vite-plugin-eslint';
 // @ts-expect-error - Package has no type definitions.
 import noBundlePluginExport from 'vite-plugin-no-bundle';
+import { viteStaticCopy } from 'vite-plugin-static-copy';
 import tsconfigPathsPluginExport from 'vite-tsconfig-paths';
-
 
 import { BARE_EXTENSIONS, TEST_FILE_PATTERNS } from '../etc/constants';
 import tscAliasPlugin from '../lib/tsc-alias-plugin';
@@ -34,8 +34,16 @@ const noBundlePlugin = interopRequireDefault(noBundlePluginExport, 'vite-plugin-
  *   `package.json`.
  * - Source and output directories will be inferred from `tsconfig.json`.
  * - Shebangs will be preserved in files that have them.
+ * - All non-source files will be copied to the output directory as-is, similar
+ *   to Babel's `copyFiles` option.
  */
 export const library = createViteConfigurationPreset(async context => {
+  // N.B. Vitest invokes Vite with the 'serve' command, but we can handle that
+  // case by checking `mode` as well.
+  if (context.command === 'serve' && context.mode !== 'test') {
+    throw new Error('[ts] The "library" configuration preset does not support the "serve" command.');
+  }
+
   const SOURCE_FILES = [
     context.srcDir,
     '**',
@@ -55,6 +63,23 @@ export const library = createViteConfigurationPreset(async context => {
   });
 
   if (entry.length === 0) throw new Error(`[vite-config] No suitable entries found in ${context.srcDir}`);
+
+  // Compute files to copy and return an array of targets suitable for using
+  // with vite-plugin-static-copy.
+  const filesToCopy = (await glob([
+    `${context.srcDir}/**/*`,
+    `!${SOURCE_FILES}`,
+    `!${TEST_FILES}`
+  ], {
+    cwd: context.root
+  })).map(filePath => {
+    // Produces something like 'src/foo/bar/baz.ts'.
+    const src = path.relative(context.root, filePath);
+
+    // Produces something like 'foo/bar'.
+    const dest = path.dirname(src).split(path.sep).slice(1).join(path.sep);
+    return { src, dest };
+  });
 
   // Global source map setting used by various plug-ins below.
   const sourceMap = true;
@@ -129,7 +154,11 @@ export const library = createViteConfigurationPreset(async context => {
       }),
       // This plugin ensures shebangs are preserved in files that have them.
       // This is needed when building CLIs.
-      preserveShebangPlugin()
+      preserveShebangPlugin(),
+      // This plugin copies all non-source and non-test files to the output
+      // directory. Per our configuration, directory structure will be
+      // preserved.
+      viteStaticCopy({ targets: filesToCopy })
     ]
   };
 });
