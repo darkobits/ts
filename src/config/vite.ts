@@ -1,6 +1,5 @@
 import path from 'path';
 
-// import commonJsPlugin from '@rollup/plugin-commonjs';
 import typescriptPlugin from '@rollup/plugin-typescript';
 import glob from 'fast-glob';
 // @ts-expect-error - Package has no type definitions.
@@ -110,12 +109,6 @@ export const library = createViteConfigurationPreset(async context => {
       include: [TEST_FILES]
     },
     plugins: [
-      // commonJsPlugin({
-      //   sourceMap
-      //   // esmExternals: true,
-      //   // requireReturnsDefault: true,
-      //   // defaultIsModuleExports: 'auto'
-      // }),
       // This plugin allows Rollup to resolve and re-write import/require
       // statements in our source code.
       tsconfigPathsPlugin({ root: context.root }),
