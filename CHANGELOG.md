@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.14.5](https://github.com/darkobits/ts/compare/v0.14.4...v0.14.5) (2023-02-16)
+
+
+### 🏗 Chores
+
+* Remove unused code. ([46f27ff](https://github.com/darkobits/ts/commit/46f27ffd482e5028819d90e10999cc76caa2050e))
+
+
+### 🛠 Refactoring
+
+* Conditionally add plugins to compilation. ([715d420](https://github.com/darkobits/ts/commit/715d4203c90bb08289114038a5ec54df292caade))
+
 ## [0.14.4](https://github.com/darkobits/ts/compare/v0.14.3...v0.14.4) (2023-02-16)
 
 
