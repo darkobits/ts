@@ -3,7 +3,7 @@
 `ts` uses these incredible tools under the the hood to keep your project running
 smoothly:
 
-* Transpilation and type-checking with [TypeScript](https://www.typescriptlang.org).
+* Transpilation with [Vite](https://vitejs.dev/).
 * Unit testing with [Vitest](https://vitest.dev/).
 * Linting with [ESLint](https://eslint.org/).
 * Version and change log management with either:

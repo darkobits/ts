@@ -16,6 +16,9 @@ To do so, in your shell configuration file, add the line:
 export PATH="$PATH:$(npm root)/.bin"
 ```
 
+!> It is important to **append** the local NPM bin path to your PATH to prevent malicious actors from
+creating packages that define binaries that shadow system-level programs (ie: ssh).
+
 To ensure your shell is configured correctly, run `which nr` from a `ts` project's root directory. You
 should see the following output:
 
@@ -29,3 +32,6 @@ Now, to run a package script:
 ```
 nr script.name
 ```
+
+This approach also lets you run any other local NPM package that defines an executable, such as `vite`,
+`vitest`, `tsc`, `eslint`, etc.
