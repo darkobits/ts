@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.14.2](https://github.com/darkobits/ts/compare/v0.14.1...v0.14.2) (2023-02-16)
+
+
+### 🐞 Bug Fixes
+
+* Move `postinstall` script to `postprepare`; should only run locally. ([e9ec5be](https://github.com/darkobits/ts/commit/e9ec5be042248e53c95aa3313e00a9891c4d7e8e))
+
 ## [0.14.1](https://github.com/darkobits/ts/compare/v0.14.0...v0.14.1) (2023-02-16)
 
 
