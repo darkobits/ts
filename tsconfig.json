@@ -1,9 +1,5 @@
 {
   "extends": "./src/config/tsconfig-base.json",
-  // Without this, the TypeScript compiler will default to including all files
-  // in the containing directory (including root-level TypeScript configuration
-  // files) which is undesirable.
-  "include": ["src"],
   "compilerOptions": {
     // Specify the base directory to resolve non-relative module names.
     // See more: https://www.typescriptlang.org/tsconfig#baseUrl
