@@ -22,7 +22,7 @@ export default nr(({ command, task, script }) => {
     ]
   });
 
-  script('postInstall', {
+  script('postPrepare', {
     group: 'Lifecycles',
     description: 'Run various post-install tasks.',
     run: [
