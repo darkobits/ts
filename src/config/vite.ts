@@ -128,6 +128,11 @@ export const library = createViteConfigurationPreset(async context => {
       typescriptPlugin({
         exclude: [TEST_FILES],
         compilerOptions: {
+          // The user should have set either rootDir or baseUrl in their
+          // tsconfig.json, but we actually need both to be set to the same
+          // value to ensure Typescript compiles declarations properly.
+          rootDir: context.srcDir,
+          baseUrl: context.srcDir,
           // Suppresses warnings from the plugin. Because we are only using this
           // plugin to output declaration files, this setting has no effect on
           // source output anyway.

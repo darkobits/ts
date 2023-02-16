@@ -4,9 +4,9 @@ import {
   expect
 } from 'vitest';
 
-// This tests that Vitest works with our configured path mappings.
 import log from 'lib/log';
 
+// This tests that Vitest works with our configured path mappings.
 
 describe('Vitest', () => {
   it('should initialize and run test files.', () => {

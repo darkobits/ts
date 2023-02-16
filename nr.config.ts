@@ -4,7 +4,7 @@ import { nr } from './src';
 import log from './src/lib/log';
 
 
-export default nr(({ command, task, script }) => {
+export default nr(({ command, task, script, isCI }) => {
   script('docs', {
     description: `Start a local ${log.chalk.white.bold('Docsify')} server that serves our documentation.`,
     run: [
@@ -40,6 +40,10 @@ export default nr(({ command, task, script }) => {
     group: 'Lifecycles',
     description: 'Run various post-build tasks.',
     run: [
+      isCI ? [] : [
+        command.node('fixtures-cjs', ['./fixtures/cjs/index.js']),
+        command.node('fixtures-esm', ['./fixtures/esm/index.js'])
+      ],
       // Use re-pack to re-pack the output directory.
       command('re-pack', ['re-pack'])
     ]
