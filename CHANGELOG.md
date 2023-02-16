@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.14.1](https://github.com/darkobits/ts/compare/v0.14.0...v0.14.1) (2023-02-16)
+
+
+### ✨ Features
+
+* **vite:** Library preset emulates Babel's `copyFiles` option. ([e402ebe](https://github.com/darkobits/ts/commit/e402ebe7414f6e730f1249436f09af217ae649be))
+
+
+### 📖 Documentation
+
+* Update documentation. ([4ab6660](https://github.com/darkobits/ts/commit/4ab666089c429c039334cebe69cb5a54cedfa20e))
+
+
+### 🏗 Chores
+
+* **deps:** Update dependencies. ([361feb1](https://github.com/darkobits/ts/commit/361feb1320f6d8dbc238c7f47318a7e4c8ec9385))
+* **deps:** Update dependencies. ([49c947d](https://github.com/darkobits/ts/commit/49c947d674b0257cd9e8016dea36f3e23315b55a))
+* Misc. cleanup. ([695192f](https://github.com/darkobits/ts/commit/695192f111dfe9ca530a96be51d3f831daf0568f))
+* Refactor package scripts. ([52c0a90](https://github.com/darkobits/ts/commit/52c0a9059459bc8caaf5c132a7165a94828fe8ce))
+
 ## [0.14.0](https://github.com/darkobits/ts/compare/v0.14.0-beta.6...v0.14.0) (2023-02-14)
 
 
