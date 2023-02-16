@@ -1,5 +1,15 @@
 import type { NormalizedPackageJson } from 'read-pkg-up';
 import type { UserConfig, ConfigEnv } from 'vite';
+import type { InlineConfig } from 'vitest';
+
+
+/**
+ * Custom type we use for Vite configuration to prevent false type errors.
+ */
+export interface ViteConfigurationScaffold extends UserConfig {
+  test?: InlineConfig;
+  plugins: NonNullable<UserConfig['plugins']>;
+}
 
 
 /**

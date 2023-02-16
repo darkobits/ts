@@ -17,6 +17,8 @@ import {
   interopRequireDefault
 } from '../lib/utils';
 
+import type { ViteConfigurationScaffold } from 'etc/types';
+
 
 // Fix default imports for problematic packages.
 const tsconfigPathsPlugin = interopRequireDefault(tsconfigPathsPluginExport, 'vite-tsconfig-paths');
@@ -63,27 +65,10 @@ export const library = createViteConfigurationPreset(async context => {
 
   if (entry.length === 0) throw new Error(`[vite-config] No suitable entries found in ${context.srcDir}`);
 
-  // Compute files to copy and return an array of targets suitable for using
-  // with vite-plugin-static-copy.
-  const filesToCopy = (await glob([
-    `${context.srcDir}/**/*`,
-    `!${SOURCE_FILES}`,
-    `!${TEST_FILES}`
-  ], {
-    cwd: context.root
-  })).map(filePath => {
-    // Produces something like 'src/foo/bar/baz.ts'.
-    const src = path.relative(context.root, filePath);
-
-    // Produces something like 'foo/bar'.
-    const dest = path.dirname(src).split(path.sep).slice(1).join(path.sep);
-    return { src, dest };
-  });
-
   // Global source map setting used by various plug-ins below.
   const sourceMap = true;
 
-  return {
+  const config: ViteConfigurationScaffold = {
     build: {
       // Empty the output directory on build start.
       emptyOutDir: true,
@@ -97,66 +82,126 @@ export const library = createViteConfigurationPreset(async context => {
       // We don't need to minify code in library mode.
       minify: false
     },
-    // Configuration for Vitest.
-    test: {
-      deps: {
-        interopDefault: true
-      },
-      coverage: {
-        all: true,
-        include: entry
-      },
-      include: [TEST_FILES]
-    },
-    plugins: [
-      // This plugin allows Rollup to resolve and re-write import/require
-      // statements in our source code.
-      tsconfigPathsPlugin({ root: context.root }),
-      // This plugin ensures source files are not bundled together and that all
-      // node modules are externalized.
-      noBundlePlugin({ root: context.srcDir }),
-      // This plugin is responsible for type-checking the project and outputting
-      // declaration files. It reads the project's tsconfig.json automatically,
-      // so the below configuration is only overrides.
-      typescriptPlugin({
-        exclude: [TEST_FILES],
-        compilerOptions: {
-          // The user should have set either rootDir or baseUrl in their
-          // tsconfig.json, but we actually need both to be set to the same
-          // value to ensure Typescript compiles declarations properly.
-          rootDir: context.srcDir,
-          baseUrl: context.srcDir,
-          // Suppresses warnings from the plugin. Because we are only using this
-          // plugin to output declaration files, this setting has no effect on
-          // source output anyway.
-          module: 'esnext',
-          // Ensure we only emit declaration files; all other source should be
-          // processed by Vite/Rollup.
-          emitDeclarationOnly: true,
-          // Causes the build to fail if type errors are present.
-          noEmitOnError: true,
-          // If we have build.sourcemap set to `true`, this must also be `true`
-          // or the plugin will issue a warning.
-          sourceMap
-        }
-      }),
-      // This plugin is responsible for re-writing import/export statements in
-      // declaration files after the TypeScript compiler has finished writing
-      // them.
-      tscAliasPlugin({ configFile: context.tsConfigPath }),
-      // This plugin is responsible for linting the project.
-      eslintPlugin({
-        // cache: true,
-        failOnError: true,
-        include: [SOURCE_FILES]
-      }),
-      // This plugin ensures shebangs are preserved in files that have them.
-      // This is needed when building CLIs.
-      preserveShebangPlugin(),
-      // This plugin copies all non-source and non-test files to the output
-      // directory. Per our configuration, directory structure will be
-      // preserved.
-      viteStaticCopy({ targets: filesToCopy })
-    ]
+    plugins: []
   };
+
+
+  // ----- Vitest Configuration ------------------------------------------------
+
+  config.test = {
+    deps: {
+      interopDefault: true
+    },
+    coverage: {
+      all: true,
+      include: entry
+    },
+    include: [TEST_FILES]
+  };
+
+
+  // ----- Plugin: TypeScript --------------------------------------------------
+
+  // This plugin is responsible for type-checking the project and outputting
+  // declaration files. It reads the project's tsconfig.json automatically,
+  // so the below configuration is only overrides.
+  config.plugins.push(typescriptPlugin({
+    exclude: [TEST_FILES],
+    compilerOptions: {
+      // The user should have set either rootDir or baseUrl in their
+      // tsconfig.json, but we actually need both to be set to the same
+      // value to ensure Typescript compiles declarations properly.
+      rootDir: context.srcDir,
+      baseUrl: context.srcDir,
+      // Suppresses warnings from the plugin. Because we are only using this
+      // plugin to output declaration files, this setting has no effect on
+      // source output anyway.
+      module: 'esnext',
+      // Ensure we only emit declaration files; all other source should be
+      // processed by Vite/Rollup.
+      emitDeclarationOnly: true,
+      // Causes the build to fail if type errors are present.
+      noEmitOnError: true,
+      // If we have build.sourcemap set to `true`, this must also be `true`
+      // or the plugin will issue a warning.
+      sourceMap
+    }
+  }));
+
+
+  // ----- Plugin: tsconfig-paths ----------------------------------------------
+
+  // This plugin allows Rollup to resolve import/require statements in
+  // source files by using path mappings configured in the project's
+  // tsconfig.json file.
+  config.plugins.push(tsconfigPathsPlugin({ root: context.root }));
+
+
+  // ----- Plugin: tsc-alias ---------------------------------------------------
+
+  // This plugin is responsible for resolving import/export statements to
+  // relative paths in declaration files after the TypeScript compiler has
+  // finished writing them. This is a requirement for the declaration files
+  // to work for consumers, and TypeScript will not resolve these paths on
+  // its own.
+  config.plugins.push(tscAliasPlugin({ configFile: context.tsConfigPath }));
+
+
+  // ----- Plugin: No Bundle ---------------------------------------------------
+
+  // This plugin ensures source files are not bundled together and that all
+  // node modules are externalized.
+  config.plugins.push(noBundlePlugin({ root: context.srcDir }));
+
+
+  // ----- Plugin: Preserve Shebangs -------------------------------------------
+
+  // This plugin ensures shebangs are preserved in files that have them.
+  // This is needed when building CLIs.
+  config.plugins.push(preserveShebangPlugin());
+
+
+  // ----- Plugin: Copy Files --------------------------------------------------
+
+  // Compute files to copy and return an array of targets suitable for using
+  // with vite-plugin-static-copy.
+  const filesToCopy = (await glob([
+    `${context.srcDir}/**/*`,
+    `!${SOURCE_FILES}`,
+    `!${TEST_FILES}`
+  ], {
+    cwd: context.root
+  })).map(filePath => {
+    // Produces something like 'src/foo/bar/baz.ts'.
+    const src = path.relative(context.root, filePath);
+    // Produces something like 'foo/bar'.
+    const dest = path.dirname(src).split(path.sep).slice(1).join(path.sep);
+    return { src, dest };
+  });
+
+  // This plugin copies all non-source and non-test files to the output folder.
+  // Per our configuration, directory structure will be preserved. We only add
+  // this plugin to the build if there are actually files to be copied because
+  // it will issue a warning otherwise.
+  if (filesToCopy) {
+    config.plugins.push(viteStaticCopy({ targets: filesToCopy }));
+  }
+
+
+  // ----- Plugin: ESLint ------------------------------------------------------
+
+  const hasEslintConfig = (await glob(['.eslintrc.*'], { cwd: context.root })).length > 0;
+
+  // Conditionally add the ESLint plugin to the compilation if the user has an
+  // ESLint configuration file present.
+  if (hasEslintConfig) {
+    config.plugins.push(eslintPlugin({
+      // cache: true,
+      failOnError: true,
+      include: [SOURCE_FILES]
+    }));
+  }
+
+
+  return config;
 });
