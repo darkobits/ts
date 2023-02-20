@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.14.8](https://github.com/darkobits/ts/compare/v0.14.7...v0.14.8) (2023-02-20)
+
+
+### 🐞 Bug Fixes
+
+* Configuration preset factories may modify context in-place. ([e47fa80](https://github.com/darkobits/ts/commit/e47fa80857f0d31b8d6f99eafa0e47bc2fccb318))
+
 ## [0.14.7](https://github.com/darkobits/ts/compare/v0.14.6...v0.14.7) (2023-02-20)
 
 
