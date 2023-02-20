@@ -45,6 +45,14 @@
     // See more: https://www.typescriptlang.org/tsconfig#emitDecoratorMetadata
     "emitDecoratorMetadata": true,
 
+    // Generate .d.ts files from TypeScript and JavaScript files in your project.
+    // See more: https://www.typescriptlang.org/tsconfig#declaration
+    "declaration": true,
+
+    // Only output d.ts files and not JavaScript files.
+    // See more: https://www.typescriptlang.org/tsconfig#emitDeclarationOnly
+    // "emitDeclarationOnly": true,
+
     // Emit additional JavaScript to ease support for importing CommonJS
     // modules. This enables allowSyntheticDefaultImports for type
     // compatibility.
@@ -83,10 +91,6 @@
 
     // Create source map files for emitted JavaScript files.
     // See more: https://www.typescriptlang.org/tsconfig#sourceMap
-    "sourceMap": true,
-
-    // Generate .d.ts files from TypeScript and JavaScript files in your project.
-    // See more: https://www.typescriptlang.org/tsconfig#declaration
-    "declaration": true
+    "sourceMap": true
   }
 }

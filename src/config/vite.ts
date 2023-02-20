@@ -4,7 +4,7 @@ import typescriptPlugin from '@rollup/plugin-typescript';
 import glob from 'fast-glob';
 // @ts-expect-error - Package has no type definitions.
 import preserveShebangPlugin from 'rollup-plugin-preserve-shebang';
-import eslintPluginExport from 'vite-plugin-eslint';
+import checkerPluginExport from 'vite-plugin-checker';
 // @ts-expect-error - Package has no type definitions.
 import noBundlePluginExport from 'vite-plugin-no-bundle';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
@@ -17,11 +17,10 @@ import {
   interopRequireDefault
 } from '../lib/utils';
 
-
 // Fix default imports for problematic packages.
-const tsconfigPathsPlugin = interopRequireDefault(tsconfigPathsPluginExport, 'vite-tsconfig-paths');
-const eslintPlugin = interopRequireDefault(eslintPluginExport, 'vite-plugin-eslint');
+const checkerPlugin = interopRequireDefault(checkerPluginExport, 'vite-plugin-checker');
 const noBundlePlugin = interopRequireDefault(noBundlePluginExport, 'vite-plugin-no-bundle');
+const tsconfigPathsPlugin = interopRequireDefault(tsconfigPathsPluginExport, 'vite-tsconfig-paths');
 
 
 /**
@@ -98,9 +97,9 @@ export const library = createViteConfigurationPreset(async context => {
 
   // ----- Plugin: TypeScript --------------------------------------------------
 
-  // This plugin is responsible for type-checking the project and outputting
-  // declaration files. It reads the project's tsconfig.json automatically,
-  // so the below configuration is only overrides.
+  // This plugin is responsible _only_ responsible for emitting declaration
+  // files. It reads the project's tsconfig.json automatically, so the below
+  // configuration is only overrides.
   config.plugins.push(typescriptPlugin({
     exclude: [TEST_FILES],
     compilerOptions: {
@@ -116,8 +115,9 @@ export const library = createViteConfigurationPreset(async context => {
       // Ensure we only emit declaration files; all other source should be
       // processed by Vite/Rollup.
       emitDeclarationOnly: true,
-      // Causes the build to fail if type errors are present.
-      noEmitOnError: true,
+      // Do not fail if an error is encountered; vite-plugin-checker will handle
+      // type errors.
+      noEmitOnError: false,
       // If we have build.sourcemap set to `true`, this must also be `true`
       // or the plugin will issue a warning.
       sourceMap
@@ -184,17 +184,15 @@ export const library = createViteConfigurationPreset(async context => {
   }
 
 
-  // ----- Plugin: ESLint ------------------------------------------------------
+  // ----- Plugin: Checker -----------------------------------------------------
 
   const hasEslintConfig = (await glob(['.eslintrc.*'], { cwd: root })).length > 0;
 
-  // Conditionally add the ESLint plugin to the compilation if the user has an
-  // ESLint configuration file present.
-  if (hasEslintConfig) {
-    config.plugins.push(eslintPlugin({
-      // cache: true,
-      failOnError: true,
-      include: [SOURCE_FILES]
-    }));
-  }
+  config.plugins.push(checkerPlugin({
+    typescript: true,
+    eslint: hasEslintConfig
+      ? {
+        lintCommand: `eslint "${SOURCE_FILES}"`
+      } : false
+  }));
 });

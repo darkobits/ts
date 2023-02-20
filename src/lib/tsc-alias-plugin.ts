@@ -17,11 +17,9 @@ export default function tscAliasPlugin(options = {}): Plugin {
     async closeBundle() {
       const timer = log.createTimer();
 
-      log.verbose('Starting...');
-
       try {
         await replaceTscAliasPaths(options);
-        log.verbose(`Done in ${timer}.`);
+        log.verbose(log.prefix('tsc-alias'), `Done in ${timer}.`);
       } catch (err: any) {
         this.error(err);
       }
