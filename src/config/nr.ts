@@ -1,3 +1,4 @@
+import { EOL } from 'os';
 import path from 'path';
 
 import { EXTENSIONS } from '../etc/constants';
@@ -148,14 +149,17 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
 
   interface CreateReleaseScriptOptions {
     releaseType?: 'first' | 'major' | 'minor' | 'patch' | 'beta';
-    description: string;
+    description?: string;
     args?: any;
   }
 
   const createBumpScript = ({ releaseType, args, description }: CreateReleaseScriptOptions) => {
     script(releaseType ? `bump.${releaseType}` : 'bump', {
       group: 'Bump',
-      description: `Generate a change log entry and tagged commit for ${description} using ${log.chalk.white.bold('standard-version')}.`,
+      description: [
+        `Generate a change log entry and tagged commit for a ${releaseType} release using ${log.chalk.white.bold('standard-version')}.`,
+        description
+      ].filter(Boolean).join(EOL),
       run: [
         command(`standard-version-${releaseType ?? 'default'}`, [
           standardVersionCmd, {
@@ -168,37 +172,32 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
   };
 
   createBumpScript({
-    description: 'a release'
-  });
-
-  createBumpScript({
-    releaseType: 'beta',
-    description: 'a beta release',
-    args: { prerelease: 'beta' }
+    description: 'The release type will be automatically computed by reviewing commits since the last release.'
   });
 
   createBumpScript({
     releaseType: 'first',
-    description: 'the first release',
     args: { firstRelease: true }
   });
 
   createBumpScript({
     releaseType: 'major',
-    description: 'a major release',
     args: { releaseAs: 'major' }
   });
 
   createBumpScript({
     releaseType: 'minor',
-    description: 'a minor release',
     args: { releaseAs: 'minor' }
   });
 
   createBumpScript({
     releaseType: 'patch',
-    description: 'a patch release',
     args: { releaseAs: 'patch' }
+  });
+
+  createBumpScript({
+    releaseType: 'beta',
+    args: { prerelease: 'beta' }
   });
 
 

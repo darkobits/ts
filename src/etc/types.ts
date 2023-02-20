@@ -4,11 +4,15 @@ import type { InlineConfig } from 'vitest';
 
 
 /**
- * Custom type we use for Vite configuration to prevent false type errors.
+ * Custom type we use for Vite configuration that has various properties
+ * pre-defined to make updating the object in-place easier.
  */
 export interface ViteConfigurationScaffold extends UserConfig {
   test?: InlineConfig;
+  build: NonNullable<UserConfig['build']>;
   plugins: NonNullable<UserConfig['plugins']>;
+  resolve: NonNullable<UserConfig['resolve']>;
+  server: NonNullable<UserConfig['server']>;
 }
 
 
@@ -58,11 +62,13 @@ export interface PackageContext {
  * the default ConfigEnv provided by Vite with the values from PackageContext
  * above.
  */
-export type ConfigurationContext = ConfigEnv & PackageContext;
+export type ConfigurationContext = ConfigEnv & PackageContext & {
+  config: ViteConfigurationScaffold;
+};
 
 
 /**
  * Signature of configuration functions passed to a Vite configuration preset.
  */
-export type CustomUserConfigFn = (context: ConfigurationContext) => UserConfig | Promise<UserConfig>;
-export type CustomUserConfigExport = UserConfig | Promise<UserConfig> | CustomUserConfigFn;
+export type CustomUserConfigFn<C extends ConfigurationContext = ConfigurationContext> = (context: C) => void | Promise<void>;
+export type CustomUserConfigExport<C extends ConfigurationContext = ConfigurationContext> = UserConfig | Promise<UserConfig> | CustomUserConfigFn<C>;

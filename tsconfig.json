@@ -5,7 +5,7 @@
     // See: https://www.typescriptlang.org/tsconfig#baseUrl
     "baseUrl": "src",
     // Output folder for all emitted files.
-    // See more: https://www.typescriptlang.org/tsconfig#outDir
+    // See: https://www.typescriptlang.org/tsconfig#outDir
     "outDir": "dist"
   }
 }

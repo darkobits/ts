@@ -8,6 +8,7 @@ export const TEST_FILE_PATTERNS = [
   'test'
 ];
 
+
 /**
  * List of common file extensions we want tools to work with.
  */

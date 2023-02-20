@@ -5,8 +5,27 @@ import * as tsConfCk from 'tsconfck';
 
 import log from './log';
 
-import type { PackageContext, CustomUserConfigExport, ConfigurationContext } from '../etc/types';
-import type { UserConfig, ConfigEnv } from 'vite';
+import type {
+  PackageContext,
+  CustomUserConfigExport,
+  ConfigurationContext,
+  ViteConfigurationScaffold
+} from '../etc/types';
+import type {
+  UserConfig,
+  ConfigEnv,
+  PluginOption
+} from 'vite';
+
+
+/**
+ * @private
+ *
+ * Uses duck-typing to determine if the provided value is Promise-like.
+ */
+function isPromise(value: any): value is PromiseLike<any> {
+  return Reflect.has(value, 'then') && Reflect.has(value, 'catch');
+}
 
 
 /**
@@ -63,9 +82,87 @@ export async function getPackageContext(): Promise<PackageContext> {
 
 
 /**
- * Used internally to create Vite configuration presets for different project
- * types. Accepts a function that will be provided a ConfigurationContext
- * object and returns a function that will be invoked by the user in their Vite
+ * Returns a ViteConfigurationScaffold.
+ */
+export function getViteConfigurationScaffold(): ViteConfigurationScaffold {
+  return {
+    build: {},
+    plugins: [],
+    resolve: {},
+    server: {},
+    test: {}
+  };
+}
+
+
+/**
+ * Provided a Vite configuration object, returns a function that accepts a
+ * plugin name and configuration value. The function then finds the plugin and
+ * merges the provided configuration object with the plugin's existing
+ * configuration.
+ */
+export function createPluginReconfigurator(config: ViteConfigurationScaffold) {
+  return async (newPluginReturnValue: PluginOption) => {
+    if (!config) return;
+
+    const existingPluginsAsFlatArray = config.plugins?.flat(1);
+
+    // A plugin factory can return a single plugin instance or an array of
+    // plugins. Since we accept a plugin factory's return value, coerce the
+    // incoming value to an array so we can deal with it uniformly.
+    const newPluginsAsFlatArray = Array.isArray(newPluginReturnValue)
+      ? newPluginReturnValue.flat(1)
+      : [newPluginReturnValue];
+
+    // Iterate over each _new_ plugin object and attempt to find its
+    // corresponding value in the current plugin configuration.
+    for (const curPlugin of newPluginsAsFlatArray) {
+      let pluginFound = false;
+
+      const resolvedPlugin = isPromise(curPlugin) ? await curPlugin : curPlugin;
+
+      if (!resolvedPlugin) continue;
+
+      // Only necessary for TypeScript; the PluginOption type contains a
+      // recursive reference to an array of itself, so no amount of flattening
+      // will ever allow us to narrow this to a non-array type.
+      if (Array.isArray(resolvedPlugin)) {
+        throw new TypeError('[reconfigurePlugin] Unexpected: Found an array in a flattened list of plugins');
+      }
+
+      for (let i = 0; i < existingPluginsAsFlatArray.length; i++) {
+        const existingPlugin = existingPluginsAsFlatArray[i];
+
+        const resolvedExistingPlugin = isPromise(existingPlugin)
+          ? await existingPlugin
+          : existingPlugin;
+
+        if (!resolvedExistingPlugin) continue;
+        if (Array.isArray(resolvedExistingPlugin)) continue;
+
+        if (resolvedPlugin.name === resolvedExistingPlugin.name) {
+          pluginFound = true;
+          existingPluginsAsFlatArray[i] = curPlugin;
+          log.verbose(log.prefix('reconfigurePlugin'), `Reconfigured plugin: ${resolvedExistingPlugin.name}`);
+          break;
+        }
+      }
+
+      if (!pluginFound) {
+        throw new Error(`[reconfigurePlugin] Unable to find an existing plugin instance for ${resolvedPlugin.name}`);
+      }
+    }
+
+    // Because we modified this value in-place, we can return it as-is.
+    config.plugins = existingPluginsAsFlatArray;
+  };
+}
+
+
+/**
+ * Used to create Vite configuration presets for different project types.
+ * Accepts a function that will be provided a ConfigurationContext object and\
+ * returns a function that will be invoked by the user in their Vite
  * configuration file (similar to Vite's defineConfig helper). This function may
  * be invoked with zero arguments, a value, or a function. Like defineConfig,
  * the provided value or function's return value will be resolved. Finally, the
@@ -75,35 +172,42 @@ export async function getPackageContext(): Promise<PackageContext> {
  * TODO: Implement Vite configuration scaffolds from tsx so users can access the
  * base configuration object and modify it in-place.
  */
-export function createViteConfigurationPreset(baseConfigurationFactory: (context: ConfigurationContext) => UserConfig | Promise<UserConfig>) {
+export function createViteConfigurationPreset<
+  C extends ConfigurationContext = ConfigurationContext
+>(baseConfigurationFactory: (context: C) => UserConfig | Promise<UserConfig>) {
   // N.B. This is the function that the user will invoke in their Vite
   // configuration file and pass an optional value/function to set configuration
   // overrides.
-  return (userConfigExport?: CustomUserConfigExport) => {
+  return (userConfigExport?: CustomUserConfigExport<C>) => {
     // N.B. This is the function that will ultimately be provided to Vite, which
     // it will invoke with the default ConfigEnv type.
     return async (configEnv: ConfigEnv) => {
       const packageContext = await getPackageContext();
+      const config = getViteConfigurationScaffold();
 
-      const configurationContext: ConfigurationContext = {
+      // @ts-expect-error - TypeScript does not like the instantiation of this
+      // type.
+      const context: C = {
         ...configEnv,
-        ...packageContext
+        ...packageContext,
+        config
       };
 
-      const baseConfig = await baseConfigurationFactory(configurationContext);
+      const baseConfig = await baseConfigurationFactory(context);
 
       // User did not provide any configuration overrides.
       if (!userConfigExport) {
         return baseConfig;
       }
 
-      // User provided a function that will return configuration overrides.
+      // User provided a function that will modify config.context in-place.
       if (typeof userConfigExport === 'function') {
-        return merge(baseConfig,  await userConfigExport(configurationContext));
+        await userConfigExport(context);
+        return merge(baseConfig,  context.config);
       }
 
-      // User provided a value or a Promise that will resolve with configuration
-      // overrides.
+      // User provided a configuration value or a Promise that will resolve with
+      // a configuration value.
       return merge(baseConfig, await userConfigExport);
     };
   };
