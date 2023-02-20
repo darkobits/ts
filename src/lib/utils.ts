@@ -12,7 +12,6 @@ import type {
   ViteConfigurationScaffold
 } from '../etc/types';
 import type {
-  UserConfig,
   ConfigEnv,
   PluginOption
 } from 'vite';

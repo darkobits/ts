@@ -63,7 +63,7 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
 
   script('build', {
     group: 'Build',
-    description: `Build, type-check, and lint the project using ${log.chalk.white.bold('TypeScript')} and ${log.chalk.white.bold('ESLint')}.`,
+    description: `Build, type-check, and lint the project using ${log.chalk.white.bold('Vite')}.`,
     timing: true,
     run: [
       command('vite-build', ['vite', ['build']])
@@ -72,7 +72,7 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
 
   script('build.watch', {
     group: 'Build',
-    description: `Continuously build and type-check the project using ${log.chalk.white.bold('TypeScript')}.`,
+    description: `Continuously build and type-check the project using ${log.chalk.white.bold('Vite')}.`,
     run: [
       command('vite-build-watch', ['vite', ['build'], { watch: true }])
     ]

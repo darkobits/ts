@@ -25,6 +25,12 @@ const noBundlePlugin = interopRequireDefault(noBundlePluginExport, 'vite-plugin-
 
 
 /**
+ * TODO: Consider making this preset work with developing a backend server, or
+ * create a separate preset for that purpose.
+ */
+
+
+/**
  * Vite configuration preset suitable for publishing libraries or CLIs to NPM.
  *
  * - Source files will not be bundled.
