@@ -23,17 +23,17 @@
     "help": "nr --scripts"
   },
   "peerDependencies": {
-    "@darkobits/eslint-plugin": "^0.3.2",
-    "@darkobits/nr": "~0.14.32",
-    "@types/node": "^18.13.0",
-    "@vitest/coverage-c8": "^0.28.5",
-    "@vitest/ui": "^0.28.5",
-    "npm-check-updates": "^16.7.4",
+    "@darkobits/eslint-plugin": "~0.3.2",
+    "@darkobits/nr": "~0.14.34",
+    "@types/node": "^18.14.0",
+    "@vitest/coverage-c8": "~0.28.5",
+    "@vitest/ui": "~0.28.5",
+    "npm-check-updates": "^16.7.5",
     "semantic-release": "^20.1.0",
     "tsconfck": "^2.0.2",
     "typescript": "~4.9.5",
-    "vite": "^4.1.1",
-    "vitest": "^0.28.5"
+    "vite": "^4.1.3",
+    "vitest": "~0.28.5"
   },
   "dependencies": {
     "@darkobits/log": "^2.0.0-beta.16",
@@ -52,7 +52,7 @@
     "tsc-alias": "^1.8.2",
     "vite-plugin-eslint": "^1.8.1",
     "vite-plugin-no-bundle": "^2.0.1",
-    "vite-plugin-static-copy": "^0.13.0",
+    "vite-plugin-static-copy": "~0.13.0",
     "vite-tsconfig-paths": "^4.0.5"
   },
   "devDependencies": {
