@@ -191,7 +191,4 @@ export const library = createViteConfigurationPreset(async context => {
       include: [SOURCE_FILES]
     }));
   }
-
-
-  return config;
 });

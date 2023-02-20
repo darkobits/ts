@@ -174,7 +174,7 @@ export function createPluginReconfigurator(config: ViteConfigurationScaffold) {
  */
 export function createViteConfigurationPreset<
   C extends ConfigurationContext = ConfigurationContext
->(baseConfigurationFactory: (context: C) => UserConfig | Promise<UserConfig>) {
+>(baseConfigurationFactory: (context: C) => void | Promise<void>) {
   // N.B. This is the function that the user will invoke in their Vite
   // configuration file and pass an optional value/function to set configuration
   // overrides.
@@ -193,22 +193,23 @@ export function createViteConfigurationPreset<
         config
       };
 
-      const baseConfig = await baseConfigurationFactory(context);
+      // This should modify context.config in-place.
+      await baseConfigurationFactory(context);
 
       // User did not provide any configuration overrides.
       if (!userConfigExport) {
-        return baseConfig;
+        return context.config;
       }
 
       // User provided a function that will modify config.context in-place.
       if (typeof userConfigExport === 'function') {
         await userConfigExport(context);
-        return merge(baseConfig,  context.config);
+        return context.config;
       }
 
       // User provided a configuration value or a Promise that will resolve with
       // a configuration value.
-      return merge(baseConfig, await userConfigExport);
+      return merge(context.config, await userConfigExport);
     };
   };
 }
