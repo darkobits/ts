@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.14.6](https://github.com/darkobits/ts/compare/v0.14.5...v0.14.6) (2023-02-20)
+
+
+### 🛠 Refactoring
+
+* Improve Vite preset factory. ([f4f0ef4](https://github.com/darkobits/ts/commit/f4f0ef4206907e1f0e317962a249b3e4773b697f))
+
+
+### 🏗 Chores
+
+* **deps:** Update dependencies. ([c704072](https://github.com/darkobits/ts/commit/c704072c04ff74054638f077c3ffdeca1fb717b2))
+
 ## [0.14.5](https://github.com/darkobits/ts/compare/v0.14.4...v0.14.5) (2023-02-16)
 
 
