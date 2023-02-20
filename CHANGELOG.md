@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.14.9-beta.0](https://github.com/darkobits/ts/compare/v0.14.8...v0.14.9-beta.0) (2023-02-20)
+
+
+### 🐞 Bug Fixes
+
+* Update package script descriptions. ([ca4709a](https://github.com/darkobits/ts/commit/ca4709a71cbb38d554c13edbb863f880dad8c053))
+
 ## [0.14.8](https://github.com/darkobits/ts/compare/v0.14.7...v0.14.8) (2023-02-20)
 
 
