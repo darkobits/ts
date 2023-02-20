@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.14.9](https://github.com/darkobits/ts/compare/v0.14.9-beta.0...v0.14.9) (2023-02-20)
+
+
+### 🐞 Bug Fixes
+
+* Resolve `outDir`. ([1962ba5](https://github.com/darkobits/ts/commit/1962ba542c37fc93407b88840a34f4de36ce477b))
+
 ## [0.14.9-beta.0](https://github.com/darkobits/ts/compare/v0.14.8...v0.14.9-beta.0) (2023-02-20)
 
 
