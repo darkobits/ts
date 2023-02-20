@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.14.10](https://github.com/darkobits/ts/compare/v0.14.9...v0.14.10) (2023-02-20)
+
+
+### 🛠 Refactoring
+
+* Use `vite-plugin-checker` for linting / type-checking. ([b772fd0](https://github.com/darkobits/ts/commit/b772fd0af245338cef3d8f7a56c5e5260bdbcba3))
+
 ## [0.14.9](https://github.com/darkobits/ts/compare/v0.14.9-beta.0...v0.14.9) (2023-02-20)
 
 
