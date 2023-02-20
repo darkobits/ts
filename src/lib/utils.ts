@@ -38,33 +38,38 @@ export async function getPackageContext(): Promise<PackageContext> {
     const { findUp } = await import('find-up');
 
     const root = process.env.VITE_ROOT ?? process.cwd();
-    log.verbose(log.prefix('getPackageContext'), log.chalk.bold('root'), root);
+    log.silly(log.prefix('getPackageContext'), log.chalk.bold('root'), root);
 
     // Find and parse package.json.
     const pkgResult = await readPackageUp({ cwd: root });
     if (!pkgResult) throw new Error('[getPackageContext] Unable to find package.json.');
     const packageJson = pkgResult.packageJson;
-    log.verbose(log.prefix('getPackageContext'), log.chalk.bold('packageJson'), log.chalk.green(pkgResult.path));
+    log.silly(log.prefix('getPackageContext'), log.chalk.bold('packageJson'), log.chalk.green(pkgResult.path));
 
     // Find tsconfig.json.
     const tsConfigPath = await findUp('tsconfig.json', { cwd: root });
     if (!tsConfigPath) throw new Error('[getPackageContext] Unable to find tsconfig.json');
-    log.verbose(log.prefix('getPackageContext'), log.chalk.bold('tsConfig'),  log.chalk.green(tsConfigPath));
+    log.silly(log.prefix('getPackageContext'), log.chalk.bold('tsConfig'),  log.chalk.green(tsConfigPath));
 
     // Parse tsconfig.json.
     const { tsconfig: tsConfig } = await tsConfCk.parse(tsConfigPath);
 
-    // Infer source root.
+    // Infer source root. This will already be an absolute directory.
     const srcDir = tsConfig.compilerOptions.baseUrl;
     if (!srcDir) throw new Error('[getPackageContext] "compilerOptions.baseUrl" must be set in tsconfig.json');
-    log.verbose(log.prefix('getPackageContext'), log.chalk.bold('srcDir'), log.chalk.green(srcDir));
+    log.silly(log.prefix('getPackageContext'), log.chalk.bold('srcDir'), log.chalk.green(srcDir));
 
-    // Infer output directory.
-    const outDir = tsConfig.compilerOptions.outDir;
+    // Infer output directory. If it is not absolute, resolve it relative to the
+    // root directory.
+    const outDir = tsConfig.compilerOptions.outDir
+      ? path.isAbsolute(tsConfig.compilerOptions.outDir)
+        ? tsConfig.compilerOptions.outDir
+        : path.resolve(root, tsConfig.compilerOptions.outDir)
+      : undefined;
     if (!outDir) throw new Error('[getPackageContext] "compilerOptions.outDir" must be set in tsconfig.json');
-    log.verbose(log.prefix('getPackageContext'), log.chalk.bold('outDir'), log.chalk.green(path.resolve(root, outDir)));
+    log.silly(log.prefix('getPackageContext'), log.chalk.bold('outDir'), log.chalk.green(path.resolve(root, outDir)));
 
-    log.verbose(log.prefix('getPackageContext'), `Done in ${timer}.`);
+    log.silly(log.prefix('getPackageContext'), `Done in ${timer}.`);
 
     return {
       root,
