@@ -54,6 +54,14 @@ export interface PackageContext {
    * Parsed and normalized package.json file.
    */
   packageJson: NormalizedPackageJson;
+
+  /**
+   * Glob patterns that may be used to match various file types in the project.
+   */
+  patterns: {
+    SOURCE_FILES: string;
+    TEST_FILES: string;
+  };
 }
 
 
@@ -70,5 +78,5 @@ export type ConfigurationContext = ConfigEnv & PackageContext & {
 /**
  * Signature of configuration functions passed to a Vite configuration preset.
  */
-export type CustomUserConfigFn<C extends ConfigurationContext = ConfigurationContext> = (context: C) => void | Promise<void>;
-export type CustomUserConfigExport<C extends ConfigurationContext = ConfigurationContext> = UserConfig | Promise<UserConfig> | CustomUserConfigFn<C>;
+export type CustomConfigurationFactory<C extends ConfigurationContext = ConfigurationContext> = (context: C) => void | Promise<void>;
+export type CustomUserConfigExport<C extends ConfigurationContext = ConfigurationContext> = UserConfig | Promise<UserConfig> | CustomConfigurationFactory<C>;

@@ -1,3 +1,5 @@
+import path from 'path';
+
 import fs from 'fs-extra';
 
 import { nr } from './src';
@@ -12,30 +14,7 @@ export default nr(({ command, task, script, isCI }) => {
     ]
   });
 
-  // When publishing this package, we use re-pack's 'publish' command to publish
-  // from the
-  script('publish', {
-    group: 'Release',
-    description: `Publish the package using ${log.chalk.white.bold('re-pack')}.`,
-    run: [
-      command('re-pack', ['re-pack', ['publish']])
-    ]
-  });
-
-  script('postPrepare', {
-    group: 'Lifecycles',
-    description: 'Run various post-install tasks.',
-    run: [
-      // Remove the 'documentation' folder created by Docsify's postinstall
-      // script on fresh installs.
-      task('rm-docsify', () => fs.rm('documentation', {
-        recursive: true,
-        force: true
-      }))
-    ]
-  });
-
-  // N.B. nr will automatically run this for us after the 'build' script is run.
+  // N.B. nr will automatically run this for us after the 'build' script.
   script('postBuild', {
     group: 'Lifecycles',
     description: 'Run various post-build tasks.',
@@ -43,9 +22,51 @@ export default nr(({ command, task, script, isCI }) => {
       isCI ? [] : [
         command.node('fixtures-cjs', ['./fixtures/cjs/index.js']),
         command.node('fixtures-esm', ['./fixtures/esm/index.js'])
-      ],
-      // Use re-pack to re-pack the output directory.
-      command('re-pack', ['re-pack'])
+      ]
+    ]
+  });
+
+  // N.B. nr will automatically run this for us after the 'prepare' script.
+  script('postPrepare', {
+    group: 'Lifecycles',
+    description: 'Run various post-install tasks.',
+    run: [
+      // On fresh installs, remove the 'documentation' folder created by
+      // Docsify's postinstall script.
+      task('rm-docsify', () => fs.rm('documentation', {
+        recursive: true,
+        force: true
+      }))
+    ]
+  });
+
+  // When publishing this package, we use re-pack's 'publish' command to publish
+  // from the .re-pack folder.
+  script('publish', {
+    group: 'Release',
+    description: `Publish the package using ${log.chalk.white.bold('re-pack')}.`,
+    run: [
+      // Re-pack the project.
+      command('re-pack', ['re-pack']),
+      // Publish the project from the re-pack directory.
+      command('re-pack', ['re-pack', ['publish']]),
+      // Remove the re-pack directory.
+      task('rm-re-pack', () => fs.rm(path.resolve('.re-pack'), {
+        recursive: true,
+        force: true
+      }))
+    ]
+  });
+
+  script('postBump', {
+    group: 'Lifecycles',
+    description: 'Publishes the project and pushes the release commit',
+    run: [
+      'script:publish',
+      command('git-push', ['git', ['push', 'origin', 'HEAD'], {
+        followTags: true,
+        setUpstream: true
+      }])
     ]
   });
 });

@@ -1,4 +1,4 @@
-import { replaceTscAliasPaths } from 'tsc-alias';
+import { replaceTscAliasPaths, type ReplaceTscAliasPathsOptions } from 'tsc-alias';
 
 import log from './log';
 
@@ -10,7 +10,7 @@ import type { Plugin } from 'vite';
  *
  * TODO: Move to own package.
  */
-export default function tscAliasPlugin(options = {}): Plugin {
+export default function tscAliasPlugin(options: ReplaceTscAliasPathsOptions = {}): Plugin {
   return {
     name: 'vite-plugin-tsc-alias',
     enforce: 'post',
