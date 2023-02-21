@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.14.11](https://github.com/darkobits/ts/compare/v0.14.10...v0.14.11) (2023-02-21)
+
+
+### 🐞 Bug Fixes
+
+* Check length of `filesToCopy`. ([ff1ec79](https://github.com/darkobits/ts/commit/ff1ec7961175d7cd3b460f7afe5475345d6f3bea))
+
 ## [0.14.10](https://github.com/darkobits/ts/compare/v0.14.9...v0.14.10) (2023-02-20)
 
 
