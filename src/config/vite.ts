@@ -179,7 +179,7 @@ export const library = createViteConfigurationPreset(async context => {
   // Per our configuration, directory structure will be preserved. We only add
   // this plugin to the build if there are actually files to be copied because
   // it will issue a warning if we pass it an empty `targets` list.
-  if (filesToCopy) {
+  if (filesToCopy.length > 0) {
     config.plugins.push(viteStaticCopy({ targets: filesToCopy }));
   }
 
