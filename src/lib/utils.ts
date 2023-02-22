@@ -232,21 +232,3 @@ export function createViteConfigurationPreset<
     };
   };
 }
-
-
-/**
- * Needed to correctly resolve default imports for certain packages that Rollup
- * does not correct-for by default. Usually, these seem to be packages built
- * with tsup.
- */
-export function interopRequireDefault<T>(packageExport: T, label?: string): T {
-  if (Reflect.has(packageExport as any, 'default')) {
-    if (label) {
-      log.silly(log.prefix('interopRequireDefault'), `Fixed default import for ${label}`);
-    }
-
-    return Reflect.get(packageExport as any, 'default');
-  }
-
-  return packageExport;
-}

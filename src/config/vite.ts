@@ -1,5 +1,6 @@
 import path from 'path';
 
+import { interopImportDefault } from '@darkobits/interop-import-default';
 import typescriptPlugin from '@rollup/plugin-typescript';
 import glob from 'fast-glob';
 // @ts-expect-error - Package has no type definitions.
@@ -12,16 +13,13 @@ import tsconfigPathsPluginExport from 'vite-tsconfig-paths';
 
 import log from '../lib/log';
 import tscAliasPlugin from '../lib/tsc-alias-plugin';
-import {
-  createViteConfigurationPreset,
-  interopRequireDefault
-} from '../lib/utils';
+import { createViteConfigurationPreset } from '../lib/utils';
 
 
 // Fix default imports for problematic packages.
-const checkerPlugin = interopRequireDefault(checkerPluginExport, 'vite-plugin-checker');
-const noBundlePlugin = interopRequireDefault(noBundlePluginExport, 'vite-plugin-no-bundle');
-const tsconfigPathsPlugin = interopRequireDefault(tsconfigPathsPluginExport, 'vite-tsconfig-paths');
+const checkerPlugin = interopImportDefault(checkerPluginExport);
+const noBundlePlugin = interopImportDefault(noBundlePluginExport);
+const tsconfigPathsPlugin = interopImportDefault(tsconfigPathsPluginExport);
 
 
 /**
