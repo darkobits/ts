@@ -41,7 +41,7 @@ export default nr(({ command, task, script, isCI }) => {
   });
 
   // When publishing this package, we use re-pack's 'publish' command to publish
-  // from the .re-pack folder.
+  // from the .re-pack folder rather than `npm publish`.
   script('publish', {
     group: 'Release',
     description: `Publish the package using ${log.chalk.white.bold('re-pack')}.`,
