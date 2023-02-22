@@ -50,6 +50,11 @@ export default nr(({ command, task, script, isCI }) => {
       command('re-pack', ['re-pack']),
       // Publish the project from the re-pack directory.
       command('re-pack', ['re-pack', ['publish']]),
+      // Push the release commit.
+      command('git-push', ['git', ['push', 'origin', 'HEAD'], {
+        setUpstream: true,
+        followTags: true
+      }]),
       // Remove the re-pack directory.
       task('rm-re-pack', () => fs.rm(path.resolve('.re-pack'), {
         recursive: true,
