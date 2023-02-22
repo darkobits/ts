@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.14.14](https://github.com/darkobits/ts/compare/v0.14.13...v0.14.14) (2023-02-22)
+
+
+### 🛠 Refactoring
+
+* **tsc-alias:** Set default options for output. ([1e05ef9](https://github.com/darkobits/ts/commit/1e05ef9936ad6c1515ba8461e5dc1d647cf9528c))
+* **vite:** Update plugins. ([e0e1677](https://github.com/darkobits/ts/commit/e0e16779955aa19a5ba6e19a9105096bb94ecb85))
+
+
+### 🏗 Chores
+
+* Update `.ci.yml`. ([dafdc54](https://github.com/darkobits/ts/commit/dafdc540c0ba26eb34426a5575482eb7926c93fe))
+* Update engines spec, add homepage. ([302405c](https://github.com/darkobits/ts/commit/302405c4265042dd36a0b7cecddc298f91c52e0e))
+* Update package scripts. ([558a837](https://github.com/darkobits/ts/commit/558a83799d36e0cce4bc4ab9ccc70d1d81a79720))
+
+
+### 📖 Documentation
+
+* Update documentation. ([c6beea3](https://github.com/darkobits/ts/commit/c6beea34a6e1182c926c9a67f6f04a2cf4e423d4))
+
 ## [0.14.13](https://github.com/darkobits/ts/compare/v0.14.12...v0.14.13) (2023-02-22)
 
 
