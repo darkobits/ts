@@ -8,8 +8,9 @@
     "type": "git",
     "url": "https://github.com/darkobits/ts"
   },
+  "homepage": "https://darkobits.github.io/ts",
   "engines": {
-    "node": ">=18",
+    "node": ">=16",
     "npm": ">=8"
   },
   "engineStrict": true,
