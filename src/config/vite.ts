@@ -2,7 +2,6 @@ import path from 'path';
 
 import { interopImportDefault } from '@darkobits/interop-import-default';
 import autoInstallPlugin from '@rollup/plugin-auto-install';
-// import rollupEslintPlugin from '@rollup/plugin-eslint';
 import typescriptPlugin from '@rollup/plugin-typescript';
 import glob from 'fast-glob';
 // @ts-expect-error - Package has no type definitions.
