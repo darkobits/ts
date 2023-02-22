@@ -245,10 +245,15 @@ export const library = createViteConfigurationPreset(async context => {
 
   // Only add this plugin to the compilation if the user has an ESLint
   // configuration file in their project root.
+  // TODO: Errors should not kill the process when running in any kind of test
+  // mode.
   if (eslintConfigResult.length > 0) {
     config.plugins.push(viteEslintPlugin({
       formatter: 'codeframe',
-      failOnError: true,
+      // Don't fail due to lint errors when running tests or when in watch mode.
+      failOnError: mode === 'test' || isWatchMode
+        ? false
+        : true,
       failOnWarning: false
     }));
   }
