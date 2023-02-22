@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.14.13](https://github.com/darkobits/ts/compare/v0.14.12...v0.14.13) (2023-02-22)
+
+
+### 🛠 Refactoring
+
+* Move `interopImportDefault` to separate package. ([55ad31c](https://github.com/darkobits/ts/commit/55ad31ceb2cb0447c7dc79e3edbc73de0fbca06a))
+
+
+### 🐞 Bug Fixes
+
+* Map `coverage.include` to root-relative paths. ([be7d4a4](https://github.com/darkobits/ts/commit/be7d4a433c56cf272fbd22a8162dc4662f405706))
+
+
+### 🏗 Chores
+
+* **deps:** Update dependencies. ([61ab923](https://github.com/darkobits/ts/commit/61ab9238e4157fba5d7f35620146096b457286ee))
+* **tsconfig:** Add `ES2022` to default `lib`. ([a9bb4a7](https://github.com/darkobits/ts/commit/a9bb4a78ef43ca211d78481684054a5314c2a930))
+
 ## [0.14.12](https://github.com/darkobits/ts/compare/v0.14.10...v0.14.12) (2023-02-21)
 
 
