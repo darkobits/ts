@@ -37,6 +37,5 @@ jobs:
         run: npx nr build
       - name: Run Tests
         run: npx nr test
-        # run: |
-        #   npx nr test.coverage
-        #   bash <(curl -s https://codecov.io/bash)
+      # - name: Upload Coverage Report
+      #   uses: codecov/codecov-action@v3
