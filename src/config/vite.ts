@@ -66,8 +66,7 @@ export const library = createViteConfigurationPreset(async context => {
   if (command === 'serve' && mode !== 'test')
     throw new Error('[preset:library] The "library" configuration preset does not support the "serve" command.');
 
-  // Compute entries, files to copy, and search for an ESLint configuration
-  // file.
+  // Compute anything we need to use async for concurrently.
   const [entry, filesToCopy, eslintConfigResult] = await Promise.all([
     glob(SOURCE_FILES, { cwd: root, ignore: [TEST_FILES] }),
     glob([`${srcDir}/**/*`, `!${SOURCE_FILES}`, `!${TEST_FILES}`], { cwd: root }),
@@ -102,14 +101,17 @@ export const library = createViteConfigurationPreset(async context => {
   // ----- Vitest Configuration ------------------------------------------------
 
   config.test = {
-    root: root,
+    root,
     name: packageJson.name,
     deps: {
       interopDefault: true
     },
     coverage: {
       all: true,
-      include: entry
+      // N.B. Vitest requires paths relative to the configured `root`, and entry
+      // files are already resolved to absolute paths. This un-resolves them to
+      // relative paths.
+      include: entry.map(entry => path.relative(root, entry))
     },
     include: [TEST_FILES]
   };
