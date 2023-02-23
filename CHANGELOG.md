@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.14.16](https://github.com/darkobits/ts/compare/v0.14.15...v0.14.16) (2023-02-23)
+
+
+### 🛠 Refactoring
+
+* **config:** Do not fail due to linting errors when testing or in watch mode. ([652c1c1](https://github.com/darkobits/ts/commit/652c1c1b138442ed5d5ca3b6d51042ed5e994996))
+
+
+### 📖 Documentation
+
+* Update documentation. ([4b8065c](https://github.com/darkobits/ts/commit/4b8065c5dcc0bd17045bad7ba74b80a1659bddd9))
+
+
+### 🏗 Chores
+
+* **deps:** Update dependencies. ([ca59577](https://github.com/darkobits/ts/commit/ca5957793e6ef9dbfdda51bd8d9e7fedb64d0eb4))
+* **standard-version:** Release commits use skip CI token. ([b3b623d](https://github.com/darkobits/ts/commit/b3b623d1656f648dca8ff84dfc909ef8ef5c512b))
+
 ## [0.14.15](https://github.com/darkobits/ts/compare/v0.14.14...v0.14.15) (2023-02-22)
 
 
