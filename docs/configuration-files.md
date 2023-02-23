@@ -2,15 +2,17 @@
 
 This section will walk you through setting up the configuration files required by the various tools used
 by `ts`. If you are already familiar with setting up these tools, this process should be
-straightforward. Each base configuration provided by `ts` comes in one of two variants depending on
-whether the underlying tool's configuration supports an `extends` option:
+straightforward.
 
-* For tools that support an `extends` option, `ts` will provide a string literal pointing to its base
-  configuration file. Simply provide this value as the `extends` option in the tool's configuration
-  file.
-* For tools that do not support `extends`, `ts` will provide a function that accepts a configuration
-  object and will perform a recursive merge with its base configuration and return the merged object to
-  the tool.
+`ts` takes one of two approaches to configuration, depending on the tool:
+
+For tools that support JavaScript configuration files that export an object or function, `ts` will
+provide a higher-order function which uses a base configuration with reasonable defaults, but will allow
+you to invoke it with your own configuration function to set any overrides you may need. The two
+configurations are then recursively merged.
+
+For tools that leverage an `extends` option (ie: ESLint), `ts` provides an appropriate plugin/preset,
+and additional configuration may be applied according to the tool's configuration schema.
 
 ---
 
@@ -18,21 +20,21 @@ whether the underlying tool's configuration supports an `extends` option:
 
 [`nr`](https://github.com/darkobits/nr) is used to manage and coordinate tasks, keeping your
 `package.json` "scripts" section terse while still giving you the flexibility to write custom scripts
-using a JavaScript or TypeScript configuration file. To configure NR, create `nr.config.js` or
-`nr.config.ts` in your project root. To use the base package scripts from `ts`, call the `nr`
+using a JavaScript or TypeScript configuration file. To configure NR, create `nr.config.ts` or
+`nr.config.js` in your project root. To use the base package scripts from `ts`, call the `nr`
 configuration function:
 
-```js
-// nr.config.js
+```ts
+// nr.config.ts
 import { nr } from '@darkobits/ts';
 
 export default nr();
 ```
 
-To define additional package scripts, pass a function to `nr`:
+To define additional package scripts or to overwrite one of the defaults, pass a function to `nr`:
 
-```js
-// nr.config.js
+```ts
+// nr.config.ts
 import { nr } from '@darkobits/ts';
 
 export default nr(({ command, script }) => {
@@ -45,7 +47,7 @@ export default nr(({ command, script }) => {
 });
 ```
 
-Once you have created this file, you can get a list of all package scripts by running:
+Once you have created this file, you can produce a list of all package scripts by running:
 
 ```
 npx nr --scripts
@@ -79,11 +81,11 @@ When configuring TypeScript, there are a few fields that _must_ be declared dire
 `tsconfig.json` because TypeScript resolves certain paths relative to the `tsconfig.json` in which they
 were defined.
 
-Additionally, `ts` uses the `baseUrl` and `outDir` settings to configure Vite, so these _must_ be set.
+In particular, `ts` uses the `baseUrl` and `outDir` settings to configure Vite, so these _must_ be set.
 
-As such, a minimal `tsconfig.json` should contain the following:
+A minimal `tsconfig.json` should therefore contain the following:
 
-```json
+```js
 // tsconfig.json
 {
   "extends": "@darkobits/ts/tsconfig.json",
@@ -103,8 +105,8 @@ well. To configure Vite, create `vite.config.js` or `vite.config.ts` in your pro
 default-export one of the Vite configuration presets from `ts`. The examples below use the "library"
 preset, suitable for building Node projects such as backend servers, CLIs, or libraries.
 
-```js
-// vite.config.js
+```ts
+// vite.config.ts
 import { vite } from '@darkobits/ts';
 
 export default vite.library();
@@ -112,8 +114,8 @@ export default vite.library();
 
 To provide additional/custom configuration:
 
-```js
-// vite.config.js
+```ts
+// vite.config.ts
 import { vite } from '@darkobits/ts';
 
 export default vite.library({
@@ -131,8 +133,8 @@ Vitest is used for unit-testing your project. By default, Vitest will use your e
 configuration file with additional options for Vitest under the `test` key. Configuration presets
 provided by `ts` ship with sensible defaults for Vitest, but these settings may be customized:
 
-```js
-// vite.config.js
+```ts
+// vite.config.ts
 import { vite } from '@darkobits/ts';
 
 export default vite.library({

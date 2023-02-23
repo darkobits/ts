@@ -1,5 +1,23 @@
 # Install
 
+### Requirements
+
+> TL;DR: Node 14 or later, NPM 8 or later.
+
+In order to use `ts`, it is recommended that you are running at least the [LTS](https://github.com/nodejs/release#release-schedule)
+version of Node, but `ts` should work on versions as old as `14.x`.
+
+Secondly, `ts` relies on the peer dependency installation strategy of NPM 8 (and later). Specifically,
+it declares all tooling that expose executable scripts (ie: Vite, ESLint, TypeScript) as peer
+dependencies, and it expects that the package manager being used will automatically install these
+dependencies _and_ link their executable scripts in the standard `node_modules/.bin` directory.
+
+You _may_ be able to configure Yarn or PNPm to mimic this behavior but, by default, both of these
+package managers implement radically different installation strategies that break the above assumptions
+and make it impossible for `ts` to expose executables properly.
+
+As such, alternative package managers are not officially supported.
+
 ### Existing Projects
 
 To add `ts` to an existing project, run:
