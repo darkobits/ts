@@ -164,6 +164,7 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
         command(`standard-version-${releaseType ?? 'default'}`, [
           standardVersionCmd, {
             preset: path.resolve(__dirname, 'changelog-preset.js'),
+            releaseCommitMessageFormat: 'chore(release): {{currentTag}}\n[skip ci]',
             ...args
           }
         ])
