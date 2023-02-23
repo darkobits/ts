@@ -12,6 +12,7 @@ import noBundlePluginExport from 'vite-plugin-no-bundle';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 import tsconfigPathsPluginExport from 'vite-tsconfig-paths';
 
+import log from '../lib/log';
 import tscAliasPlugin from '../lib/tsc-alias-plugin';
 import { createViteConfigurationPreset } from '../lib/utils';
 
@@ -26,13 +27,13 @@ const viteEslintPlugin = interopImportDefault(viteEslintPluginExport);
  * Vite configuration preset suitable for publishing libraries or CLIs to NPM.
  *
  * - Source files will not be bundled.
- * - `node_modules` will be externalized.
+ * - Dependencies will be externalized.
  * - Output format (CJS or ESM) will be inferred from the `type` field in
  *   `package.json`.
  * - Source and output directories will be inferred from `tsconfig.json`.
  * - Shebangs will be preserved in files that have them.
- * - All non-source files will be copied to the output directory as-is, similar
- *   to Babel's `copyFiles` option.
+ * - Any other files in the source directory will be copied to the output
+ *   directory as-is, similar to Babel's `copyFiles` feature.
  */
 export const library = createViteConfigurationPreset(async context => {
   /**
@@ -47,22 +48,31 @@ export const library = createViteConfigurationPreset(async context => {
 
   const { command, mode, root, srcDir, patterns: { SOURCE_FILES, TEST_FILES } } = context;
 
-  // This preset does not (yet) work with 'vite serve', so we want to issue a
-  // warning and terminate the build process when the user invokes 'vite serve'.
-  // However, Vitest _also_ invokes Vite with the 'serve' command, but we can
-  // handle that case by checking `mode` as well.
+  // It does not make sense to use 'vite serve' with this preset, so issue a
+  // warning and terminate the build when this command is used. However, Vitest
+  // invokes Vite with the 'serve' command, so handle that case by checking
+  // `mode`.
   if (command === 'serve' && mode !== 'test')
     throw new Error('[preset:library] The "library" configuration preset does not support the "serve" command.');
 
-  // Compute anything we need to use async for concurrently.
-  const [entry, filesToCopy, eslintConfigResult] = await Promise.all([
+  const [
+    // Array of all source files. To prevent bundling, we tell Rollup that each
+    // file in the project should be treated as its own entrypoint.
+    entry,
+    // Array of all files in the source directory other than source code.
+    filesToCopy,
+    // Whether the user has an ESLint configuration file. If not, we skip adding
+    // the ESLint plugin to the build.
+    eslintConfigResult
+  ] = await Promise.all([
     glob(SOURCE_FILES, { cwd: root, ignore: [TEST_FILES] }),
     glob([`${srcDir}/**/*`, `!${SOURCE_FILES}`, `!${TEST_FILES}`], { cwd: root }),
     glob(['.eslintrc.*'], { cwd: root })
   ]);
 
+  // User forgot to write any code or more likely bumbled their path config.
   if (entry.length === 0)
-    throw new Error(`[preset:library] No entry files found in ${srcDir}`);
+    throw new Error(`[preset:library] No entry files found in ${log.chalk.green(srcDir)}.`);
 
 
   // ----- Build Configuration -------------------------------------------------
@@ -72,7 +82,6 @@ export const library = createViteConfigurationPreset(async context => {
   config.build = {
     // Use the inferred output directory defined in tsconfig.json.
     outDir,
-    // Empty the output directory before writing a new compilation to it.
     emptyOutDir: true,
     // We don't need to minify this kind of project.
     minify: false,
@@ -90,7 +99,6 @@ export const library = createViteConfigurationPreset(async context => {
   config.test = {
     name: packageJson.name,
     root,
-    // Files that will be treated as test files.
     include: [TEST_FILES],
     deps: {
       // Automatically fixes default imports of modules where the intended value
@@ -99,10 +107,10 @@ export const library = createViteConfigurationPreset(async context => {
     },
     coverage: {
       all: true,
-      // Files to be considered (as source) when collecting coverage.
-      // N.B. Vitest requires paths relative to the configured `root`, and entry
-      // files are already resolved to absolute paths. This un-resolves them to
-      // relative paths.
+      // Files to be considered as source when computing coverage. Vitest
+      // requires paths relative to the configured root, and entry files are
+      // already resolved to absolute paths. This un-resolves them to relative
+      // paths.
       include: entry.map(entry => path.relative(root, entry))
     }
   };
@@ -130,32 +138,33 @@ export const library = createViteConfigurationPreset(async context => {
   // ----- Plugin: TypeScript --------------------------------------------------
 
   /**
-   * This plugin is used to emit declaration files and type-check the
-   * compilation. _only_. In watch mode, it will issue a warning when it
-   * encounters an error. Otherwise, it will throw an error.
+   * This plugin is used to emit declaration files and type-check the project.
+   * In watch mode, it will issue a warning when it encounters an error so as to
+   * not terminate the process. Otherwise, it will fail the build.
    */
   config.plugins.push(typescriptPlugin({
+    // Ensures we don't emit declarations for test files.
     exclude: [TEST_FILES],
+    // If TypeScript sees .ts files in the project root (configuration files,
+    // for example) it will assume that they need to be compiled and use the
+    // project root as a reference for the directory structure it needs to
+    // create in the output folder.
     filterRoot: srcDir,
     compilerOptions: {
-      // The user should have set either rootDir or baseUrl in their
-      // tsconfig.json, but we actually need _both_ to be set to the same
-      // value to ensure TypeScript compiles declarations properly.
-      // rootDir: srcDir,
       baseUrl: srcDir,
-      // This plugin will issue a warning if this is set to any other value.
-      // Because we are only using this plugin to output declaration files, this
-      // setting has no effect on source output.
-      module: 'esnext',
       // Ensure we only emit declaration files; all other source should be
       // processed by Vite/Rollup.
       emitDeclarationOnly: true,
       // Only fail the compilation on type-errors when not in watch mode.
       // Otherwise, issue a warning and do not kill the process.
       noEmitOnError: !isWatchMode,
-      // If we have `config.build.sourcemap` set to `true`, this must also be
-      // `true` or the plugin will issue a warning.
-      sourceMap: config.build.sourcemap
+      // This must be set to the same value as config.build.sourcemap or the
+      // plugin will throw an error.
+      sourceMap: config.build.sourcemap,
+      // The plugin will issue a warning if this is set to any other value.
+      // Because we are only using it to emit declaration files, this setting
+      // has no effect on Rollup's output.
+      module: 'esnext'
     }
   }));
 
@@ -163,12 +172,8 @@ export const library = createViteConfigurationPreset(async context => {
   // ----- Plugin: tsconfig-paths ----------------------------------------------
 
   /**
-   * This plugin allows Vite to resolve import/require specifiers in source
+   * This plugin allows Rollup to resolve import/require specifiers in source
    * files using the path mappings configured in tsconfig.json.
-   *
-   * In other words, if you can import a local project file using a custom path
-   * alias and TypeScript can find it without issue, then you can be reasonably
-   * assured that Vite will be able to resolve it during builds as well.
    *
    * See: https://github.com/aleclarson/vite-tsconfig-paths
    */
@@ -180,10 +185,10 @@ export const library = createViteConfigurationPreset(async context => {
   const { tsConfigPath } = context;
 
   /**
-   * Vite does not process declaration files emitted by TypeScript, any custom
-   * path mappings in declaration files will need to be resolved to relative
-   * paths as well. This plugin is to declaration files what tsconfig-paths is
-   * to source files.
+   * Rollup does not resolve (and by extension, re-write) import/export
+   * specifiers in declaration files, so those custom path mappings have to be
+   * re-written separately. This plugin addresses that issue by running
+   * tsc-alias after Rollup has written the bundle.
    *
    * See:
    * - https://github.com/justkey007/tsc-alias
@@ -199,7 +204,8 @@ export const library = createViteConfigurationPreset(async context => {
    * the output directory by skipping the "bundling" phase. This type of output
    * is ideal for a Node library; if the project winds up being used in an
    * application that runs in the browser, that project's build system can (and
-   * typically will) minify library code as part of its build process.
+   * typically will) bundle and minify library code as part of its build
+   * process.
    *
    * See: https://github.com/ManBearTM/vite-plugin-no-bundle
    */
@@ -210,10 +216,8 @@ export const library = createViteConfigurationPreset(async context => {
 
   /**
    * CLIs often make use of a shebang on the first line to indicate the location
-   * of the binary needed to execute the application. However Vite (and to a
-   * lesser degree, Rollup) were not designed for this purpose and strip
-   * shebangs in emitted code, causing an error when the user tries to run the
-   * application. This plugin addresses that issue by preserving shebangs.
+   * of the binary needed to execute it. Rollup strips shebangs by default.This
+   * plugin ensures they are preserved.
    *
    * See: https://github.com/developit/rollup-plugin-preserve-shebang
    */
@@ -225,8 +229,7 @@ export const library = createViteConfigurationPreset(async context => {
   /**
    * This plugin will copy all non-source files (excluding test files, and
    * preserving directory structure) from `srcDir` to `outDir`. Ths behavior was
-   * available in Babe' using its `copyFiles` option, but Vite/Rollup do not
-   * seem to have an analogous argument and have no plans to implement one.
+   * available in Babel using the `copyFiles` option.
    */
   if (filesToCopy.length > 0) {
     config.plugins.push(viteStaticCopy({
@@ -245,15 +248,11 @@ export const library = createViteConfigurationPreset(async context => {
 
   // Only add this plugin to the compilation if the user has an ESLint
   // configuration file in their project root.
-  // TODO: Errors should not kill the process when running in any kind of test
-  // mode.
   if (eslintConfigResult.length > 0) {
     config.plugins.push(viteEslintPlugin({
       formatter: 'codeframe',
       // Don't fail due to lint errors when running tests or when in watch mode.
-      failOnError: mode === 'test' || isWatchMode
-        ? false
-        : true,
+      failOnError: mode === 'test' || isWatchMode ? false : true,
       failOnWarning: false
     }));
   }
