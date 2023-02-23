@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.14.17](https://github.com/darkobits/ts/compare/v0.14.16...v0.14.17) (2023-02-23)
+
+
+### 🐞 Bug Fixes
+
+* Release commit message set via CLI. ([1f90b3f](https://github.com/darkobits/ts/commit/1f90b3f81353db1027be44ba39cb86c6e9d7b4a8))
+
 ## [0.14.16](https://github.com/darkobits/ts/compare/v0.14.15...v0.14.16) (2023-02-23)
 
 
