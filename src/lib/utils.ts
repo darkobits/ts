@@ -105,10 +105,74 @@ export async function getPackageContext(): Promise<PackageContext> {
 }
 
 
+export interface ESLintConfigurationStrategy {
+  type: 'flat' | 'legacy';
+  configFile: string;
+}
+
 /**
- * Returns a ViteConfigurationScaffold.
+ * Determines how the user has configured ESLint in their project. If a file
+ * named `eslint.config.{js,mjs,cjs}` exists, the project is using ESLint's new
+ * "flat configuration" format. If a file matching `.eslintrc` is found, the
+ * project is using ESLint's legacy configuration format.
+ *
+ * We want to prefer and prioritize flat configuration files over legacy ones,
+ * and knowing what strategy the project uses is necessary as it will affect how
+ * ESLint is invoked by our boilerplate package scripts.
  */
-export function getViteConfigurationScaffold(): ViteConfigurationScaffold {
+export async function inferESLintConfigurationStrategy(cwd: string = process.cwd()): Promise<ESLintConfigurationStrategy | false> {
+  try {
+    const { findUp } = await import('find-up');
+
+    const [
+      flatConfigFilePath,
+      legacyConfigFilePath
+    ] = await Promise.all([
+      findUp([
+        'eslint.config.js',
+        'eslint.config.mjs',
+        'eslint.config.cjs',
+        // ESLint cannot parse TypeScript configuration files... yet.
+        'eslint.config.ts',
+        'eslint.config.cts'
+      ], { cwd }),
+      findUp([
+        '.eslintrc',
+        '.eslintrc.json',
+        '.eslintrc.yml',
+        '.eslintrc.yaml',
+        '.eslintrc.js',
+        '.eslintrc.cjs',
+        '.eslintrc.mjs'
+      ], { cwd })
+    ]);
+
+    if (flatConfigFilePath) {
+      return {
+        type: 'flat',
+        configFile: flatConfigFilePath
+      };
+    }
+
+    if (legacyConfigFilePath) {
+      return {
+        type: 'legacy',
+        configFile: legacyConfigFilePath
+      };
+    }
+
+    return false;
+  } catch (err: any) {
+    log.error(log.prefix('inferESLintConfigurationStrategy'), err);
+    return false;
+  }
+}
+
+
+/**
+ * Returns a new ViteConfigurationScaffold.
+ */
+export function createViteConfigurationScaffold(): ViteConfigurationScaffold {
   return {
     build: {},
     plugins: [],
@@ -204,7 +268,7 @@ export function createViteConfigurationPreset<
     // it will invoke with the default ConfigEnv type.
     return async (configEnv: ConfigEnv) => {
       const packageContext = await getPackageContext();
-      const config = getViteConfigurationScaffold();
+      const config = createViteConfigurationScaffold();
 
       const context = {
         ...configEnv,

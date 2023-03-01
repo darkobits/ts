@@ -3,22 +3,39 @@ import path from 'path';
 
 import { EXTENSIONS } from '../etc/constants';
 import log from '../lib/log';
-import { getPackageContext } from '../lib/utils';
+import { getPackageContext, inferESLintConfigurationStrategy } from '../lib/utils';
 
 import type { ConfigurationFactory } from '@darkobits/nr';
 
 
 export default (userConfig?: ConfigurationFactory): ConfigurationFactory => async context => {
   const { command, task, script, isCI } = context;
-  const { srcDir } = await getPackageContext();
+  const { srcDir, root } = await getPackageContext();
 
 
   // ----- Lint Scripts --------------------------------------------------------
 
-  const eslintFlags = {
-    ext: EXTENSIONS.join(','),
+  const eslintConfig = await inferESLintConfigurationStrategy(root);
+
+  const eslintFlags: Record<string, any> = {
     format: 'codeframe'
   };
+
+  const eslintEnvVars: Record<string, string> = {};
+
+  if (eslintConfig) {
+    eslintFlags.config = eslintConfig.configFile;
+
+    if (eslintConfig.type === 'flat') {
+      eslintEnvVars.ESLINT_USE_FLAT_CONFIG = 'true';
+      log.silly(log.prefix('script:lint'), `Using flat ESLint configuration via ${log.chalk.green(eslintConfig.configFile)}.`);
+    } else {
+      eslintFlags.ext = EXTENSIONS.join(',');
+      log.silly(log.prefix('script:lint'), `Using legacy ESLint configuration via ${log.chalk.green(eslintConfig.configFile)}.`);
+    }
+  } else {
+    log.silly(log.prefix('script:lint'), 'Unable to determine ESLint configuration strategy.');
+  }
 
   /**
    * We need to use || here because srcDir may be an empty string, in which case
@@ -43,7 +60,11 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
     group: 'Lint',
     description: `Lint the project using ${log.chalk.white.bold('ESLint')}.`,
     run: [
-      command('eslint', ['eslint', [lintRoot], eslintFlags]),
+      command('eslint', ['eslint', [lintRoot], eslintFlags], {
+        execaOptions: {
+          env: eslintEnvVars
+        }
+      }),
       'task:eslint-log'
     ]
   });
