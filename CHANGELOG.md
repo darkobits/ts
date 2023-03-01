@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.15.0](https://github.com/darkobits/ts/compare/v0.14.17...v0.15.0) (2023-03-01)
+
+
+### 🏗 Chores
+
+* Add package keywords. ([36403fe](https://github.com/darkobits/ts/commit/36403fef425a4c777450889d948538bdbb963d45))
+* Update comments. ([56104f0](https://github.com/darkobits/ts/commit/56104f00d3c65e0aa2d4ca28a93303060d710206))
+
+
+### ✨ Features
+
+* Lint script detects flat ESLint configuration. ([82a2c41](https://github.com/darkobits/ts/commit/82a2c413ad9a1a2872b9a8167d1379b8c954a414))
+
 ## [0.14.17](https://github.com/darkobits/ts/compare/v0.14.16...v0.14.17) (2023-02-23)
 
 
