@@ -64,5 +64,13 @@
     "@types/fs-extra": "^11.0.1",
     "docsify-cli": "^4.4.4",
     "docsify-darklight-theme": "^3.2.0"
-  }
+  },
+  "keywords": [
+    "typescript",
+    "build-tool",
+    "vitest",
+    "build",
+    "vite",
+    "node"
+  ]
 }
