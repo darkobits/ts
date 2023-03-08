@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.15.1](https://github.com/darkobits/ts/compare/v0.15.0...v0.15.1) (2023-03-08)
+
+
+### 🏗 Chores
+
+* Expose ESLint config strategy to Vite processes. ([70e78c9](https://github.com/darkobits/ts/commit/70e78c95f4164aa66d76ecb2f83570c5bed5b1cc))
+
 ## [0.15.0](https://github.com/darkobits/ts/compare/v0.14.17...v0.15.0) (2023-03-01)
 
 
