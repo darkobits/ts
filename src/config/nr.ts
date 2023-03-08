@@ -87,7 +87,13 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
     description: `Build, type-check, and lint the project using ${log.chalk.white.bold('Vite')}.`,
     timing: true,
     run: [
-      command('vite-build', ['vite', ['build']])
+      command('vite-build', ['vite', ['build']], {
+        execaOptions: {
+          env: {
+            ...eslintEnvVars
+          }
+        }
+      })
     ]
   });
 
@@ -95,7 +101,13 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
     group: 'Build',
     description: `Continuously build and type-check the project using ${log.chalk.white.bold('Vite')}.`,
     run: [
-      command('vite-build-watch', ['vite', ['build'], { watch: true }])
+      command('vite-build-watch', ['vite', ['build'], { watch: true }], {
+        execaOptions: {
+          env: {
+            ...eslintEnvVars
+          }
+        }
+      })
     ]
   });
 
@@ -109,7 +121,12 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
       command('vitest', ['vitest', ['run'], {
         passWithNoTests: true
       }], {
-        preserveArgumentCasing: true
+        preserveArgumentCasing: true,
+        execaOptions: {
+          env: {
+            ...eslintEnvVars
+          }
+        }
       })
     ]
   });
@@ -125,7 +142,10 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
         preserveArgumentCasing: true,
         execaOptions: {
           // This command involves user interaction so we need to use 'inherit'.
-          stdio: 'inherit'
+          stdio: 'inherit',
+          env: {
+            ...eslintEnvVars
+          }
         }
       })
     ]
@@ -139,7 +159,12 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
         coverage: true,
         passWithNoTests: true
       }], {
-        preserveArgumentCasing: true
+        preserveArgumentCasing: true,
+        execaOptions: {
+          env: {
+            ...eslintEnvVars
+          }
+        }
       })
     ]
   });
