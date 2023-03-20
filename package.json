@@ -52,11 +52,11 @@
     "read-pkg-up": "^9.1.0",
     "rollup-plugin-preserve-shebang": "^1.0.1",
     "standard-version": "^9.5.0",
-    "tsc-alias": "^1.8.2",
-    "tsconfck": "^2.0.3",
+    "tsc-alias": "^1.8.3",
+    "tsconfck": "^2.1.0",
     "vite-plugin-eslint": "^1.8.1",
-    "vite-plugin-no-bundle": "^2.0.1",
-    "vite-plugin-static-copy": "~0.13.0",
+    "vite-plugin-no-bundle": "^2.0.2",
+    "vite-plugin-static-copy": "~0.13.1",
     "vite-tsconfig-paths": "^4.0.5"
   },
   "devDependencies": {
