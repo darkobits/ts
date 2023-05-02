@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.15.2](https://github.com/darkobits/ts/compare/v0.15.1...v0.15.2) (2023-05-02)
+
+
+### 🏗 Chores
+
+* **deps:** Update `eslint-plugin`, use flat ESLint config. ([459db2e](https://github.com/darkobits/ts/commit/459db2ea18536a9f75c4214b019e64f59b753cf9))
+* **deps:** Update dependencies. ([f1deab5](https://github.com/darkobits/ts/commit/f1deab5121e06300ea02f7b5a126288edb177d78))
+
 ## [0.15.1](https://github.com/darkobits/ts/compare/v0.15.0...v0.15.1) (2023-03-08)
 
 
