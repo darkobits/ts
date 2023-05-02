@@ -7,7 +7,6 @@ import glob from 'fast-glob';
 // @ts-expect-error - Package has no type definitions.
 import preserveShebangPlugin from 'rollup-plugin-preserve-shebang';
 import viteEslintPluginExport from 'vite-plugin-eslint';
-// @ts-expect-error - Package has no type definitions.
 import noBundlePluginExport from 'vite-plugin-no-bundle';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 import tsconfigPathsPluginExport from 'vite-tsconfig-paths';
