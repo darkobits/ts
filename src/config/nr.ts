@@ -42,7 +42,6 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
    * we want to fall back to process.cwd(), and this will not happen with ??
    * because empty strings are not considered nullish.
    */
-  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   const lintRoot = srcDir || process.cwd();
 
   /**
