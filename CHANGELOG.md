@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.15.4](https://github.com/darkobits/ts/compare/v0.15.3...v0.15.4) (2023-06-03)
+
+
+### 🐞 Bug Fixes
+
+* Add environment variables to `lint.fix` script. ([d910a8f](https://github.com/darkobits/ts/commit/d910a8f1c02d2714192690d601d54f9052d79e65))
+
 ## [0.15.3](https://github.com/darkobits/ts/compare/v0.15.2...v0.15.3) (2023-06-03)
 
 
