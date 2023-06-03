@@ -71,9 +71,12 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
   script('lint.fix', {
     group: 'Lint',
     description: `Lint the project using ${log.chalk.white.bold('ESLint')} and automatically fix any fixable errors.`,
-    // timing: true,
     run: [
-      command('eslint.fix', ['eslint', [lintRoot], { ...eslintFlags, fix: true }]),
+      command('eslint.fix', ['eslint', [lintRoot], { ...eslintFlags, fix: true }], {
+        execaOptions: {
+          env: eslintEnvVars
+        }
+      }),
       'task:eslint-log'
     ]
   });
