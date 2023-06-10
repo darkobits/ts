@@ -1,5 +1,8 @@
 import merge from 'deepmerge';
-import { replaceTscAliasPaths, type ReplaceTscAliasPathsOptions } from 'tsc-alias';
+import {
+  replaceTscAliasPaths,
+  type ReplaceTscAliasPathsOptions
+} from 'tsc-alias';
 
 import log from './log';
 
@@ -40,8 +43,6 @@ const defaultOptions: ReplaceTscAliasPathsOptions = {
 
 /**
  * Responsible for running tsc-alias on emitted declaration files.
- *
- * TODO: Move to own package.
  */
 export default function tscAliasPlugin(userOptions: ReplaceTscAliasPathsOptions = {}): Plugin {
   const options = merge(defaultOptions, userOptions);
@@ -54,7 +55,7 @@ export default function tscAliasPlugin(userOptions: ReplaceTscAliasPathsOptions 
 
       try {
         await replaceTscAliasPaths(options);
-        log.verbose(log.prefix('tsc-alias'), `Done in ${timer}.`);
+        log.verbose(log.prefix('tscAliasPlugin'), `Done in ${timer}.`);
       } catch (err: any) {
         this.error(err);
       }
