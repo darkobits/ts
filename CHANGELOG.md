@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.16.1](https://github.com/darkobits/ts/compare/v0.16.0...v0.16.1) (2023-06-10)
+
+
+### 🐞 Bug Fixes
+
+* Replace `"@vitest/coverage-c8` with `"@vitest/coverage-v8`. ([e13e1f8](https://github.com/darkobits/ts/commit/e13e1f851b4ebf0d997ca6a2f7b7cd72ab97622a))
+
 ## [0.16.0](https://github.com/darkobits/ts/compare/v0.15.4...v0.16.0) (2023-06-10)
 
 
