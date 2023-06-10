@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.16.0](https://github.com/darkobits/ts/compare/v0.15.4...v0.16.0) (2023-06-10)
+
+
+### 🏗 Chores
+
+* **deps:** Update dependencies. ([42baa21](https://github.com/darkobits/ts/commit/42baa21a70087a96d9c37fa4c83a8be305b9571c))
+
+
+### ✨ Features
+
+* Add `gitDescribe` utility. ([7f37f83](https://github.com/darkobits/ts/commit/7f37f835e7008b840e003fd1f35bff396132b370))
+
 ## [0.15.4](https://github.com/darkobits/ts/compare/v0.15.3...v0.15.4) (2023-06-03)
 
 
