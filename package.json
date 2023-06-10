@@ -27,7 +27,7 @@
     "@darkobits/eslint-plugin": "~0.4.6",
     "@darkobits/nr": "0.14.36",
     "@types/node": "^20.2.6",
-    "@vitest/coverage-c8": "~0.32.0",
+    "@vitest/coverage-v8": "^0.32.0",
     "@vitest/ui": "~0.32.0",
     "eslint": "^8.42.0",
     "npm-check-updates": "^16.10.12",
