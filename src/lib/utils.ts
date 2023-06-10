@@ -1,3 +1,4 @@
+import { execSync } from 'child_process';
 import path from 'path';
 
 import merge from 'deepmerge';
@@ -295,4 +296,31 @@ export function createViteConfigurationPreset<
       return merge(context.config, await userConfigExport);
     };
   };
+}
+
+
+/**
+ * Returns a short description of the current Git commit using 'git describe'.
+ * If the current commit has a tag pointing to it, the description will be the
+ * tag name. Otherwise, the description will include the most recent tag name
+ * and a short commit SHA for the current commit.
+ *
+ * @example
+ *
+ * 'v1.12.7'
+ * 'v1.12.7-9d2f0dc'
+ */
+export function gitDescribe() {
+  try {
+    return execSync('git describe --tags --always', { encoding: 'utf8' })
+      // Remove trailing newline.
+      .trim()
+      // Remove the 'g' that immediately precedes the commit SHA.
+      .replaceAll(/-g(\w{7,})$/g, '-$1')
+      // Replace the 'commits since last tag' segment with a dash.
+      .replaceAll(/-\d+-/g, '-');
+  } catch (err: any) {
+    log.error(log.prefix('gitDescribe'), err);
+    return '';
+  }
 }
