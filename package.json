@@ -24,9 +24,9 @@
     "help": "nr --scripts"
   },
   "peerDependencies": {
-    "@darkobits/eslint-plugin": "~0.4.6",
-    "@darkobits/nr": "0.14.36",
-    "@types/node": "^20.2.6",
+    "@darkobits/eslint-plugin": "~0.4.7",
+    "@darkobits/nr": "0.14.37",
+    "@types/node": "^20.3.0",
     "@vitest/coverage-v8": "^0.32.0",
     "@vitest/ui": "~0.32.0",
     "eslint": "^8.42.0",
