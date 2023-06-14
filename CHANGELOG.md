@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.16.2](https://github.com/darkobits/ts/compare/v0.16.1...v0.16.2) (2023-06-14)
+
+
+### 🏗 Chores
+
+* **deps:** Update dependencies. ([c0a7182](https://github.com/darkobits/ts/commit/c0a71822c6a2c43a40d76a284019031c7ec5c921))
+* **deps:** Update dependencies. ([46aca3f](https://github.com/darkobits/ts/commit/46aca3f14c793a57cc0b410e3a4c7e49b6d0fc28))
+* Update `ci.yml`. ([f85cafb](https://github.com/darkobits/ts/commit/f85cafbb89e3646aaff2de9e5101e156bfdea2af))
+* Update LICENSE. ([7a56962](https://github.com/darkobits/ts/commit/7a569620ca258f02f667c9d7993334663c710e82))
+
+
+### 🛠 Refactoring
+
+* Disable ESLint plugin, run ESLint command separately. ([63cc8b8](https://github.com/darkobits/ts/commit/63cc8b879dafa7b63b689693adab116a92a67aa2))
+
 ## [0.16.1](https://github.com/darkobits/ts/compare/v0.16.0...v0.16.1) (2023-06-10)
 
 
