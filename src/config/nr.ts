@@ -95,7 +95,8 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
             ...eslintEnvVars
           }
         }
-      })
+      }),
+      'script:lint'
     ]
   });
 

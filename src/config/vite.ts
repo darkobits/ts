@@ -6,8 +6,7 @@ import typescriptPlugin from '@rollup/plugin-typescript';
 import glob from 'fast-glob';
 // @ts-expect-error - Package has no type definitions.
 import preserveShebangPlugin from 'rollup-plugin-preserve-shebang';
-// @ts-expect-error - Package has no type definitions.
-import viteEslintPluginExport from 'vite-plugin-eslint';
+// import viteEslintPluginExport from 'vite-plugin-eslint';
 import noBundlePluginExport from 'vite-plugin-no-bundle';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 import tsconfigPathsPluginExport from 'vite-tsconfig-paths';
@@ -20,7 +19,7 @@ import { createViteConfigurationPreset } from '../lib/utils';
 // Fix default imports for problematic packages.
 const noBundlePlugin = interopImportDefault(noBundlePluginExport);
 const tsconfigPathsPlugin = interopImportDefault(tsconfigPathsPluginExport);
-const viteEslintPlugin = interopImportDefault(viteEslintPluginExport);
+// const viteEslintPlugin = interopImportDefault(viteEslintPluginExport);
 
 
 /**
@@ -34,6 +33,8 @@ const viteEslintPlugin = interopImportDefault(viteEslintPluginExport);
  * - Shebangs will be preserved in files that have them.
  * - Any other files in the source directory will be copied to the output
  *   directory as-is, similar to Babel's `copyFiles` feature.
+ *
+ * Note: ESLint plugin is disabled until it can support flat configuration.
  */
 export const library = createViteConfigurationPreset(async context => {
   /**
@@ -60,14 +61,19 @@ export const library = createViteConfigurationPreset(async context => {
     // file in the project should be treated as its own entrypoint.
     entry,
     // Array of all files in the source directory other than source code.
-    filesToCopy,
+    filesToCopy
     // Whether the user has an ESLint configuration file. If not, we skip adding
     // the ESLint plugin to the build.
-    eslintConfigResult
+    // eslintConfigResult
   ] = await Promise.all([
     glob(SOURCE_FILES, { cwd: root, ignore: [TEST_FILES] }),
-    glob([`${srcDir}/**/*`, `!${SOURCE_FILES}`, `!${TEST_FILES}`], { cwd: root }),
-    glob(['.eslintrc.*'], { cwd: root })
+    glob([`${srcDir}/**/*`, `!${SOURCE_FILES}`, `!${TEST_FILES}`], { cwd: root })
+    // glob([
+    //   '.eslintrc.*',
+    //   'eslint.config.js',
+    //   'eslint.config.mjs',
+    //   'eslint.config.cjs'
+    // ], { cwd: root })
   ]);
 
   // User forgot to write any code or more likely bumbled their path config.
@@ -248,12 +254,15 @@ export const library = createViteConfigurationPreset(async context => {
 
   // Only add this plugin to the compilation if the user has an ESLint
   // configuration file in their project root.
-  if (eslintConfigResult.length > 0) {
-    config.plugins.push(viteEslintPlugin({
-      formatter: 'codeframe',
-      // Don't fail due to lint errors when running tests or when in watch mode.
-      failOnError: mode === 'test' || isWatchMode ? false : true,
-      failOnWarning: false
-    }));
-  }
+  // if (eslintConfigResult.length > 0) {
+  //   console.log('ENV VAR', process.env.ESLINT_USE_FLAT_CONFIG);
+
+  //   config.plugins.push(viteEslintPlugin({
+  //     formatter: 'codeframe',
+  //     // Don't fail due to lint errors when running tests or when in watch
+  //     // mode.
+  //     failOnError: mode === 'test' || isWatchMode ? false : true,
+  //     failOnWarning: false
+  //   }));
+  // }
 });
