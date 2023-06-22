@@ -19,9 +19,12 @@
     // regardless of whether they are authoring their packages using ESM syntax,
     // TypeScript, or CommonJS.
     // See more: https://www.typescriptlang.org/tsconfig#module
-    "module": "ESNext",
+    "module": "NodeNext",
 
-    // Specify how TypeScript looks-up a file from a given module specifier.
+    // Specify how TypeScript looks-up a file from a given module specifier. We
+    // use the "bundler" option because, among other things, it allows us to
+    // omit file extensions from import specifiers, which are required when
+    // using strict ESM modes.
     // See more: https://www.typescriptlang.org/tsconfig#moduleResolution
     "moduleResolution": "bundler",
 
