@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.16.4](https://github.com/darkobits/ts/compare/v0.16.3...v0.16.4) (2023-06-22)
+
+
+### 🏗 Chores
+
+* Add logging for module output type. ([27d72af](https://github.com/darkobits/ts/commit/27d72af88b499204d6cfaf6b5da6ebf3a177f68a))
+* **deps:** Update dependencies. ([ae62df3](https://github.com/darkobits/ts/commit/ae62df3cdc1fa58d226cc3f99c1a68b97b82053a))
+
+
+### 🛠 Refactoring
+
+* **config:** Set `module` to `NodeNext` in tsconfig. ([4b06325](https://github.com/darkobits/ts/commit/4b06325eabf96ab48f40cabb88f21e7a4cdf9428))
+
 ## [0.16.3](https://github.com/darkobits/ts/compare/v0.16.2...v0.16.3) (2023-06-14)
 
 
