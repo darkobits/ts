@@ -21,7 +21,10 @@ export default nr(({ command, task, script, isCI }) => {
     run: [
       isCI ? [] : [
         command.node('fixtures-cjs', ['./fixtures/cjs/index.js']),
-        command.node('fixtures-esm', ['./fixtures/esm/index.js'])
+        command.node('fixtures-esm', ['./fixtures/esm/index.js']),
+        task('', () => {
+          log.info(log.prefix('smokeTest'), 'CJS / ESM smoke tests passed.');
+        })
       ]
     ]
   });
