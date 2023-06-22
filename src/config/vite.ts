@@ -85,6 +85,12 @@ export const library = createViteConfigurationPreset(async context => {
 
   const { config, outDir, packageJson } = context;
 
+  if (packageJson.type === 'module') {
+    log.verbose(log.prefix('preset:library'), `Emitting ${log.chalk.green('ESM')} because ${log.chalk.green.bold('type')} is ${log.chalk.green('module')} in package.json.`);
+  } else {
+    log.verbose(log.prefix('preset:library'), `Emitting ${log.chalk.green('CommonJS')} because ${log.chalk.green('type')} ${log.chalk.bold('is not')} ${log.chalk.green('module')} in package.json.`);
+  }
+
   config.build = {
     // Use the inferred output directory defined in tsconfig.json.
     outDir,
