@@ -14,7 +14,7 @@ export default nr(({ command, task, script, isCI }) => {
     ]
   });
 
-  // N.B. nr will automatically run this for us after the 'build' script.
+  // N.B. nr will run this after the 'build' script.
   script('postBuild', {
     group: 'Lifecycles',
     description: 'Run various post-build tasks.',
@@ -29,7 +29,7 @@ export default nr(({ command, task, script, isCI }) => {
     ]
   });
 
-  // N.B. nr will automatically run this for us after the 'prepare' script.
+  // N.B. nr will run this after the 'prepare' script.
   script('postPrepare', {
     group: 'Lifecycles',
     description: 'Run various post-install tasks.',

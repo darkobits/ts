@@ -8,6 +8,10 @@ import { getPackageContext, inferESLintConfigurationStrategy } from '../lib/util
 import type { ConfigurationFactory } from '@darkobits/nr';
 
 
+/**
+ * TODO: Make this function accept _either_ a user configuration factory _or_
+ * an NR context object.
+ */
 export default (userConfig?: ConfigurationFactory): ConfigurationFactory => async context => {
   const { command, task, script, isCI } = context;
   const { srcDir, root } = await getPackageContext();
