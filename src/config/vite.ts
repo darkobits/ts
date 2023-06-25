@@ -84,8 +84,9 @@ export const library = createViteConfigurationPreset(async context => {
   // ----- Build Configuration -------------------------------------------------
 
   const { config, outDir, packageJson } = context;
+  const isExplicitESM = packageJson.type === 'module';
 
-  if (packageJson.type === 'module') {
+  if (isExplicitESM) {
     log.verbose(log.prefix('preset:library'), `Emitting ${log.chalk.green('ESM')} because ${log.chalk.green.bold('type')} is ${log.chalk.green('module')} in package.json.`);
   } else {
     log.verbose(log.prefix('preset:library'), `Emitting ${log.chalk.green('CommonJS')} because ${log.chalk.green('type')} ${log.chalk.bold('is not')} ${log.chalk.green('module')} in package.json.`);
@@ -101,7 +102,7 @@ export const library = createViteConfigurationPreset(async context => {
     lib: {
       entry,
       // Infer output format based on the "type" setting in package.json.
-      formats: packageJson.type === 'module' ? ['es'] : ['cjs']
+      formats: isExplicitESM ? ['es'] : ['cjs']
     }
   };
 
@@ -176,7 +177,8 @@ export const library = createViteConfigurationPreset(async context => {
       // The plugin will issue a warning if this is set to any other value.
       // Because we are only using it to emit declaration files, this setting
       // has no effect on Rollup's output.
-      module: 'esnext'
+      // module: 'esnext'
+      module: isExplicitESM ? 'NodeNext' : 'ESNext'
     }
   }));
 
