@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.17.1](https://github.com/darkobits/ts/compare/v0.17.0...v0.17.1) (2023-06-26)
+
+
+### 🐞 Bug Fixes
+
+* **config:** Set TypeScript `module` to `ESNext`. ([de253bb](https://github.com/darkobits/ts/commit/de253bbe81c726ee3373184428693c0ef831d269))
+
 ## [0.17.0](https://github.com/darkobits/ts/compare/v0.16.5-beta.0...v0.17.0) (2023-06-26)
 
 
