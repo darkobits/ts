@@ -39,7 +39,5 @@
   ></a>
 </p>
 
-<br />
-<p align="center">
-  To get started with <code>ts</code>, check out the documentation at <a href="https://darkobits.github.io/ts">darkobits.github.io/ts</a>.
-</p>
+- [Documentation](https://darkobits.github.io/ts)
+- [Template Repository](https://github.com/darkobits/ts-template)
