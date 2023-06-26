@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.17.0](https://github.com/darkobits/ts/compare/v0.16.5-beta.0...v0.17.0) (2023-06-26)
+
+
+### ⚠ BREAKING CHANGES
+
+* This package now requires Node 16.
+
+### 🏗 Chores
+
+* **deps:** Update dependencies. ([530e774](https://github.com/darkobits/ts/commit/530e774f4d2c81e752a170b13c7fb534c3e553c8))
+* Require Node 16. ([537c012](https://github.com/darkobits/ts/commit/537c0122f7be4f77517a89c4f23d180da7d48aa4))
+
 ## [0.16.5-beta.0](https://github.com/darkobits/ts/compare/v0.16.4...v0.16.5-beta.0) (2023-06-25)
 
 
