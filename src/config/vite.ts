@@ -174,11 +174,10 @@ export const library = createViteConfigurationPreset(async context => {
       // This must be set to the same value as config.build.sourcemap or the
       // plugin will throw an error.
       sourceMap: config.build.sourcemap,
-      // The plugin will issue a warning if this is set to any other value.
-      // Because we are only using it to emit declaration files, this setting
-      // has no effect on Rollup's output.
-      // module: 'esnext'
-      module: isExplicitESM ? 'NodeNext' : 'ESNext'
+      // The plugin will issue a warning if this is set a value other than
+      // 'ESNext'. Because we are only using it to emit declaration files, this
+      // setting has no effect on Rollup's output.
+      module: 'ESNext'
     }
   }));
 
