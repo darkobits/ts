@@ -280,8 +280,7 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
       })
     ] : [
       'script:build',
-      'script:test',
-      'script:test.smoke'
+      'script:test'
     ]
   });
 

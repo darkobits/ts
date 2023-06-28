@@ -16,27 +16,18 @@ export default nr(({ command, task, script, isCI }) => {
 
   script('test.smoke', {
     group: 'Test',
-    description: 'Run somke tests aginst the compiled version of the project.',
+    description: 'Run smoke tests against the compiled version of the project.',
+    timing: true,
     run: [
       command.node('smoke-tests:cjs', ['./smoke-tests/cjs/index.js']),
       command.node('smoke-tests:esm', ['./smoke-tests/esm/index.js'])
-    ],
-    timing: true
+    ]
   });
-
-  // N.B. nr will run this after the 'build' script.
-  if (!isCI) {
-    script('postBuild', {
-      group: 'Lifecycle',
-      description: '[local only] Run smoke tests after building the project.',
-      run: ['script:test.smoke']
-    });
-  }
 
   // N.B. nr will run this after the 'prepare' script.
   script('postPrepare', {
     group: 'Lifecycle',
-    description: 'Removes Docsify installation artifacts.',
+    description: '[hook] After the prepare script runs, remove Docsify installation artifacts.',
     run: [
       // On fresh installs, remove the 'documentation' folder created by
       // Docsify's postinstall script.
@@ -52,6 +43,7 @@ export default nr(({ command, task, script, isCI }) => {
   script('publish', {
     group: 'Release',
     description: `Publish the package using ${log.chalk.white.bold('re-pack')}.`,
+    timing: true,
     run: [
       // Re-pack the project.
       command('re-pack', ['re-pack']),
@@ -72,7 +64,7 @@ export default nr(({ command, task, script, isCI }) => {
 
   script('postBump', {
     group: 'Lifecycle',
-    description: 'Publishes the project and pushes the release commit.',
+    description: '[hook] After a bump script is run, publishes the project and pushes the release commit.',
     run: [
       'script:publish',
       command('git-push', ['git', ['push', 'origin', 'HEAD'], {
@@ -81,4 +73,14 @@ export default nr(({ command, task, script, isCI }) => {
       }])
     ]
   });
+
+  if (!isCI) {
+    script('postBuild', {
+      group: 'Lifecycle',
+      description: '[hook] If not in a CI environment, run smoke tests after building the project.',
+      run: [
+        'script:test.smoke'
+      ]
+    });
+  }
 });
