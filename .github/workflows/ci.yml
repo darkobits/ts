@@ -36,6 +36,8 @@ jobs:
       - name: Build Project
         run: npx nr build
       - name: Run Tests
-        run: npx nr test
+        run: |
+          npx nr test
+          npx nr test.smoke
       # - name: Upload Coverage Report
       #   uses: codecov/codecov-action@v3

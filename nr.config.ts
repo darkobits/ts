@@ -14,25 +14,29 @@ export default nr(({ command, task, script, isCI }) => {
     ]
   });
 
-  // N.B. nr will run this after the 'build' script.
-  script('postBuild', {
-    group: 'Lifecycles',
-    description: 'Run various post-build tasks.',
+  script('test.smoke', {
+    group: 'Test',
+    description: 'Run somke tests aginst the compiled version of the project.',
     run: [
-      isCI ? [] : [
-        command.node('fixtures-cjs', ['./fixtures/cjs/index.js']),
-        command.node('fixtures-esm', ['./fixtures/esm/index.js']),
-        task('', () => {
-          log.info(log.prefix('smokeTest'), 'CJS / ESM smoke tests passed.');
-        })
-      ]
-    ]
+      command.node('smoke-tests:cjs', ['./smoke-tests/cjs/index.js']),
+      command.node('smoke-tests:esm', ['./smoke-tests/esm/index.js'])
+    ],
+    timing: true
   });
+
+  // N.B. nr will run this after the 'build' script.
+  if (!isCI) {
+    script('postBuild', {
+      group: 'Lifecycle',
+      description: '[local only] Run smoke tests after building the project.',
+      run: ['script:test.smoke']
+    });
+  }
 
   // N.B. nr will run this after the 'prepare' script.
   script('postPrepare', {
-    group: 'Lifecycles',
-    description: 'Run various post-install tasks.',
+    group: 'Lifecycle',
+    description: 'Removes Docsify installation artifacts.',
     run: [
       // On fresh installs, remove the 'documentation' folder created by
       // Docsify's postinstall script.
@@ -67,7 +71,7 @@ export default nr(({ command, task, script, isCI }) => {
   });
 
   script('postBump', {
-    group: 'Lifecycles',
+    group: 'Lifecycle',
     description: 'Publishes the project and pushes the release commit.',
     run: [
       'script:publish',

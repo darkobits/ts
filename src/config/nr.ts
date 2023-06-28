@@ -48,27 +48,16 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
    */
   const lintRoot = srcDir || process.cwd();
 
-  /**
-   * Hacky way to produce some sort of output from ESLint because, by default,
-   * ESLint won't output anything if no errors are found.
-   */
-  const lintTimer = log.createTimer();
-
-  task('eslint-log', () => {
-    // eslint-disable-next-line no-console
-    console.log(log.chalk.bgMagenta(' ESLint '), log.chalk.dim(`Done in ${lintTimer}.`));
-  });
-
   script('lint', {
     group: 'Lint',
     description: `Lint the project using ${log.chalk.white.bold('ESLint')}.`,
+    timing: true,
     run: [
       command('eslint', ['eslint', [lintRoot], eslintFlags], {
         execaOptions: {
           env: eslintEnvVars
         }
-      }),
-      'task:eslint-log'
+      })
     ]
   });
 
@@ -80,8 +69,7 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
         execaOptions: {
           env: eslintEnvVars
         }
-      }),
-      'task:eslint-log'
+      })
     ]
   });
 
@@ -124,6 +112,7 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
   script('test', {
     group: 'Test',
     description: `Run unit tests using ${log.chalk.white.bold('Vitest')}.`,
+    timing: true,
     run: [
       command('vitest', ['vitest', ['run'], {
         passWithNoTests: true
@@ -161,6 +150,7 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
   script('test.coverage', {
     group: 'Test',
     description: `Run unit tests using ${log.chalk.white.bold('Vitest')} and generate a coverage report.`,
+    timing: true,
     run: [
       command('vitest-coverage', ['vitest', ['run'], {
         coverage: true,
@@ -213,6 +203,7 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
         `Generate a change log entry and tagged commit for a ${releaseType} release using ${log.chalk.white.bold('standard-version')}.`,
         description
       ].filter(Boolean).join(EOL),
+      timing: true,
       run: [
         command(`standard-version-${releaseType ?? 'default'}`, [
           standardVersionCmd, {
@@ -279,17 +270,18 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
     description: 'Run after "npm install" to ensure the project builds and tests are passing.',
     timing: true,
     run: isCI ? [
-      // Don't run our prepare script in CI environments, giving consumers
-      // the granularity to build and/or test their project in discreet steps.
+      // In CI environments, skip our usual prepare steps; users can will likely
+      // need to build and test projects explicitly in such cases.
       task('skip-prepare', () => {
-        log.info(log.prefix('prepare'), [
-          'CI environment detected.',
-          `Skipping ${log.chalk.bold.green('prepare')} script.`
-        ].join(' '));
+        log.info(
+          log.prefix('prepare'),
+          log.chalk.yellow(`CI environment detected. Skipping ${log.chalk.bold('prepare')} script.`)
+        );
       })
     ] : [
       'script:build',
-      'script:test'
+      'script:test',
+      'script:test.smoke'
     ]
   });
 
