@@ -48,141 +48,106 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
    */
   const lintRoot = srcDir || process.cwd();
 
-  script('lint', {
+  script([
+    command('eslint', { args: [lintRoot, eslintFlags], env: eslintEnvVars })
+  ], {
+    name: 'lint',
     group: 'Lint',
     description: `Lint the project using ${log.chalk.white.bold('ESLint')}.`,
-    timing: true,
-    run: [
-      command('eslint', ['eslint', [lintRoot], eslintFlags], {
-        execaOptions: {
-          env: eslintEnvVars
-        }
-      })
-    ]
+    timing: true
   });
 
-  script('lint.fix', {
+  script([
+    command('eslint', { args: [lintRoot, { ...eslintFlags, fix: true }], env: eslintEnvVars })
+  ], {
+    name: 'lint.fix',
     group: 'Lint',
-    description: `Lint the project using ${log.chalk.white.bold('ESLint')} and automatically fix any fixable errors.`,
-    run: [
-      command('eslint.fix', ['eslint', [lintRoot], { ...eslintFlags, fix: true }], {
-        execaOptions: {
-          env: eslintEnvVars
-        }
-      })
-    ]
+    description: `Lint the project using ${log.chalk.white.bold('ESLint')} and automatically fix any fixable errors.`
   });
 
 
   // ----- Build Scripts -------------------------------------------------------
 
-  script('build', {
+  script([
+    command('vite', { args: ['build'], env: eslintEnvVars }),
+    'script:lint'
+  ], {
+    name: 'build',
     group: 'Build',
     description: `Build, type-check, and lint the project using ${log.chalk.white.bold('Vite')}.`,
-    timing: true,
-    run: [
-      command('vite-build', ['vite', ['build']], {
-        execaOptions: {
-          env: {
-            ...eslintEnvVars
-          }
-        }
-      }),
-      'script:lint'
-    ]
+    timing: true
   });
 
-  script('build.watch', {
+  script([
+    command('vite', { args: ['build', { watch: true }], env: eslintEnvVars })
+  ], {
+    name: 'build.watch',
     group: 'Build',
-    description: `Continuously build and type-check the project using ${log.chalk.white.bold('Vite')}.`,
-    run: [
-      command('vite-build-watch', ['vite', ['build'], { watch: true }], {
-        execaOptions: {
-          env: {
-            ...eslintEnvVars
-          }
-        }
-      })
-    ]
+    description: `Continuously build and type-check the project using ${log.chalk.white.bold('Vite')}.`
   });
 
 
   // ----- Testing Scripts -----------------------------------------------------
 
-  script('test', {
+  script([
+    command('vitest', {
+      args: ['run', { passWithNoTests: true }],
+      preserveArgumentCasing: true,
+      env: eslintEnvVars
+    })
+  ], {
+    name: 'test',
     group: 'Test',
     description: `Run unit tests using ${log.chalk.white.bold('Vitest')}.`,
-    timing: true,
-    run: [
-      command('vitest', ['vitest', ['run'], {
-        passWithNoTests: true
-      }], {
-        preserveArgumentCasing: true,
-        execaOptions: {
-          env: {
-            ...eslintEnvVars
-          }
-        }
-      })
-    ]
+    timing: true
   });
 
-  script('test.watch', {
+  script([
+    command('vitest', {
+      args: { ui: true, passWithNoTests: true },
+      preserveArgumentCasing: true,
+      // This command involves user interaction so we need to use 'inherit'.
+      stdio: 'inherit',
+      env: eslintEnvVars
+    })
+  ], {
+    name: 'test.watch',
     group: 'Test',
-    description: `Run unit tests using ${log.chalk.white.bold('Vitest')} in watch mode.`,
-    run: [
-      command('vitest-watch', ['vitest', {
-        ui: true,
-        passWithNoTests: true
-      }], {
-        preserveArgumentCasing: true,
-        execaOptions: {
-          // This command involves user interaction so we need to use 'inherit'.
-          stdio: 'inherit',
-          env: {
-            ...eslintEnvVars
-          }
-        }
-      })
-    ]
+    description: `Run unit tests using ${log.chalk.white.bold('Vitest')} in watch mode.`
   });
 
-  script('test.coverage', {
+  script([
+    command('vitest', {
+      args: ['run', { coverage: true, passWithNoTests: true }],
+      preserveArgumentCasing: true,
+      env: eslintEnvVars
+    })
+  ], {
+    name: 'test.coverage',
     group: 'Test',
     description: `Run unit tests using ${log.chalk.white.bold('Vitest')} and generate a coverage report.`,
-    timing: true,
-    run: [
-      command('vitest-coverage', ['vitest', ['run'], {
-        coverage: true,
-        passWithNoTests: true
-      }], {
-        preserveArgumentCasing: true,
-        execaOptions: {
-          env: {
-            ...eslintEnvVars
-          }
-        }
-      })
-    ]
+    timing: true
   });
 
 
   // ----- Release Scripts -----------------------------------------------------
 
-  script('release', {
+  script([
+    command('semantic-release')
+  ], {
+    name: 'release',
     description: `Create a release in a CI environment using ${log.chalk.white.bold('semantic-release')}.`,
-    group: 'Release',
-    run: [
-      command('semantic-release', ['semantic-release'])
-    ]
+    group: 'Release'
   });
 
-  script('release.local', {
+  script([
+    command('semantic-release', {
+      args: { ci: false }
+    })
+  ], {
+    name: 'release.local',
     description: `Create a release locally using ${log.chalk.white.bold('semantic-release')}.`,
-    group: 'Release',
-    run: [
-      command('semantic-release', ['semantic-release', { ci: false }])
-    ]
+    group: 'Release'
   });
 
 
@@ -197,22 +162,22 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
   }
 
   const createBumpScript = ({ releaseType, args, description }: CreateReleaseScriptOptions) => {
-    script(releaseType ? `bump.${releaseType}` : 'bump', {
+    script([
+      command(standardVersionCmd, {
+        args: {
+          preset: path.resolve(__dirname, 'changelog-preset.js'),
+          releaseCommitMessageFormat: 'chore(release): {{currentTag}}\n[skip ci]',
+          ...args
+        }
+      })
+    ], {
+      name: releaseType ? `bump.${releaseType}` : 'bump',
       group: 'Bump',
       description: [
         `Generate a change log entry and tagged commit for a ${releaseType} release using ${log.chalk.white.bold('standard-version')}.`,
         description
       ].filter(Boolean).join(EOL),
-      timing: true,
-      run: [
-        command(`standard-version-${releaseType ?? 'default'}`, [
-          standardVersionCmd, {
-            preset: path.resolve(__dirname, 'changelog-preset.js'),
-            releaseCommitMessageFormat: 'chore(release): {{currentTag}}\n[skip ci]',
-            ...args
-          }
-        ])
-      ]
+      timing: true
     });
   };
 
@@ -248,40 +213,35 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
 
   // ----- Dependency Management -----------------------------------------------
 
-  script('deps.check', {
+  script([
+    command('npm-check-updates', {
+      args: { dep: 'prod,peer,dev', format: 'group', interactive: true },
+      stdio: 'inherit'
+    })
+  ], {
+    name: 'deps.check',
     group: 'Dependency Management',
-    description: `Check for newer versions of installed dependencies using ${log.chalk.white.bold('npm-check-updates')}.`,
-    run: [
-      command('npm-check-updates', ['npm-check-updates', {
-        dep: 'prod,peer,dev',
-        format: 'group',
-        interactive: true
-      }], {
-        execaOptions: { stdio: 'inherit' }
-      })
-    ]
+    description: `Check for newer versions of installed dependencies using ${log.chalk.white.bold('npm-check-updates')}.`
   });
 
 
   // ----- Lifecycles ----------------------------------------------------------
 
-  script('prepare', {
+  script(isCI ? [
+    // In CI environments, skip our usual prepare steps; users can will likely
+    // need to build and test projects explicitly in such cases.
+    task(() => log.info(
+      log.prefix('prepare'),
+      log.chalk.yellow(`CI environment detected. Skipping ${log.chalk.bold('prepare')} script.`)
+    ))
+  ] : [
+    'script:build',
+    'script:test'
+  ], {
+    name: 'prepare',
     group: 'Lifecycle',
     description: 'Run after "npm install" to ensure the project builds and tests are passing.',
-    timing: true,
-    run: isCI ? [
-      // In CI environments, skip our usual prepare steps; users can will likely
-      // need to build and test projects explicitly in such cases.
-      task('skip-prepare', () => {
-        log.info(
-          log.prefix('prepare'),
-          log.chalk.yellow(`CI environment detected. Skipping ${log.chalk.bold('prepare')} script.`)
-        );
-      })
-    ] : [
-      'script:build',
-      'script:test'
-    ]
+    timing: true
   });
 
   if (typeof userConfig === 'function') {
