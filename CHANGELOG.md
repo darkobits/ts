@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.17.4-beta.0](https://github.com/darkobits/ts/compare/v0.17.3...v0.17.4-beta.0) (2023-06-29)
+
+
+### 🛠 Refactoring
+
+* Use new `nr` configuration file format. ([3c49869](https://github.com/darkobits/ts/commit/3c4986942e2d2c68d69d0b2b1ca8718616031a81))
+
 ## [0.17.3](https://github.com/darkobits/ts/compare/v0.17.2...v0.17.3) (2023-06-28)
 
 
