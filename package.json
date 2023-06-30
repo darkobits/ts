@@ -25,7 +25,7 @@
   },
   "peerDependencies": {
     "@darkobits/eslint-plugin": "~0.4.10",
-    "@darkobits/nr": "0.14.46-beta.2",
+    "@darkobits/nr": "~0.14.46",
     "@types/node": "^20.3.2",
     "@vitest/coverage-v8": "^0.32.2",
     "@vitest/ui": "~0.32.2",
