@@ -48,40 +48,37 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
    */
   const lintRoot = srcDir || process.cwd();
 
-  script([
+  script('lint', [
     command('eslint', { args: [lintRoot, eslintFlags], env: eslintEnvVars })
   ], {
-    name: 'lint',
     group: 'Lint',
     description: `Lint the project using ${log.chalk.white.bold('ESLint')}.`,
     timing: true
   });
 
-  script([
+  script('lint.fix', [
     command('eslint', { args: [lintRoot, { ...eslintFlags, fix: true }], env: eslintEnvVars })
   ], {
-    name: 'lint.fix',
     group: 'Lint',
-    description: `Lint the project using ${log.chalk.white.bold('ESLint')} and automatically fix any fixable errors.`
+    description: `Lint the project using ${log.chalk.white.bold('ESLint')} and automatically fix any fixable errors.`,
+    timing: true
   });
 
 
   // ----- Build Scripts -------------------------------------------------------
 
-  script([
+  script('build', [
     command('vite', { args: ['build'], env: eslintEnvVars }),
     'script:lint'
   ], {
-    name: 'build',
     group: 'Build',
     description: `Build, type-check, and lint the project using ${log.chalk.white.bold('Vite')}.`,
     timing: true
   });
 
-  script([
+  script('build.watch', [
     command('vite', { args: ['build', { watch: true }], env: eslintEnvVars })
   ], {
-    name: 'build.watch',
     group: 'Build',
     description: `Continuously build and type-check the project using ${log.chalk.white.bold('Vite')}.`
   });
@@ -89,41 +86,38 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
 
   // ----- Testing Scripts -----------------------------------------------------
 
-  script([
+  script('test', [
     command('vitest', {
       args: ['run', { passWithNoTests: true }],
       preserveArgumentCasing: true,
       env: eslintEnvVars
     })
   ], {
-    name: 'test',
     group: 'Test',
     description: `Run unit tests using ${log.chalk.white.bold('Vitest')}.`,
     timing: true
   });
 
-  script([
+  script('test.watch', [
     command('vitest', {
       args: { ui: true, passWithNoTests: true },
-      preserveArgumentCasing: true,
       // This command involves user interaction so we need to use 'inherit'.
       stdio: 'inherit',
-      env: eslintEnvVars
+      env: eslintEnvVars,
+      preserveArgumentCasing: true
     })
   ], {
-    name: 'test.watch',
     group: 'Test',
     description: `Run unit tests using ${log.chalk.white.bold('Vitest')} in watch mode.`
   });
 
-  script([
+  script('test.coverage', [
     command('vitest', {
       args: ['run', { coverage: true, passWithNoTests: true }],
       preserveArgumentCasing: true,
       env: eslintEnvVars
     })
   ], {
-    name: 'test.coverage',
     group: 'Test',
     description: `Run unit tests using ${log.chalk.white.bold('Vitest')} and generate a coverage report.`,
     timing: true
@@ -132,22 +126,16 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
 
   // ----- Release Scripts -----------------------------------------------------
 
-  script([
-    command('semantic-release')
-  ], {
-    name: 'release',
+  script('release', command('semantic-release'), {
     description: `Create a release in a CI environment using ${log.chalk.white.bold('semantic-release')}.`,
-    group: 'Release'
+    group: 'Release',
+    timing: true
   });
 
-  script([
-    command('semantic-release', {
-      args: { ci: false }
-    })
-  ], {
-    name: 'release.local',
+  script('release.local', command('semantic-release', { args: { ci: false } }), {
     description: `Create a release locally using ${log.chalk.white.bold('semantic-release')}.`,
-    group: 'Release'
+    group: 'Release',
+    timing: true
   });
 
 
@@ -162,7 +150,7 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
   }
 
   const createBumpScript = ({ releaseType, args, description }: CreateReleaseScriptOptions) => {
-    script([
+    script(releaseType ? `bump.${releaseType}` : 'bump', [
       command(standardVersionCmd, {
         args: {
           preset: path.resolve(__dirname, 'changelog-preset.js'),
@@ -171,7 +159,6 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
         }
       })
     ], {
-      name: releaseType ? `bump.${releaseType}` : 'bump',
       group: 'Bump',
       description: [
         `Generate a change log entry and tagged commit for a ${releaseType} release using ${log.chalk.white.bold('standard-version')}.`,
@@ -213,13 +200,12 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
 
   // ----- Dependency Management -----------------------------------------------
 
-  script([
+  script('deps.check', [
     command('npm-check-updates', {
       args: { dep: 'prod,peer,dev', format: 'group', interactive: true },
       stdio: 'inherit'
     })
   ], {
-    name: 'deps.check',
     group: 'Dependency Management',
     description: `Check for newer versions of installed dependencies using ${log.chalk.white.bold('npm-check-updates')}.`
   });
@@ -227,7 +213,7 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
 
   // ----- Lifecycles ----------------------------------------------------------
 
-  script(isCI ? [
+  script('prepare', isCI ? [
     // In CI environments, skip our usual prepare steps; users can will likely
     // need to build and test projects explicitly in such cases.
     task(() => log.info(
@@ -238,7 +224,6 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
     'script:build',
     'script:test'
   ], {
-    name: 'prepare',
     group: 'Lifecycle',
     description: 'Run after "npm install" to ensure the project builds and tests are passing.',
     timing: true
