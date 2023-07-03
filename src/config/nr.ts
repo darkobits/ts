@@ -8,10 +8,6 @@ import { getPackageContext, inferESLintConfigurationStrategy } from '../lib/util
 import type { ConfigurationFactory } from '@darkobits/nr';
 
 
-/**
- * TODO: Make this function accept _either_ a user configuration factory _or_
- * an NR context object.
- */
 export default (userConfig?: ConfigurationFactory): ConfigurationFactory => async context => {
   const { command, task, script, isCI } = context;
   const { srcDir, root } = await getPackageContext();
@@ -48,17 +44,19 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
    */
   const lintRoot = srcDir || process.cwd();
 
-  script('lint', [
-    command('eslint', { args: [lintRoot, eslintFlags], env: eslintEnvVars })
-  ], {
+  script('lint', command('eslint', {
+    args: [lintRoot, eslintFlags],
+    env: eslintEnvVars
+  }), {
     group: 'Lint',
     description: `Lint the project using ${log.chalk.white.bold('ESLint')}.`,
     timing: true
   });
 
-  script('lint.fix', [
-    command('eslint', { args: [lintRoot, { ...eslintFlags, fix: true }], env: eslintEnvVars })
-  ], {
+  script('lint.fix', command('eslint', {
+    args: [lintRoot, { ...eslintFlags, fix: true }],
+    env: eslintEnvVars
+  }), {
     group: 'Lint',
     description: `Lint the project using ${log.chalk.white.bold('ESLint')} and automatically fix any fixable errors.`,
     timing: true
@@ -68,7 +66,10 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
   // ----- Build Scripts -------------------------------------------------------
 
   script('build', [
-    command('vite', { args: ['build'], env: eslintEnvVars }),
+    command('vite', {
+      args: ['build'],
+      env: eslintEnvVars
+    }),
     'script:lint'
   ], {
     group: 'Build',
@@ -76,9 +77,10 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
     timing: true
   });
 
-  script('build.watch', [
-    command('vite', { args: ['build', { watch: true }], env: eslintEnvVars })
-  ], {
+  script('build.watch', command('vite', {
+    args: ['build', { watch: true }],
+    env: eslintEnvVars
+  }), {
     group: 'Build',
     description: `Continuously build and type-check the project using ${log.chalk.white.bold('Vite')}.`
   });
@@ -86,38 +88,32 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
 
   // ----- Testing Scripts -----------------------------------------------------
 
-  script('test', [
-    command('vitest', {
-      args: ['run', { passWithNoTests: true }],
-      preserveArgumentCasing: true,
-      env: eslintEnvVars
-    })
-  ], {
+  script('test', command('vitest', {
+    args: ['run', { passWithNoTests: true }],
+    preserveArgumentCasing: true,
+    env: eslintEnvVars
+  }), {
     group: 'Test',
     description: `Run unit tests using ${log.chalk.white.bold('Vitest')}.`,
     timing: true
   });
 
-  script('test.watch', [
-    command('vitest', {
-      args: { ui: true, passWithNoTests: true },
-      // This command involves user interaction so we need to use 'inherit'.
-      stdio: 'inherit',
-      env: eslintEnvVars,
-      preserveArgumentCasing: true
-    })
-  ], {
+  script('test.watch', command('vitest', {
+    args: { ui: true, passWithNoTests: true },
+    // This command involves user interaction so we need to use 'inherit'.
+    stdio: 'inherit',
+    env: eslintEnvVars,
+    preserveArgumentCasing: true
+  }), {
     group: 'Test',
     description: `Run unit tests using ${log.chalk.white.bold('Vitest')} in watch mode.`
   });
 
-  script('test.coverage', [
-    command('vitest', {
-      args: ['run', { coverage: true, passWithNoTests: true }],
-      preserveArgumentCasing: true,
-      env: eslintEnvVars
-    })
-  ], {
+  script('test.coverage', command('vitest', {
+    args: ['run', { coverage: true, passWithNoTests: true }],
+    preserveArgumentCasing: true,
+    env: eslintEnvVars
+  }), {
     group: 'Test',
     description: `Run unit tests using ${log.chalk.white.bold('Vitest')} and generate a coverage report.`,
     timing: true
@@ -132,7 +128,9 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
     timing: true
   });
 
-  script('release.local', command('semantic-release', { args: { ci: false } }), {
+  script('release.local', command('semantic-release', {
+    args: { ci: false }
+  }), {
     description: `Create a release locally using ${log.chalk.white.bold('semantic-release')}.`,
     group: 'Release',
     timing: true
@@ -150,15 +148,13 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
   }
 
   const createBumpScript = ({ releaseType, args, description }: CreateReleaseScriptOptions) => {
-    script(releaseType ? `bump.${releaseType}` : 'bump', [
-      command(standardVersionCmd, {
-        args: {
-          preset: path.resolve(__dirname, 'changelog-preset.js'),
-          releaseCommitMessageFormat: 'chore(release): {{currentTag}}\n[skip ci]',
-          ...args
-        }
-      })
-    ], {
+    script(releaseType ? `bump.${releaseType}` : 'bump', command(standardVersionCmd, {
+      args: {
+        preset: path.resolve(__dirname, 'changelog-preset.js'),
+        releaseCommitMessageFormat: 'chore(release): {{currentTag}}\n[skip ci]',
+        ...args
+      }
+    }), {
       group: 'Bump',
       description: [
         `Generate a change log entry and tagged commit for a ${releaseType} release using ${log.chalk.white.bold('standard-version')}.`,
@@ -200,12 +196,10 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
 
   // ----- Dependency Management -----------------------------------------------
 
-  script('deps.check', [
-    command('npm-check-updates', {
-      args: { dep: 'prod,peer,dev', format: 'group', interactive: true },
-      stdio: 'inherit'
-    })
-  ], {
+  script('deps.check', command('npm-check-updates', {
+    args: { dep: 'prod,peer,dev', format: 'group', interactive: true },
+    stdio: 'inherit'
+  }), {
     group: 'Dependency Management',
     description: `Check for newer versions of installed dependencies using ${log.chalk.white.bold('npm-check-updates')}.`
   });
@@ -213,14 +207,12 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
 
   // ----- Lifecycles ----------------------------------------------------------
 
-  script('prepare', isCI ? [
-    // In CI environments, skip our usual prepare steps; users can will likely
-    // need to build and test projects explicitly in such cases.
-    task(() => log.info(
-      log.prefix('prepare'),
-      log.chalk.yellow(`CI environment detected. Skipping ${log.chalk.bold('prepare')} script.`)
-    ))
-  ] : [
+  // In CI environments, skip our usual prepare steps; users can will likely
+  // need to build and test projects explicitly in such cases.
+  script('prepare', isCI ? task(() => log.info(
+    log.prefix('prepare'),
+    log.chalk.yellow(`CI environment detected. Skipping ${log.chalk.bold('prepare')} script.`)
+  )) : [
     'script:build',
     'script:test'
   ], {
@@ -229,7 +221,5 @@ export default (userConfig?: ConfigurationFactory): ConfigurationFactory => asyn
     timing: true
   });
 
-  if (typeof userConfig === 'function') {
-    await userConfig(context);
-  }
+  if (typeof userConfig === 'function') await userConfig(context);
 };

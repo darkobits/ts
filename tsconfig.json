@@ -1,11 +1,7 @@
 {
   "extends": "./src/config/tsconfig-base.json",
   "compilerOptions": {
-    // Base directory to resolve non-absolute module names.
-    // See: https://www.typescriptlang.org/tsconfig#baseUrl
     "baseUrl": "src",
-    // Output folder for all emitted files.
-    // See: https://www.typescriptlang.org/tsconfig#outDir
     "outDir": "dist"
   }
 }
