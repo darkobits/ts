@@ -11,16 +11,15 @@ export default nr(({ command, task, script, isCI }) => {
     description: `Start a local ${log.chalk.white.bold('Docsify')} server that serves our documentation.`
   });
 
-  script('test.smoke', [
-    command.node('index.js', { cwd: './smoke-tests/cjs' }),
-    command.node('index.js', { cwd: './smoke-tests/esm' })
-  ], {
+  script('test.smoke', [[
+    command.node('index.js', { cwd: './tests/fixtures/cjs' }),
+    command.node('index.js', { cwd: './tests/fixtures/esm' })
+  ]], {
     group: 'Test',
     description: 'Run smoke tests against the compiled version of the project.',
     timing: true
   });
 
-  // N.B. nr will run this after the 'prepare' script.
   script('postPrepare', [
     // Do not automatically run smoke tests in CI environments.
     !isCI && 'script:test.smoke',
@@ -50,7 +49,9 @@ export default nr(({ command, task, script, isCI }) => {
 
   script('postBump', [
     'script:publish',
-    command('git', { args: ['push', 'origin', 'HEAD', { setUpstream: true, followTags: true }] })
+    command('git', {
+      args: ['push', 'origin', 'HEAD', { setUpstream: true, followTags: true }]
+    })
   ], {
     group: 'Lifecycle',
     description: '[hook] After a bump script is run, publishes the project and pushes the release commit.'

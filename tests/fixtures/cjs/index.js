@@ -1,4 +1,4 @@
-const { vite } = require('../../dist');
+const { vite } = require('../../../dist');
 
 
 async function main() {
@@ -6,7 +6,7 @@ async function main() {
   const viteConfig = await viteConfigFn();
 
   if (typeof viteConfig !== 'object') {
-    throw new Error('[fixtures:cjs] Assertion failed.');
+    throw new TypeError('[fixtures:cjs] Assertion failed.');
   }
 }
 
