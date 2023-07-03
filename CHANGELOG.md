@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.17.5](https://github.com/darkobits/ts/compare/v0.17.4...v0.17.5) (2023-07-03)
+
+
+### 🏗 Chores
+
+* Add `withDefaultPackageScripts` export. ([192b7ef](https://github.com/darkobits/ts/commit/192b7ef8af0ba9e0de8c4dd6761f5797c10b5a6c))
+* **deps:** Update dependencies. ([6884506](https://github.com/darkobits/ts/commit/68845062eb7a3b9aaf2adc761576f6529141960a))
+* Misc. cleanup. ([0c2cd96](https://github.com/darkobits/ts/commit/0c2cd966aeb004f40888fbed2bfdfe13bd098761))
+* Reorganize tests. ([d0dd0c1](https://github.com/darkobits/ts/commit/d0dd0c1ee239274794b3b1688a373815dd7f0cc5))
+
 ## [0.17.4](https://github.com/darkobits/ts/compare/v0.17.4-beta.1...v0.17.4) (2023-06-30)
 
 
