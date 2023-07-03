@@ -25,16 +25,16 @@
   },
   "peerDependencies": {
     "@darkobits/eslint-plugin": "~0.4.10",
-    "@darkobits/nr": "~0.14.46",
-    "@types/node": "^20.3.2",
-    "@vitest/coverage-v8": "^0.32.2",
-    "@vitest/ui": "~0.32.2",
-    "eslint": "^8.43.0",
+    "@darkobits/nr": "~0.14.47",
+    "@types/node": "^20.3.3",
+    "@vitest/coverage-v8": "^0.32.3",
+    "@vitest/ui": "~0.32.3",
+    "eslint": "^8.44.0",
     "npm-check-updates": "^16.10.13",
     "semantic-release": "^21.0.6",
     "typescript": "~5.1.6",
     "vite": "^4.3.9",
-    "vitest": "~0.32.2"
+    "vitest": "~0.32.3"
   },
   "dependencies": {
     "@darkobits/interop-import-default": "^1.0.0",
@@ -46,7 +46,7 @@
     "conventional-changelog-conventionalcommits": "^6.1.0",
     "deepmerge": "^4.3.1",
     "eslint-formatter-codeframe": "^7.32.1",
-    "fast-glob": "^3.2.12",
+    "fast-glob": "^3.3.0",
     "find-up": "^6.3.0",
     "fs-extra": "^11.1.1",
     "read-pkg-up": "^9.1.0",
@@ -60,7 +60,7 @@
     "vite-tsconfig-paths": "^4.2.0"
   },
   "devDependencies": {
-    "@darkobits/re-pack": "^1.0.11",
+    "@darkobits/re-pack": "^1.0.12",
     "@types/fs-extra": "^11.0.1",
     "docsify-cli": "^4.4.4",
     "docsify-darklight-theme": "^3.2.0"
