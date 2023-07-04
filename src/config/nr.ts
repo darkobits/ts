@@ -5,10 +5,10 @@ import { EXTENSIONS } from '../etc/constants';
 import log from '../lib/log';
 import { getPackageContext, inferESLintConfigurationStrategy } from '../lib/utils';
 
-import type { ConfigurationFactory } from '@darkobits/nr';
+import type { UserConfigurationFn } from '@darkobits/nr';
 
 
-export default (userConfig?: ConfigurationFactory): ConfigurationFactory => async context => {
+export default (userConfig?: UserConfigurationFn): UserConfigurationFn => async context => {
   const { command, task, script, isCI } = context;
   const { srcDir, root } = await getPackageContext();
 
