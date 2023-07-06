@@ -17,7 +17,7 @@
   "files": [
     "dist"
   ],
-  "main": "dist/server.js",
+  "main": "dist/index.js",
   "scripts": {
     "prepare": "nr prepare",
     "prepublishOnly": "re-pack guard",
