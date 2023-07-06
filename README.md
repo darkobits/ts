@@ -39,7 +39,7 @@
   ></a>
 </p>
 
-To get started, consult the [documentation](https://darkobits.github.io/ts) or clone the
+To get started, consult the [documentation](https://darkobits.gitbook.io/ts) or clone the
 [template repository](https://github.com/darkobits/ts-template) and start building something great.
 
 ## Current Versions

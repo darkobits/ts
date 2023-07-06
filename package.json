@@ -8,7 +8,7 @@
     "type": "git",
     "url": "https://github.com/darkobits/ts"
   },
-  "homepage": "https://darkobits.github.io/ts",
+  "homepage": "https://darkobits.gitbook.io/ts",
   "engines": {
     "node": ">=16",
     "npm": ">=8"
@@ -32,6 +32,7 @@
     "eslint": "^8.44.0",
     "npm-check-updates": "^16.10.13",
     "semantic-release": "^21.0.7",
+    "standard-version": "^9.5.0",
     "typescript": "~5.1.6",
     "vite": "^4.3.9",
     "vitest": "~0.32.4"
@@ -51,7 +52,6 @@
     "fs-extra": "^11.1.1",
     "read-pkg-up": "^10.0.0",
     "rollup-plugin-preserve-shebang": "^1.0.1",
-    "standard-version": "^9.5.0",
     "tsc-alias": "^1.8.7",
     "tsconfck": "^2.1.1",
     "vite-plugin-eslint": "^1.8.1",
@@ -63,8 +63,6 @@
     "@darkobits/re-pack": "^1.0.13",
     "@types/ejs": "^3.1.2",
     "@types/fs-extra": "^11.0.1",
-    "docsify-cli": "^4.4.4",
-    "docsify-darklight-theme": "^3.2.0",
     "ejs": "^3.1.9",
     "resolve-pkg": "^2.0.0",
     "ts-node": "^10.9.1"

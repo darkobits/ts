@@ -218,7 +218,7 @@ export default (userConfig?: UserConfigurationFn): UserConfigurationFn => async 
   ], {
     group: 'Lifecycle',
     description: '[hook] Run after "npm install" to ensure the project builds and tests are passing.',
-    timing: true
+    timing: !isCI
   });
 
   if (typeof userConfig === 'function') await userConfig(context);

@@ -7,10 +7,6 @@ import log from './src/lib/log';
 
 
 export default nr(({ command, task, script, isCI }) => {
-  script('docs', command('docsify', { args: ['serve', 'docs'] }), {
-    description: `Start a local ${log.chalk.white.bold('Docsify')} server that serves our documentation.`
-  });
-
   script('test.smoke', [[
     command.node('index.js', { cwd: './tests/fixtures/cjs' }),
     command.node('index.js', { cwd: './tests/fixtures/esm' })
@@ -18,16 +14,6 @@ export default nr(({ command, task, script, isCI }) => {
     group: 'Test',
     description: 'Run smoke tests against the compiled version of the project.',
     timing: true
-  });
-
-  script('postPrepare', [
-    // Do not automatically run smoke tests in CI environments.
-    !isCI && 'script:test.smoke',
-    // Remove the 'documentation' folder created by Docsify. 🙄
-    task(() => fs.rm('documentation', { recursive: true, force: true }))
-  ], {
-    group: 'Lifecycle',
-    description: '[hook] After the prepare script runs, remove Docsify installation artifacts.'
   });
 
   // When publishing this package, we use re-pack's 'publish' command to publish
@@ -51,17 +37,22 @@ export default nr(({ command, task, script, isCI }) => {
     nodeOptions: ['--loader=ts-node/esm', '--no-warnings']
   }), {
     group: 'Lifecycle',
-    description: '[hook] Updates versions in README.',
+    description: '[hook] Update dependency versions in README.',
     timing: true
   });
 
   script('postBump', [
     'script:publish',
-    command('git', {
-      args: ['push', 'origin', 'HEAD', { setUpstream: true, followTags: true }]
-    })
+    command('git', { args: ['push', 'origin', 'HEAD', { setUpstream: true, followTags: true }] })
   ], {
     group: 'Lifecycle',
-    description: '[hook] After a bump script is run, publishes the project and pushes the release commit.'
+    description: '[hook] After the bump script, publish the project and push the release commit.'
   });
+
+  if (!isCI) {
+    script('postPrepare', 'script:test.smoke', {
+      group: 'Lifecycle',
+      description: '[hook] After the prepare script, run smoke tests.'
+    });
+  }
 });
