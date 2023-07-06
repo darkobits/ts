@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.18.0](https://github.com/darkobits/ts/compare/v0.17.6...v0.18.0) (2023-07-06)
+
+
+### ✨ Features
+
+* Add `start` script. ([c2e4936](https://github.com/darkobits/ts/commit/c2e4936219b9ba164a17814d8a0d688fc5f975a4))
+
+
+### 🏗 Chores
+
+* **deps:** Update dependencies. ([4bbe020](https://github.com/darkobits/ts/commit/4bbe0200ceac9dd0e2f1689e43f1b6931d2dffd5))
+
+
+### 📖 Documentation
+
+* Add current dependency versions to README. ([6fa37bf](https://github.com/darkobits/ts/commit/6fa37bf13e7d5844a6c81977e1c1e87bb6af289c))
+* Move documentation to GitBook. ([4d16b5e](https://github.com/darkobits/ts/commit/4d16b5e0c99f099564d3dd596be1724135ad42ec))
+
 ## [0.17.6](https://github.com/darkobits/ts/compare/v0.17.5...v0.17.6) (2023-07-04)
 
 
