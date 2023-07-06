@@ -1,6 +1,8 @@
 import { EOL } from 'os';
 import path from 'path';
 
+import waitOn from 'wait-on';
+
 import { EXTENSIONS } from '../etc/constants';
 import log from '../lib/log';
 import { getPackageContext, inferESLintConfigurationStrategy } from '../lib/utils';
@@ -10,7 +12,7 @@ import type { UserConfigurationFn } from '@darkobits/nr';
 
 export default (userConfig?: UserConfigurationFn): UserConfigurationFn => async context => {
   const { command, task, script, isCI } = context;
-  const { srcDir, root } = await getPackageContext();
+  const { srcDir, root, packageJson } = await getPackageContext();
 
 
   // ----- Lint Scripts --------------------------------------------------------
@@ -220,6 +222,48 @@ export default (userConfig?: UserConfigurationFn): UserConfigurationFn => async 
     description: '[hook] Run after "npm install" to ensure the project builds and tests are passing.',
     timing: !isCI
   });
+
+  script('start', [[
+    command('vite', {
+      args: ['build', { watch: true, logLevel: 'error' }],
+      preserveArgumentCasing: true,
+      stdio: 'inherit'
+    }),
+    script('nodemon', [
+      task(async () => {
+        const mainFile = packageJson.main;
+        if (!mainFile) throw new Error('[ts] No "main" file defined in package.json.');
+
+        // See: https://github.com/jeffbski/wait-on
+        await waitOn({
+          resources: [mainFile],
+          // How often to poll the filesystem for updates.
+          interval: 10,
+          // Stabilization time; how long we will wait after the resource
+          // becomes available to report that it's ready. This lets us add a
+          // buffer to allow the bundler to completely finish writing.
+          window: 1000
+        });
+
+        log.info(log.prefix('start'), 'Running:', log.chalk.green(mainFile));
+
+        // See: https://github.com/remy/nodemon#nodemon
+        const nodemonCommand = command('nodemon', { args: [mainFile, { quiet: true }] });
+
+        void nodemonCommand();
+      })
+    ], {
+      // TODO: Add a 'hidden' option to nr.
+      description: 'Used internally by the "start" script.'
+    })
+  ]], {
+    group: 'Lifecycle',
+    description: [
+      `• Start ${log.chalk.bold.white('Vite')} in watch mode.`,
+      `• Start ${log.chalk.bold.white('nodemon')}, watching the project's ${log.chalk.green('main')} file.`
+    ].join(EOL)
+  });
+
 
   if (typeof userConfig === 'function') await userConfig(context);
 };
