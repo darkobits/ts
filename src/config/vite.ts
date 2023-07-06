@@ -6,7 +6,6 @@ import typescriptPlugin from '@rollup/plugin-typescript';
 import glob from 'fast-glob';
 // @ts-expect-error - Package has no type definitions.
 import preserveShebangPlugin from 'rollup-plugin-preserve-shebang';
-// import viteEslintPluginExport from 'vite-plugin-eslint';
 import noBundlePluginExport from 'vite-plugin-no-bundle';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 import tsconfigPathsPluginExport from 'vite-tsconfig-paths';
@@ -15,11 +14,16 @@ import log from '../lib/log';
 import tscAliasPlugin from '../lib/tsc-alias-plugin';
 import { createViteConfigurationPreset } from '../lib/utils';
 
-
-// Fix default imports for problematic packages.
 const noBundlePlugin = interopImportDefault(noBundlePluginExport);
 const tsconfigPathsPlugin = interopImportDefault(tsconfigPathsPluginExport);
-// const viteEslintPlugin = interopImportDefault(viteEslintPluginExport);
+
+
+/**
+  * @private
+  *
+  * Very hacky way to determine if we are in watch mode or not.
+  */
+const isWatchMode = process.argv.includes('--watch');
 
 
 /**
@@ -37,14 +41,6 @@ const tsconfigPathsPlugin = interopImportDefault(tsconfigPathsPluginExport);
  * Note: ESLint plugin is disabled until it can support flat configuration.
  */
 export const library = createViteConfigurationPreset(async context => {
-  /**
-   * @private
-   *
-   * Very hacky way to determine if we are in watch mode or not.
-   */
-  const isWatchMode = process.argv.includes('--watch');
-
-
   // ----- Preflight Checks ----------------------------------------------------
 
   const { command, mode, root, srcDir, patterns: { SOURCE_FILES, TEST_FILES } } = context;
@@ -76,7 +72,8 @@ export const library = createViteConfigurationPreset(async context => {
     // ], { cwd: root })
   ]);
 
-  // User forgot to write any code or more likely bumbled their path config.
+  // User forgot to write any code or did not set up paths correctly in
+  // tsconfig.json.
   if (entry.length === 0)
     throw new Error(`[preset:library] No entry files found in ${log.chalk.green(srcDir)}.`);
 
@@ -216,9 +213,8 @@ export const library = createViteConfigurationPreset(async context => {
    * This plugin helps us preserve the directory structure of source files in
    * the output directory by skipping the "bundling" phase. This type of output
    * is ideal for a Node library; if the project winds up being used in an
-   * application that runs in the browser, that project's build system can (and
-   * typically will) bundle and minify library code as part of its build
-   * process.
+   * application that runs in the browser, that project's build system will
+   * bundle and minify library code as part of its own build process.
    *
    * See: https://github.com/ManBearTM/vite-plugin-no-bundle
    */

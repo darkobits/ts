@@ -7,6 +7,10 @@ import log from './src/lib/log';
 
 
 export default nr(({ command, task, script, isCI }) => {
+  const gitPushCommand = command('git', {
+    args: ['push', 'origin', 'HEAD', { setUpstream: true, followTags: true }]
+  });
+
   script('test.smoke', [[
     command.node('index.js', { cwd: './tests/fixtures/cjs' }),
     command.node('index.js', { cwd: './tests/fixtures/esm' })
@@ -24,7 +28,7 @@ export default nr(({ command, task, script, isCI }) => {
     // Publish the project from the re-pack directory.
     command('re-pack', { args: ['publish'] }),
     // Push the release commit.
-    command('git', { args: ['push', 'origin', 'HEAD', { setUpstream: true, followTags: true }] }),
+    gitPushCommand,
     // Remove the re-pack directory.
     task(() => fs.rm(path.resolve('.re-pack'), { recursive: true, force: true }))
   ], {
@@ -33,23 +37,25 @@ export default nr(({ command, task, script, isCI }) => {
     timing: true
   });
 
-  script('postBuild', command.node('./scripts/update-readme.mts', {
-    nodeOptions: ['--loader=ts-node/esm', '--no-warnings']
-  }), {
-    group: 'Lifecycle',
-    description: '[hook] Update dependency versions in README.',
-    timing: true
-  });
-
   script('postBump', [
     'script:publish',
-    command('git', { args: ['push', 'origin', 'HEAD', { setUpstream: true, followTags: true }] })
+    gitPushCommand
   ], {
     group: 'Lifecycle',
     description: '[hook] After the bump script, publish the project and push the release commit.'
   });
 
   if (!isCI) {
+    script('postBuild', [
+      command.node('./scripts/update-readme.mts', {
+        nodeOptions: ['--loader=ts-node/esm', '--no-warnings']
+      }),
+      'script:test.smoke'
+    ], {
+      group: 'Lifecycle',
+      description: '[hook] Update dependency versions in README.'
+    });
+
     script('postPrepare', 'script:test.smoke', {
       group: 'Lifecycle',
       description: '[hook] After the prepare script, run smoke tests.'

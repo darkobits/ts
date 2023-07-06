@@ -67,13 +67,13 @@ export default (userConfig?: UserConfigurationFn): UserConfigurationFn => async 
 
   // ----- Build Scripts -------------------------------------------------------
 
-  script('build', [
+  script('build', [[
     command('vite', {
       args: ['build'],
       env: eslintEnvVars
     }),
     'script:lint'
-  ], {
+  ]], {
     group: 'Build',
     description: `Build, type-check, and lint the project using ${log.chalk.white.bold('Vite')}.`,
     timing: true
