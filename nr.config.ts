@@ -47,6 +47,14 @@ export default nr(({ command, task, script, isCI }) => {
     timing: true
   });
 
+  script('postBuild', command.node('./scripts/update-readme.mts', {
+    nodeOptions: ['--loader=ts-node/esm', '--no-warnings']
+  }), {
+    group: 'Lifecycle',
+    description: '[hook] Updates versions in README.',
+    timing: true
+  });
+
   script('postBump', [
     'script:publish',
     command('git', {

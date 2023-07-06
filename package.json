@@ -61,9 +61,13 @@
   },
   "devDependencies": {
     "@darkobits/re-pack": "^1.0.13",
+    "@types/ejs": "^3.1.2",
     "@types/fs-extra": "^11.0.1",
     "docsify-cli": "^4.4.4",
-    "docsify-darklight-theme": "^3.2.0"
+    "docsify-darklight-theme": "^3.2.0",
+    "ejs": "^3.1.9",
+    "resolve-pkg": "^2.0.0",
+    "ts-node": "^10.9.1"
   },
   "keywords": [
     "typescript",

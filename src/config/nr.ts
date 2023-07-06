@@ -217,7 +217,7 @@ export default (userConfig?: UserConfigurationFn): UserConfigurationFn => async 
     'script:test'
   ], {
     group: 'Lifecycle',
-    description: 'Run after "npm install" to ensure the project builds and tests are passing.',
+    description: '[hook] Run after "npm install" to ensure the project builds and tests are passing.',
     timing: true
   });
 
