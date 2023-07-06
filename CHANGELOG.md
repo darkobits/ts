@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.18.1](https://github.com/darkobits/ts/compare/v0.18.0...v0.18.1) (2023-07-06)
+
+
+### 🐞 Bug Fixes
+
+* Restore main field. ([a1f50e2](https://github.com/darkobits/ts/commit/a1f50e29580ad84d312acae51ba1c5870a97c830))
+
 ## [0.18.0](https://github.com/darkobits/ts/compare/v0.17.6...v0.18.0) (2023-07-06)
 
 
