@@ -12,7 +12,7 @@ import type { UserConfigurationFn } from '@darkobits/nr';
 
 export default (userConfig?: UserConfigurationFn): UserConfigurationFn => async context => {
   const { command, task, script, isCI } = context;
-  const { srcDir, root, packageJson } = await getPackageContext();
+  const { root, srcDir, packageJson } = await getPackageContext();
 
 
   // ----- Lint Scripts --------------------------------------------------------
@@ -199,8 +199,21 @@ export default (userConfig?: UserConfigurationFn): UserConfigurationFn => async 
   // ----- Dependency Management -----------------------------------------------
 
   script('deps.check', command('npm-check-updates', {
-    args: { dep: 'prod,peer,dev', format: 'group', interactive: true },
-    stdio: 'inherit'
+    args: {
+      dep: 'prod,peer,dev',
+      format: 'group,repo',
+      interactive: true,
+      // Run on the root package and any workspaces.
+      root: true,
+      // Only set this flag to true if package.json declares a "workspaces"
+      // field. Otherwise, npm-check-updates will fail.
+      workspaces: Boolean(packageJson.workspaces)
+    },
+    stdio: 'inherit',
+    // This CLI exits with a non-zero code if the user issues a SIGTERM to quit
+    // interactive mode without performing updates. This instructs Execa to
+    // ignore that.
+    reject: false
   }), {
     group: 'Dependency Management',
     description: `Check for newer versions of installed dependencies using ${log.chalk.white.bold('npm-check-updates')}.`
@@ -227,34 +240,33 @@ export default (userConfig?: UserConfigurationFn): UserConfigurationFn => async 
     command('vite', {
       args: ['build', { watch: true, logLevel: 'error' }],
       preserveArgumentCasing: true,
-      stdio: 'inherit'
+      stdout: 'pipe',
+      stderr: 'ignore'
     }),
-    script('nodemon', [
-      task(async () => {
-        const mainFile = packageJson.main;
-        if (!mainFile) throw new Error('[ts] No "main" file defined in package.json.');
+    task(async () => {
+      const mainFile = packageJson.main;
+      if (!mainFile) throw new Error('[script:start] No "main" file declared in package.json.');
+      log.verbose(log.prefix('script:start'), log.chalk.gray('Using entrypoint:'), log.chalk.green(mainFile));
 
-        // See: https://github.com/jeffbski/wait-on
-        await waitOn({
-          resources: [mainFile],
-          // How often to poll the filesystem for updates.
-          interval: 10,
-          // Stabilization time; how long we will wait after the resource
-          // becomes available to report that it's ready. This lets us add a
-          // buffer to allow the bundler to completely finish writing.
-          window: 1000
-        });
+      // See: https://github.com/jeffbski/wait-on
+      await waitOn({
+        resources: [mainFile],
+        // How often to poll the filesystem for updates.
+        interval: 10,
+        // Stabilization time; how long we will wait after the resource
+        // becomes available to report that it's ready. This lets us add a
+        // buffer to allow the bundler to completely finish writing.
+        window: 1000
+      });
 
-        log.info(log.prefix('start'), 'Running:', log.chalk.green(mainFile));
+      // See: https://github.com/remy/nodemon#nodemon
+      const nodemonCommandThunk = command('nodemon', {
+        args: [mainFile, { quiet: true }]
+      });
 
-        // See: https://github.com/remy/nodemon#nodemon
-        const nodemonCommand = command('nodemon', { args: [mainFile, { quiet: true }] });
-
-        void nodemonCommand();
-      })
-    ], {
-      // TODO: Add a 'hidden' option to nr.
-      description: 'Used internally by the "start" script.'
+      return nodemonCommandThunk();
+    }, {
+      name: 'nodemon'
     })
   ]], {
     group: 'Lifecycle',
