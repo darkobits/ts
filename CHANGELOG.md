@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.18.3](https://github.com/darkobits/ts/compare/v0.18.2...v0.18.3) (2023-07-06)
+
+
+### 🛠 Refactoring
+
+* Use return value from Vite configuration functions. ([245c8d7](https://github.com/darkobits/ts/commit/245c8d72d4aefd3769c201c5dbea10901f90452f))
+
 ## [0.18.2](https://github.com/darkobits/ts/compare/v0.18.1...v0.18.2) (2023-07-06)
 
 
