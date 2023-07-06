@@ -47,10 +47,10 @@ To get started, consult the [documentation](https://darkobits.gitbook.io/ts) or 
 | Name | Version
 | :-- | :--
 | [`typescript`](https://github.com/microsoft/TypeScript) | `5.1.6`
-| [`vite`](https://github.com/vitejs/vite) | `4.3.9`
+| [`vite`](https://github.com/vitejs/vite) | `4.4.0`
 | [`vitest`](https://github.com/vitest-dev/vitest) | `0.32.4`
 | [`eslint`](https://github.com/eslint/eslint) | `8.44.0`
 | [`@darkobits/eslint-plugin`](https://github.com/darkobits/eslint-plugin) | `0.4.10`
 | [`semantic-release`](https://github.com/semantic-release/semantic-release) | `21.0.7`
 | [`npm-check-updates`](https://github.com/raineorshine/npm-check-updates) | `16.10.13`
-| [`@darkobits/nr`](https://github.com/darkobits/nr) | `0.15.2`
+| [`@darkobits/nr`](https://github.com/darkobits/nr) | `0.16.0`
