@@ -285,10 +285,10 @@ export function createViteConfigurationPreset<
         return context.config;
       }
 
-      // User provided a function that will modify config.context in-place.
+      // User provided a function that will modify config.context in-place, or
+      // return a Vite configuration object, or both.
       if (typeof userConfigExport === 'function') {
-        await userConfigExport(context);
-        return context.config;
+        return merge(context.config, await userConfigExport(context) ?? {});
       }
 
       // User provided a configuration value or a Promise that will resolve with

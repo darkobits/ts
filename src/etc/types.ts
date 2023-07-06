@@ -78,5 +78,5 @@ export type ConfigurationContext = ConfigEnv & PackageContext & {
 /**
  * Signature of configuration functions passed to a Vite configuration preset.
  */
-export type CustomConfigurationFactory<C extends ConfigurationContext = ConfigurationContext> = (context: C) => void | Promise<void>;
+export type CustomConfigurationFactory<C extends ConfigurationContext = ConfigurationContext> = (context: C) => void | UserConfig | Promise<void | UserConfig>;
 export type CustomUserConfigExport<C extends ConfigurationContext = ConfigurationContext> = UserConfig | Promise<UserConfig> | CustomConfigurationFactory<C>;
