@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.18.5](https://github.com/darkobits/ts/compare/v0.18.4...v0.18.5) (2023-07-08)
+
+
+### 🐞 Bug Fixes
+
+* Lint scripts no-op if project is missing ESLint configuration. ([a19d17e](https://github.com/darkobits/ts/commit/a19d17ede5be37a376afee3053643e4d662864c9))
+
 ## [0.18.4](https://github.com/darkobits/ts/compare/v0.18.3...v0.18.4) (2023-07-06)
 
 
