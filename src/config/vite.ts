@@ -10,6 +10,7 @@ import noBundlePluginExport from 'vite-plugin-no-bundle';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 import tsconfigPathsPluginExport from 'vite-tsconfig-paths';
 
+import executablePlugin from '../lib/executable-plugin';
 import log from '../lib/log';
 import tscAliasPlugin from '../lib/tsc-alias-plugin';
 import { createViteConfigurationPreset } from '../lib/utils';
@@ -231,6 +232,16 @@ export const library = createViteConfigurationPreset(async context => {
    * See: https://github.com/developit/rollup-plugin-preserve-shebang
    */
   config.plugins.push(preserveShebangPlugin());
+
+
+  // ----- Plugin: Executable --------------------------------------------------
+
+  /**
+   * This plugin determines if the project has defined any executable scripts
+   * by introspecting its package.json. If the project has any "bin" scripts,
+   * they will be given an executable flag.
+   */
+  config.plugins.push(executablePlugin());
 
 
   // ----- Plugin: Copy Files --------------------------------------------------
