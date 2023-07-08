@@ -7,7 +7,7 @@ import { EXTENSIONS } from '../etc/constants';
 import log from '../lib/log';
 import { getPackageContext, inferESLintConfigurationStrategy } from '../lib/utils';
 
-import type { UserConfigurationFn } from '@darkobits/nr';
+import type { UserConfigurationFn, Thunk } from '@darkobits/nr';
 
 
 export default (userConfig?: UserConfigurationFn): UserConfigurationFn => async context => {
@@ -17,28 +17,6 @@ export default (userConfig?: UserConfigurationFn): UserConfigurationFn => async 
 
   // ----- Lint Scripts --------------------------------------------------------
 
-  const eslintConfig = await inferESLintConfigurationStrategy(root);
-
-  const eslintFlags: Record<string, any> = {
-    format: 'codeframe'
-  };
-
-  const eslintEnvVars: Record<string, string> = {};
-
-  if (eslintConfig) {
-    eslintFlags.config = eslintConfig.configFile;
-
-    if (eslintConfig.type === 'flat') {
-      eslintEnvVars.ESLINT_USE_FLAT_CONFIG = 'true';
-      log.silly(log.prefix('script:lint'), `Using flat ESLint configuration via ${log.chalk.green(eslintConfig.configFile)}.`);
-    } else {
-      eslintFlags.ext = EXTENSIONS.join(',');
-      log.silly(log.prefix('script:lint'), `Using legacy ESLint configuration via ${log.chalk.green(eslintConfig.configFile)}.`);
-    }
-  } else {
-    log.silly(log.prefix('script:lint'), 'Unable to determine ESLint configuration strategy.');
-  }
-
   /**
    * We need to use || here because srcDir may be an empty string, in which case
    * we want to fall back to process.cwd(), and this will not happen with ??
@@ -46,19 +24,68 @@ export default (userConfig?: UserConfigurationFn): UserConfigurationFn => async 
    */
   const lintRoot = srcDir || process.cwd();
 
-  script('lint', command('eslint', {
-    args: [lintRoot, eslintFlags],
-    env: eslintEnvVars
-  }), {
+  /**
+   * If the host project doesn't have an ESLint configuration file, we'll log
+   * a warning and bail.
+   */
+  const noOpLintTask = task(() => log.warn(
+    log.prefix('lint'),
+    log.chalk.dim('No-op; missing ESLint configuration file.')
+  ));
+
+  /**
+   * By default, use our no-op task as the default instruction for the "lint"
+   * and "lint.fix" scripts.
+   */
+  let lintInstruction: Thunk = noOpLintTask;
+  let lintFixInstruction: Thunk = noOpLintTask;
+
+  const eslintFlags: Record<string, any> = { format: 'codeframe' };
+  const eslintEnvVars: Record<string, string> = {};
+
+  const eslintConfig = await inferESLintConfigurationStrategy(root);
+
+  if (eslintConfig) {
+    eslintFlags.config = eslintConfig.configFile;
+
+    if (eslintConfig.type === 'flat') {
+      // Project is using the newer flat configuration format; we will need to
+      // set the ESLINT_USE_FLAT_CONFIG environment variable in order for ESLint
+      // to use it.
+      log.silly(log.prefix('script:lint'), `Using flat ESLint configuration via ${log.chalk.green(eslintConfig.configFile)}.`);
+      eslintEnvVars.ESLINT_USE_FLAT_CONFIG = 'true';
+    } else {
+      // Project is using the legacy configuration format; we will need to
+      // explicitly pass a list of extensions to lint.
+      log.silly(log.prefix('script:lint'), `Using legacy ESLint configuration via ${log.chalk.green(eslintConfig.configFile)}.`);
+      eslintFlags.ext = EXTENSIONS.join(',');
+    }
+
+    // Overwrite the no-op instruction with our lint command.
+    lintInstruction = command('eslint', {
+      args: [lintRoot, eslintFlags],
+      env: eslintEnvVars
+    });
+
+    // Overwrite the no-op instruction with our lint --fix command.
+    lintFixInstruction = command('eslint', {
+      args: [lintRoot, { ...eslintFlags, fix: true }],
+      env: eslintEnvVars
+    });
+  } else {
+    log.silly(
+      log.prefix('script:lint'),
+      'Unable to determine ESLint configuration strategy; project may lack an ESLint configuration file.'
+    );
+  }
+
+  script('lint', lintInstruction, {
     group: 'Lint',
     description: `Lint the project using ${log.chalk.white.bold('ESLint')}.`,
     timing: true
   });
 
-  script('lint.fix', command('eslint', {
-    args: [lintRoot, { ...eslintFlags, fix: true }],
-    env: eslintEnvVars
-  }), {
+  script('lint.fix', lintFixInstruction, {
     group: 'Lint',
     description: `Lint the project using ${log.chalk.white.bold('ESLint')} and automatically fix any fixable errors.`,
     timing: true
