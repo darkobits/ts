@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.18.6](https://github.com/darkobits/ts/compare/v0.18.5...v0.18.6) (2023-07-08)
+
+
+### ✨ Features
+
+* Add `executable` plugin. ([f2f8012](https://github.com/darkobits/ts/commit/f2f8012286e93ff7e2c7f56fb3cb57b682bd6317))
+
 ## [0.18.5](https://github.com/darkobits/ts/compare/v0.18.4...v0.18.5) (2023-07-08)
 
 
