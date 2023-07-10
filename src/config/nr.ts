@@ -150,14 +150,21 @@ export default (userConfig?: UserConfigurationFn): UserConfigurationFn => async 
 
   // ----- Release Scripts -----------------------------------------------------
 
-  script('release', command('semantic-release'), {
+  script('release', command('semantic-release', {
+    args: {
+      extends: '@darkobits/semantic-release-config'
+    }
+  }), {
     description: `Create a release in a CI environment using ${log.chalk.white.bold('semantic-release')}.`,
     group: 'Release',
     timing: true
   });
 
   script('release.local', command('semantic-release', {
-    args: { ci: false }
+    args: {
+      ci: false,
+      extends: '@darkobits/semantic-release-config'
+    }
   }), {
     description: `Create a release locally using ${log.chalk.white.bold('semantic-release')}.`,
     group: 'Release',
