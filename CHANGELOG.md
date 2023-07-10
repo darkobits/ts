@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.18.8](https://github.com/darkobits/ts/compare/v0.18.7...v0.18.8) (2023-07-10)
+
+
+### 🐞 Bug Fixes
+
+* Invoke `semantic-release` with configuration preset. ([6461de2](https://github.com/darkobits/ts/commit/6461de2c2688eb734a35c6c3604905ce856fe8a4))
+
 ## [0.18.7](https://github.com/darkobits/ts/compare/v0.18.6...v0.18.7) (2023-07-10)
 
 
