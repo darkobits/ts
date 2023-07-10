@@ -1,5 +1,4 @@
 import { EOL } from 'os';
-import path from 'path';
 
 import waitOn from 'wait-on';
 
@@ -179,7 +178,9 @@ export default (userConfig?: UserConfigurationFn): UserConfigurationFn => async 
   const createBumpScript = ({ releaseType, args, description }: CreateReleaseScriptOptions) => {
     script(releaseType ? `bump.${releaseType}` : 'bump', command(standardVersionCmd, {
       args: {
-        preset: path.resolve(__dirname, 'changelog-preset.js'),
+        // This will map to @darkobits/conventional-changelog-preset.
+        // See: https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-preset-loader
+        preset: '@darkobits/preset',
         releaseCommitMessageFormat: 'chore(release): {{currentTag}}\n[skip ci]',
         ...args
       }

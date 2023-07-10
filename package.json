@@ -24,8 +24,10 @@
     "help": "nr --scripts"
   },
   "peerDependencies": {
+    "@darkobits/conventional-changelog-preset": "^0.1.0",
     "@darkobits/eslint-plugin": "~0.4.10",
     "@darkobits/nr": "~0.16.1",
+    "@darkobits/semantic-release-config": "^0.1.0",
     "@types/node": "^20.4.1",
     "@vitest/coverage-v8": "^0.33.0",
     "@vitest/ui": "~0.33.0",
@@ -53,6 +55,7 @@
     "fs-extra": "^11.1.1",
     "read-pkg-up": "^10.0.0",
     "rollup-plugin-preserve-shebang": "^1.0.1",
+    "rollup-plugin-tsconfig-paths": "^1.5.1",
     "tsc-alias": "^1.8.7",
     "tsconfck": "^2.1.1",
     "vite-plugin-eslint": "^1.8.1",
