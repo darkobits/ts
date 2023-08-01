@@ -41,8 +41,9 @@
   ></a>
 </p>
 
-To get started, consult the [documentation](https://darkobits.gitbook.io/ts) or clone the
-[template repository](https://github.com/darkobits/ts-template) and start building something great.
+To get started, consult the [documentation](https://darkobits.gitbook.io/ts), clone the
+[template repository](https://github.com/darkobits/ts-template), (or [fork it on StackBlitz](https://stackblitz.com/fork/github/darkobits/ts-template))
+and start building something great.
 
 ## Current Versions
 
