@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.18.9](https://github.com/darkobits/ts/compare/v0.18.8...v0.18.9) (2023-08-15)
+
+
+### 🏗 Chores
+
+* **deps:** Update dependencies. ([36584fc](https://github.com/darkobits/ts/commit/36584fca09e8c45116c23288895139f62e8be6f1))
+* **deps:** Update dependencies. ([56c3319](https://github.com/darkobits/ts/commit/56c331973a7b812d8087f34f385e8790d491c525))
+
+
+### 📖 Documentation
+
+* Update README. ([8c2b6ba](https://github.com/darkobits/ts/commit/8c2b6baae2fbbaf085be5e28cbbfd0783b4e2895))
+
 ## [0.18.8](https://github.com/darkobits/ts/compare/v0.18.7...v0.18.8) (2023-07-10)
 
 
