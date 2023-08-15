@@ -1,9 +1,7 @@
 import { EOL } from 'os';
-import path from 'path';
 
 import ejs from 'ejs';
 import fs from 'fs-extra';
-import resolvePackage from 'resolve-pkg';
 
 
 interface DependencyInfo {
@@ -15,12 +13,16 @@ interface DependencyInfo {
 /**
  * Gets the current local version of the provided dependency.
  */
-function getDependencyVersion(name: string) {
-  const packageDir = resolvePackage(name);
-  if (!packageDir) throw new Error(`Unable to resolve directory for "${name}".`);
+async function getDependencyVersion(name: string) {
+  const ourPackageJson = (await import('../package.json', { assert: { type: 'json' }}) ).default;
 
-  const json = fs.readJSONSync(path.join(packageDir, 'package.json'));
-  return json.version;
+  if (Reflect.has(ourPackageJson.peerDependencies, name))
+    return Reflect.get(ourPackageJson.peerDependencies, name) as string;
+
+  if (Reflect.has(ourPackageJson.dependencies, name))
+    return Reflect.get(ourPackageJson.dependencies, name) as string;
+
+  throw new Error(`[getDependencyVersion] Unable to get dependency version for "${name}".`);
 }
 
 

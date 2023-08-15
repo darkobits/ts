@@ -219,7 +219,7 @@ export function createPluginReconfigurator(config: ViteConfigurationScaffold) {
         throw new TypeError('[reconfigurePlugin] Unexpected: Found an array in a flattened list of plugins');
       }
 
-      for (let i = 0; i < existingPluginsAsFlatArray.length; i++) {
+      for (let i = 0; i < existingPluginsAsFlatArray.length; i += 1) {
         const existingPlugin = existingPluginsAsFlatArray[i];
 
         const resolvedExistingPlugin = isPromise(existingPlugin)
