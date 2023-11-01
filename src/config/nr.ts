@@ -281,16 +281,16 @@ export default (userConfig?: UserConfigurationFn): UserConfigurationFn => async 
     task(async () => {
       const mainFile = packageJson.main;
       if (!mainFile) throw new Error('[script:start] No "main" file declared in package.json.');
-      log.verbose(log.prefix('script:start'), log.chalk.gray('Using entrypoint:'), log.chalk.green(mainFile));
+      log.info(log.prefix('start'), log.chalk.gray('Using entrypoint:'), log.chalk.green(mainFile));
 
       // See: https://github.com/jeffbski/wait-on
       await waitOn({
         resources: [mainFile],
         // How often to poll the filesystem for updates.
         interval: 10,
-        // Stabilization time; how long we will wait after the resource
-        // becomes available to report that it's ready. This lets us add a
-        // buffer to allow the bundler to completely finish writing.
+        // Stabilization time; how long we will wait after the resource becomes
+        // available to report that it's ready. This lets us add a buffer to
+        // allow the bundler to completely finish writing.
         window: 1000
       });
 
@@ -306,9 +306,9 @@ export default (userConfig?: UserConfigurationFn): UserConfigurationFn => async 
   ]], {
     group: 'Lifecycle',
     description: [
-      `• Start ${log.chalk.bold.white('Vite')} in watch mode.`,
-      `• Start ${log.chalk.bold.white('nodemon')}, watching the project's ${log.chalk.green('main')} file.`
-    ].join(EOL)
+      `Starts ${log.chalk.bold.white('Vite')} and ${log.chalk.bold.white('nodemon')}, watching for`,
+      'changes to build artifacts.'
+    ].join(' ')
   });
 
 

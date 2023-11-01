@@ -2,7 +2,7 @@ import { execSync } from 'child_process';
 import path from 'path';
 
 import merge from 'deepmerge';
-import * as tsConfCk from 'tsconfck';
+import { getTsconfig } from 'get-tsconfig';
 
 import log from './log';
 import {
@@ -65,16 +65,18 @@ export async function getPackageContext(): Promise<PackageContext> {
     log.silly(log.prefix('getPackageContext'), log.chalk.bold('root'), root);
 
     // Parse tsconfig.json.
-    const { tsconfig: tsConfig } = await tsConfCk.parse(tsConfigPath);
+    const tsConfigResult = getTsconfig(tsConfigPath);
+    if (!tsConfigResult) throw new Error(`[ts:getPackageContext] Unable to locate a tsconfig.json file at or above ${log.chalk.green(tsConfigPath)}`);
+    const { config: tsConfig } = tsConfigResult;
 
     // Infer source root. This will already be an absolute directory.
-    const srcDir = tsConfig.compilerOptions.baseUrl;
+    const srcDir = tsConfig.compilerOptions?.baseUrl;
     if (!srcDir) throw new Error('[ts:getPackageContext] "compilerOptions.baseUrl" must be set in tsconfig.json');
     log.silly(log.prefix('getPackageContext'), log.chalk.bold('srcDir'), log.chalk.green(srcDir));
 
     // Infer output directory. If it is not absolute, resolve it relative to the
     // root directory.
-    const outDir = tsConfig.compilerOptions.outDir
+    const outDir = tsConfig.compilerOptions?.outDir
       ? path.isAbsolute(tsConfig.compilerOptions.outDir)
         ? tsConfig.compilerOptions.outDir
         : path.resolve(root, tsConfig.compilerOptions.outDir)
