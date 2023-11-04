@@ -1,7 +1,6 @@
 import path from 'path';
 
 import { interopImportDefault } from '@darkobits/interop-import-default';
-import autoInstallPlugin from '@rollup/plugin-auto-install';
 import typescriptPlugin from '@rollup/plugin-typescript';
 import glob from 'fast-glob';
 // @ts-expect-error - Package has no type definitions.
@@ -119,25 +118,6 @@ export const library = createViteConfigurationPreset(async context => {
   };
 
 
-  // ----- Plugin: Auto-Install ------------------------------------------------
-
-  /**
-   * TL;DR: Simply import/require a new dependency to install it.
-   *
-   * This plugin automatically installs dependencies that are imported by a
-   * bundle, even if they are not declared in package.json. It will also update
-   * package.json and a Yarn/NPM lockfile, if present.
-   *
-   * N.B. This plugin should be added before plugins that will throw errors on
-   * unresolved imports, such as TypeScript or ESLint.
-   *
-   * See: https://github.com/rollup/plugins/tree/master/packages/auto-install
-   */
-  config.plugins.push(autoInstallPlugin({
-    pkgFile: path.resolve(root, 'package.json')
-  }));
-
-
   // ----- Plugin: TypeScript --------------------------------------------------
 
   /**
@@ -145,6 +125,7 @@ export const library = createViteConfigurationPreset(async context => {
    * In watch mode, it will issue a warning when it encounters an error so as to
    * not terminate the process. Otherwise, it will fail the build.
    */
+  // @ts-expect-error
   config.plugins.push(typescriptPlugin({
     // Ensures we don't emit declarations for test files.
     exclude: [TEST_FILES],
