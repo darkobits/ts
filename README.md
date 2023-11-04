@@ -52,8 +52,8 @@ and start building something great.
 | [`typescript`](https://github.com/microsoft/TypeScript) | `~5.2.2`
 | [`vite`](https://github.com/vitejs/vite) | `~4.5.0`
 | [`vitest`](https://github.com/vitest-dev/vitest) | `~0.34.6`
-| [`eslint`](https://github.com/eslint/eslint) | `~8.52.0`
-| [`@darkobits/eslint-plugin`](https://github.com/darkobits/eslint-plugin) | `~0.5.2`
+| [`eslint`](https://github.com/eslint/eslint) | `~8.53.0`
+| [`@darkobits/eslint-plugin`](https://github.com/darkobits/eslint-plugin) | `~0.5.3`
 | [`semantic-release`](https://github.com/semantic-release/semantic-release) | `~21.1.1`
 | [`npm-check-updates`](https://github.com/raineorshine/npm-check-updates) | `~16.14.6`
 | [`@darkobits/nr`](https://github.com/darkobits/nr) | `~0.16.2`

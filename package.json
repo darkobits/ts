@@ -25,13 +25,13 @@
   },
   "peerDependencies": {
     "@darkobits/conventional-changelog-preset": "^0.1.0",
-    "@darkobits/eslint-plugin": "~0.5.2",
+    "@darkobits/eslint-plugin": "~0.5.3",
     "@darkobits/nr": "~0.16.2",
     "@darkobits/semantic-release-config": "~0.1.0",
     "@types/node": "~20.8.10",
     "@vitest/coverage-v8": "0.34.6",
     "@vitest/ui": "~0.34.6",
-    "eslint": "~8.52.0",
+    "eslint": "~8.53.0",
     "nodemon": "~3.0.1",
     "npm-check-updates": "~16.14.6",
     "semantic-release": "~21.1.1",
@@ -54,7 +54,7 @@
     "find-up": "^6.3.0",
     "fs-extra": "^11.1.1",
     "get-tsconfig": "^4.7.2",
-    "read-pkg-up": "^10.1.0",
+    "read-pkg-up": "^11.0.0",
     "rollup-plugin-preserve-shebang": "^1.0.1",
     "rollup-plugin-tsconfig-paths": "^1.5.2",
     "tsc-alias": "^1.8.8",
@@ -62,7 +62,7 @@
     "vite-plugin-no-bundle": "^3.0.0",
     "vite-plugin-static-copy": "~0.17.0",
     "vite-tsconfig-paths": "^4.2.1",
-    "wait-on": "^7.0.1"
+    "wait-on": "^7.1.0"
   },
   "devDependencies": {
     "@darkobits/re-pack": "^1.0.14",
