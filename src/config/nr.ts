@@ -281,6 +281,7 @@ export default (userConfig?: UserConfigurationFn): UserConfigurationFn => async 
     task(async () => {
       const mainFile = packageJson.main;
       if (!mainFile) throw new Error('[script:start] No "main" file declared in package.json.');
+
       log.info(log.prefix('start'), log.chalk.gray('Using entrypoint:'), log.chalk.green(mainFile));
 
       // See: https://github.com/jeffbski/wait-on
@@ -296,7 +297,8 @@ export default (userConfig?: UserConfigurationFn): UserConfigurationFn => async 
 
       // See: https://github.com/remy/nodemon#nodemon
       const nodemonCommandThunk = command('nodemon', {
-        args: [mainFile, { quiet: true }]
+        args: [mainFile, { quiet: true }],
+        stdio: 'inherit'
       });
 
       return nodemonCommandThunk();
