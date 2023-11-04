@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.18.12](https://github.com/darkobits/ts/compare/v0.18.11...v0.18.12) (2023-11-04)
+
+
+### 🐞 Bug Fixes
+
+* **scripts:** Nodemon command inherits stdio. ([a5bcf11](https://github.com/darkobits/ts/commit/a5bcf1142d48efdf9ee5dc4515346ca157213efb))
+
+
+### 🏗 Chores
+
+* **deps:** Update dependencies. ([f1d12f7](https://github.com/darkobits/ts/commit/f1d12f72e116724c524a3bee4eb338244cf27816))
+
+
+### 🛠 Refactoring
+
+* Remove auto-install plugin. ([a04a043](https://github.com/darkobits/ts/commit/a04a04326592063d12fe51a891554571984f8eb5))
+
 ## [0.18.11](https://github.com/darkobits/ts/compare/v0.18.10...v0.18.11) (2023-11-01)
 
 
