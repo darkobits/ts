@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.18.13](https://github.com/darkobits/ts/compare/v0.18.12...v0.18.13) (2023-11-17)
+
+
+### 🐞 Bug Fixes
+
+* Restore `isWatchMode` flag. ([a5a2101](https://github.com/darkobits/ts/commit/a5a210144bf35826509159561aef4113becb7631))
+
 ## [0.18.12](https://github.com/darkobits/ts/compare/v0.18.11...v0.18.12) (2023-11-04)
 
 
