@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.19.1](https://github.com/darkobits/ts/compare/v0.19.0...v0.19.1) (2023-11-17)
+
+
+### 🐞 Bug Fixes
+
+* `start` script uses `bin` if present, then `main`. ([0483700](https://github.com/darkobits/ts/commit/0483700ab75236eeace2f66f86122fed08fc16ed))
+
 ## [0.19.0](https://github.com/darkobits/ts/compare/v0.18.14...v0.19.0) (2023-11-17)
 
 
