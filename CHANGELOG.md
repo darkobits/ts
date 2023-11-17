@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.19.0](https://github.com/darkobits/ts/compare/v0.18.14...v0.19.0) (2023-11-17)
+
+
+### ✨ Features
+
+* `start` script forwards arguments after `--`. ([d10927b](https://github.com/darkobits/ts/commit/d10927b0d3a706a32813c6fa6f7f229f349e2abc))
+
 ## [0.18.14](https://github.com/darkobits/ts/compare/v0.18.13...v0.18.14) (2023-11-17)
 
 

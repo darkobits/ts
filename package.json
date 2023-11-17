@@ -1,6 +1,6 @@
 {
   "name": "@darkobits/ts",
-  "version": "0.18.14",
+  "version": "0.19.0",
   "description": "Vite-based toolchain for Node projects.",
   "author": "darkobits",
   "license": "Hippocratic",
