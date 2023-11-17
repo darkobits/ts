@@ -287,8 +287,9 @@ export default (userConfig?: UserConfigurationFn): UserConfigurationFn => async 
       stderr: 'ignore'
     }),
     task(async () => {
-      const entrypoint = typeof packageJson.bin === 'string'
-        ? packageJson.bin
+      const unscopedName = packageJson.name?.split('/').pop() ?? '';
+      const entrypoint = packageJson.bin
+        ? packageJson.bin[unscopedName]
         : packageJson.main;
 
       if (!entrypoint) throw new Error('[script:start] No "bin" (string) or "main" declarations in package.json.');
