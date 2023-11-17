@@ -19,6 +19,13 @@ const tsconfigPathsPlugin = interopImportDefault(tsconfigPathsPluginExport);
 
 
 /**
+ * Hacky way to determine if we are in watch mode, in which case we want to
+ * change the behavior of certain plugins.
+ */
+const isWatchMode = process.argv.includes('watch');
+
+
+/**
  * Vite configuration preset suitable for publishing libraries or CLIs to NPM.
  *
  * - Source files will not be bundled.
@@ -142,7 +149,7 @@ export const library = createViteConfigurationPreset(async context => {
       // Only fail the compilation on type-errors when building for production.
       // This prevents things like Vitest from failing when in watch mode due to
       // trivial errors like a variable not being used, etc.
-      noEmitOnError: mode === 'production',
+      noEmitOnError: !isWatchMode && mode === 'production',
       // This must be set to the same value as config.build.sourcemap or the
       // plugin will throw an error.
       sourceMap: config.build.sourcemap,

@@ -281,10 +281,14 @@ export default (userConfig?: UserConfigurationFn): UserConfigurationFn => async 
     task(async () => {
       const mainFile = packageJson.main;
       if (!mainFile) throw new Error('[script:start] No "main" file declared in package.json.');
-
       log.info(log.prefix('start'), log.chalk.gray('Using entrypoint:'), log.chalk.green(mainFile));
 
-      // See: https://github.com/jeffbski/wait-on
+
+      /**
+       * This will wait for our build artifacts to be completely written to disk
+       * before proceeding.
+       * See: https://github.com/jeffbski/wait-on
+       */
       await waitOn({
         resources: [mainFile],
         // How often to poll the filesystem for updates.
