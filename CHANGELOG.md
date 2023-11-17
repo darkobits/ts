@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.18.14](https://github.com/darkobits/ts/compare/v0.18.13...v0.18.14) (2023-11-17)
+
+
+### 🐞 Bug Fixes
+
+* Compute watch flag correctly. ([d194085](https://github.com/darkobits/ts/commit/d19408537e58302503b8f52ef06eb4814929ba54))
+
 ## [0.18.13](https://github.com/darkobits/ts/compare/v0.18.12...v0.18.13) (2023-11-17)
 
 
