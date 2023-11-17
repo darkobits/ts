@@ -287,8 +287,11 @@ export default (userConfig?: UserConfigurationFn): UserConfigurationFn => async 
       stderr: 'ignore'
     }),
     task(async () => {
-      const entrypoint = packageJson.main;
-      if (!entrypoint) throw new Error('[script:start] No "main" file declared in package.json.');
+      const entrypoint = typeof packageJson.bin === 'string'
+        ? packageJson.bin
+        : packageJson.main;
+
+      if (!entrypoint) throw new Error('[script:start] No "bin" (string) or "main" declarations in package.json.');
       log.info(log.prefix('start'), log.chalk.gray('Using entrypoint:'), log.chalk.green(entrypoint));
 
 
