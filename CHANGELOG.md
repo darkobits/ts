@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.19.2](https://github.com/darkobits/ts/compare/v0.19.1...v0.19.2) (2023-11-17)
+
+
+### 🐞 Bug Fixes
+
+* Parse normalized `bin` declarations. ([40f25ac](https://github.com/darkobits/ts/commit/40f25ac0be48bb8dd4203cfd076cd3d1899a8b33))
+
 ## [0.19.1](https://github.com/darkobits/ts/compare/v0.19.0...v0.19.1) (2023-11-17)
 
 
