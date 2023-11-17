@@ -13,6 +13,14 @@ export default (userConfig?: UserConfigurationFn): UserConfigurationFn => async 
   const { command, task, script, isCI } = context;
   const { root, srcDir, packageJson } = await getPackageContext();
 
+  /**
+   * Any arguments provided after a "--" argument that will be forwarded to
+   * child processes started by a command.
+   */
+  const forwardArgs = process.argv.includes('--')
+    ? process.argv.slice(process.argv.indexOf('--') + 1)
+    : [];
+
 
   // ----- Lint Scripts --------------------------------------------------------
 
@@ -279,9 +287,9 @@ export default (userConfig?: UserConfigurationFn): UserConfigurationFn => async 
       stderr: 'ignore'
     }),
     task(async () => {
-      const mainFile = packageJson.main;
-      if (!mainFile) throw new Error('[script:start] No "main" file declared in package.json.');
-      log.info(log.prefix('start'), log.chalk.gray('Using entrypoint:'), log.chalk.green(mainFile));
+      const entrypoint = packageJson.main;
+      if (!entrypoint) throw new Error('[script:start] No "main" file declared in package.json.');
+      log.info(log.prefix('start'), log.chalk.gray('Using entrypoint:'), log.chalk.green(entrypoint));
 
 
       /**
@@ -290,7 +298,7 @@ export default (userConfig?: UserConfigurationFn): UserConfigurationFn => async 
        * See: https://github.com/jeffbski/wait-on
        */
       await waitOn({
-        resources: [mainFile],
+        resources: [entrypoint],
         // How often to poll the filesystem for updates.
         interval: 10,
         // Stabilization time; how long we will wait after the resource becomes
@@ -301,7 +309,7 @@ export default (userConfig?: UserConfigurationFn): UserConfigurationFn => async 
 
       // See: https://github.com/remy/nodemon#nodemon
       const nodemonCommandThunk = command('nodemon', {
-        args: [mainFile, { quiet: true }],
+        args:  [{ quiet: true }, entrypoint, ...forwardArgs],
         stdio: 'inherit'
       });
 
