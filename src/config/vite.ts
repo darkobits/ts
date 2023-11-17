@@ -22,7 +22,7 @@ const tsconfigPathsPlugin = interopImportDefault(tsconfigPathsPluginExport);
  * Hacky way to determine if we are in watch mode, in which case we want to
  * change the behavior of certain plugins.
  */
-const isWatchMode = process.argv.includes('watch');
+const isWatchMode = process.argv.includes('--watch') || process.argv.includes('-w');
 
 
 /**
