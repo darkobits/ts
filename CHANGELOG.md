@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.20.0](https://github.com/darkobits/ts/compare/v0.19.2...v0.20.0) (2023-11-20)
+
+
+### ⚠ BREAKING CHANGES
+
+* **deps:** - Update to Vite 5. See: https://vitejs.dev/guide/migration
+
+### 🏗 Chores
+
+* **deps:** Update dependencies. ([af78458](https://github.com/darkobits/ts/commit/af7845803f3cbd423ccdbd0a4c90225849a5d660))
+
 ## [0.19.2](https://github.com/darkobits/ts/compare/v0.19.1...v0.19.2) (2023-11-17)
 
 
