@@ -132,7 +132,6 @@ export const library = createViteConfigurationPreset(async context => {
    * In watch mode, it will issue a warning when it encounters an error so as to
    * not terminate the process. Otherwise, it will fail the build.
    */
-  // @ts-expect-error
   config.plugins.push(typescriptPlugin({
     // Ensures we don't emit declarations for test files.
     exclude: [TEST_FILES],
