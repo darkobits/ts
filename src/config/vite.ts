@@ -149,7 +149,7 @@ export const library = createViteConfigurationPreset(async context => {
    */
   config.plugins.push(typescriptPlugin({
     // Ensures we don't emit declarations for test files.
-    exclude: [`**/*.${TEST_FILE_PATTERNS.join(',')}.${BARE_EXTENSIONS.join(',')}`],
+    exclude: [`**/*.{${TEST_FILE_PATTERNS.join(',')}}.{${BARE_EXTENSIONS.join(',')}}`],
     // If TypeScript sees .ts files in the project root (configuration files,
     // for example) it will assume that they need to be compiled and use the
     // project root as a reference for the directory structure it needs to
