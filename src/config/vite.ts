@@ -6,7 +6,6 @@ import glob from 'fast-glob';
 // @ts-expect-error - Package has no type definitions.
 import preserveShebangPlugin from 'rollup-plugin-preserve-shebang';
 import noBundlePluginExport from 'vite-plugin-no-bundle';
-import { viteStaticCopy } from 'vite-plugin-static-copy';
 import tsconfigPathsPluginExport from 'vite-tsconfig-paths';
 
 import executablePlugin from '../lib/executable-plugin';
@@ -225,6 +224,10 @@ export const library = createViteConfigurationPreset(async context => {
 
 
   // ----- Plugin: Copy Files --------------------------------------------------
+
+  // We use a dynamic import here because when building this project, we still
+  // use (now deprecated) CJS Vite API.
+  const { viteStaticCopy } = await import('vite-plugin-static-copy');
 
   /**
    * This plugin will copy all non-source files (excluding test files, and
