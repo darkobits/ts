@@ -5,6 +5,7 @@ import typescriptPlugin from '@rollup/plugin-typescript';
 import glob from 'fast-glob';
 // @ts-expect-error - Package has no type definitions.
 import preserveShebangPlugin from 'rollup-plugin-preserve-shebang';
+import { externalizeDeps } from 'vite-plugin-externalize-deps';
 import noBundlePluginExport from 'vite-plugin-no-bundle';
 import tsconfigPathsPluginExport from 'vite-tsconfig-paths';
 
@@ -122,6 +123,20 @@ export const library = createViteConfigurationPreset(async context => {
       include: entry.map(entry => path.relative(root, entry))
     }
   };
+
+
+  // ----- Plugin: Externalize Dependencies ------------------------------------
+
+  /**
+   * Ensures that all dependencies are externalized.
+   */
+  config.plugins.push(externalizeDeps({
+    deps: true,
+    devDeps: true,
+    nodeBuiltins: true,
+    optionalDeps: true,
+    peerDeps: true
+  }));
 
 
   // ----- Plugin: TypeScript --------------------------------------------------
