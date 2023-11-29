@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.20.1-beta.2](https://github.com/darkobits/ts/compare/v0.20.1-beta.1...v0.20.1-beta.2) (2023-11-29)
+
+
+### 🐞 Bug Fixes
+
+* Properly exclude test files in TypeScript plugin. ([8b047d1](https://github.com/darkobits/ts/commit/8b047d1650de9f5e82fb9db1ac59f633a7389ef7))
+
 ## [0.20.1-beta.1](https://github.com/darkobits/ts/compare/v0.20.1-beta.0...v0.20.1-beta.1) (2023-11-29)
 
 
