@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.20.1-beta.3](https://github.com/darkobits/ts/compare/v0.20.1-beta.2...v0.20.1-beta.3) (2023-11-29)
+
+
+### 🐞 Bug Fixes
+
+* Correct glob pattern for test files. ([11eb70d](https://github.com/darkobits/ts/commit/11eb70d8b26e7af067ae1dcbe762b440b0bc330a))
+
 ## [0.20.1-beta.2](https://github.com/darkobits/ts/compare/v0.20.1-beta.1...v0.20.1-beta.2) (2023-11-29)
 
 
