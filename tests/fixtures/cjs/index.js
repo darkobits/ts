@@ -1,7 +1,8 @@
-const { vite } = require('../../../dist');
+// const { vite } = require('../../../dist');
 
 
 async function main() {
+  const { vite } = await import('../../../dist/index.js');
   const viteConfigFn = vite.library();
   const viteConfig = await viteConfigFn();
 

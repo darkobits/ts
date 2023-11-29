@@ -4,13 +4,14 @@
   "description": "Vite-based toolchain for Node projects.",
   "author": "darkobits",
   "license": "Hippocratic",
+  "type": "module",
   "homepage": "https://darkobits.gitbook.io/ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/darkobits/ts.git"
   },
   "engines": {
-    "node": ">=16",
+    "node": ">=18",
     "npm": ">=8"
   },
   "engineStrict": true,
@@ -28,7 +29,7 @@
     "@darkobits/eslint-plugin": "~0.5.3",
     "@darkobits/nr": "~0.16.3",
     "@darkobits/semantic-release-config": "~0.1.0",
-    "@types/node": "~20.9.2",
+    "@types/node": ">=18.0.0",
     "@vitest/coverage-v8": "0.34.6",
     "@vitest/ui": "~0.34.6",
     "eslint": "~8.54.0",
