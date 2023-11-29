@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.20.1-beta.1](https://github.com/darkobits/ts/compare/v0.20.1-beta.0...v0.20.1-beta.1) (2023-11-29)
+
+
+### 🐞 Bug Fixes
+
+* Add `vite-plugin-externalize-deps`. ([053883f](https://github.com/darkobits/ts/commit/053883fefcf57c7efc9795340275b2543eba0283))
+
+
+### 🏗 Chores
+
+* **deps:** Update dependencies. ([da186e1](https://github.com/darkobits/ts/commit/da186e1eecef81d023434062d9af51f07188a7ca))
+
 ## [0.20.1-beta.0](https://github.com/darkobits/ts/compare/v0.20.0...v0.20.1-beta.0) (2023-11-29)
 
 
