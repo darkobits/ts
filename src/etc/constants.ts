@@ -6,13 +6,13 @@
 export const TEST_FILE_PATTERNS = [
   'spec',
   'test'
-];
+] as const;
 
 
 /**
  * List of common file extensions we want tools to work with.
  */
-export const BARE_EXTENSIONS = ['ts', 'tsx', 'js', 'jsx', 'mjs', 'cjs', 'mts', 'cts'];
+export const BARE_EXTENSIONS = ['ts', 'tsx', 'js', 'jsx', 'mjs', 'cjs', 'mts', 'cts'] as const;
 
 
 /**

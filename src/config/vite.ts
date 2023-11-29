@@ -9,6 +9,7 @@ import { externalizeDeps } from 'vite-plugin-externalize-deps';
 import noBundlePluginExport from 'vite-plugin-no-bundle';
 import tsconfigPathsPluginExport from 'vite-tsconfig-paths';
 
+import { BARE_EXTENSIONS, TEST_FILE_PATTERNS } from '../etc/constants';
 import executablePlugin from '../lib/executable-plugin';
 import log from '../lib/log';
 import tscAliasPlugin from '../lib/tsc-alias-plugin';
@@ -148,7 +149,7 @@ export const library = createViteConfigurationPreset(async context => {
    */
   config.plugins.push(typescriptPlugin({
     // Ensures we don't emit declarations for test files.
-    exclude: [TEST_FILES],
+    exclude: [`**/*.${TEST_FILE_PATTERNS.join(',')}.${BARE_EXTENSIONS.join(',')}`],
     // If TypeScript sees .ts files in the project root (configuration files,
     // for example) it will assume that they need to be compiled and use the
     // project root as a reference for the directory structure it needs to
