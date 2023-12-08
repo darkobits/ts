@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.20.1](https://github.com/darkobits/ts/compare/v0.20.1-beta.3...v0.20.1) (2023-12-08)
+
 ## [0.20.1-beta.3](https://github.com/darkobits/ts/compare/v0.20.1-beta.2...v0.20.1-beta.3) (2023-11-29)
 
 
