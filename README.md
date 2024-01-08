@@ -56,4 +56,4 @@ and start building something great.
 | [`@darkobits/eslint-plugin`](https://github.com/darkobits/eslint-plugin) | `~0.5.4`
 | [`semantic-release`](https://github.com/semantic-release/semantic-release) | `~21.1.1`
 | [`npm-check-updates`](https://github.com/raineorshine/npm-check-updates) | `~16.14.12`
-| [`@darkobits/nr`](https://github.com/darkobits/nr) | `~0.16.3`
+| [`@darkobits/nr`](https://github.com/darkobits/nr) | `0.17.0-beta.3`

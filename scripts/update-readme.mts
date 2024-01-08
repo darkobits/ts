@@ -1,4 +1,4 @@
-import { EOL } from 'os';
+import { EOL } from 'node:os';
 
 import ejs from 'ejs';
 import fs from 'fs-extra';

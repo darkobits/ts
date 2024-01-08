@@ -1,4 +1,4 @@
-import { EOL } from 'os';
+import { EOL } from 'node:os';
 
 import waitOn from 'wait-on';
 
@@ -6,10 +6,10 @@ import { EXTENSIONS } from '../etc/constants';
 import log from '../lib/log';
 import { getPackageContext, inferESLintConfigurationStrategy } from '../lib/utils';
 
-import type { UserConfigurationFn, Thunk } from '@darkobits/nr';
+import type { Thunk, UserConfigurationFnContext } from '@darkobits/nr';
 
 
-export default (userConfig?: UserConfigurationFn): UserConfigurationFn => async context => {
+export default async (context: UserConfigurationFnContext) => {
   const { command, task, script, isCI } = context;
   const { root, srcDir, packageJson } = await getPackageContext();
 
@@ -328,7 +328,4 @@ export default (userConfig?: UserConfigurationFn): UserConfigurationFn => async 
       'changes to build artifacts.'
     ].join(' ')
   });
-
-
-  if (typeof userConfig === 'function') await userConfig(context);
 };

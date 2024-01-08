@@ -1,4 +1,4 @@
-import path from 'path';
+import path from 'node:path';
 
 import { interopImportDefault } from '@darkobits/interop-import-default';
 import typescriptPlugin from '@rollup/plugin-typescript';
