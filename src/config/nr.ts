@@ -1,16 +1,16 @@
 import { EOL } from 'node:os';
 
+import IS_CI from 'is-ci';
 import waitOn from 'wait-on';
 
 import { EXTENSIONS } from '../etc/constants';
 import log from '../lib/log';
 import { getPackageContext, inferESLintConfigurationStrategy } from '../lib/utils';
 
-import type { Thunk, UserConfigurationFnContext } from '@darkobits/nr';
+import type { Thunk, UserConfigurationExport } from '@darkobits/nr';
 
 
-export default async (context: UserConfigurationFnContext) => {
-  const { command, task, script, isCI } = context;
+export default (async ({ command, fn, script }) => {
   const { root, srcDir, packageJson } = await getPackageContext();
 
   /**
@@ -35,17 +35,17 @@ export default async (context: UserConfigurationFnContext) => {
    * If the host project doesn't have an ESLint configuration file, we'll log
    * a warning and bail.
    */
-  const noOpLintTask = task(() => log.warn(
+  const noOpLintFn = fn(() => log.warn(
     log.prefix('lint'),
     log.chalk.dim('No-op; missing ESLint configuration file.')
   ));
 
   /**
-   * By default, use our no-op task as the default instruction for the "lint"
-   * and "lint.fix" scripts.
+   * By default, use our no-op function as the default instruction for the
+   * "lint" and "lint.fix" scripts.
    */
-  let lintInstruction: Thunk = noOpLintTask;
-  let lintFixInstruction: Thunk = noOpLintTask;
+  let lintInstruction: Thunk = noOpLintFn;
+  let lintFixInstruction: Thunk = noOpLintFn;
 
   const eslintFlags: Record<string, any> = { format: 'codeframe' };
   const eslintEnvVars: Record<string, string> = {};
@@ -250,7 +250,7 @@ export default async (context: UserConfigurationFnContext) => {
       root: true,
       // Only set this flag to true if package.json declares a "workspaces"
       // field. Otherwise, npm-check-updates will fail.
-      workspaces: Boolean(packageJson.workspaces)
+      workspaces: Reflect.has(packageJson, 'workspaces')
     },
     stdio: 'inherit',
     // This CLI exits with a non-zero code if the user issues a SIGTERM to quit
@@ -267,7 +267,7 @@ export default async (context: UserConfigurationFnContext) => {
 
   // In CI environments, skip our usual prepare steps; users can will likely
   // need to build and test projects explicitly in such cases.
-  script('prepare', isCI ? task(() => log.info(
+  script('prepare', IS_CI ? fn(() => log.info(
     log.prefix('prepare'),
     log.chalk.yellow(`CI environment detected. Skipping ${log.chalk.bold('prepare')} script.`)
   )) : [
@@ -276,7 +276,7 @@ export default async (context: UserConfigurationFnContext) => {
   ], {
     group: 'Lifecycle',
     description: '[hook] Run after "npm install" to ensure the project builds and tests are passing.',
-    timing: !isCI
+    timing: !IS_CI
   });
 
   script('start', [[
@@ -286,7 +286,7 @@ export default async (context: UserConfigurationFnContext) => {
       stdout: 'pipe',
       stderr: 'ignore'
     }),
-    task(async () => {
+    fn(async () => {
       const unscopedName = packageJson.name?.split('/').pop() ?? '';
       const entrypoint = packageJson.bin
         ? packageJson.bin[unscopedName]
@@ -328,4 +328,4 @@ export default async (context: UserConfigurationFnContext) => {
       'changes to build artifacts.'
     ].join(' ')
   });
-};
+}) satisfies UserConfigurationExport;

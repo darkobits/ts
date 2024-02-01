@@ -2,6 +2,7 @@ import path from 'node:path';
 
 import defineConfig from '@darkobits/nr';
 import fs from 'fs-extra';
+import IS_CI from 'is-ci';
 
 import { defaultPackageScripts } from './src';
 import log from './src/lib/log';
@@ -11,7 +12,7 @@ export default defineConfig([
   // Register the default scripts defined by this package.
   defaultPackageScripts,
   // Additionally, register our own custom scripts.
-  ({ command, task, script, isCI }) => {
+  ({ command, fn, script }) => {
     const gitPushCommand = command('git', {
       args: ['push', 'origin', 'HEAD', { setUpstream: true, followTags: true }]
     });
@@ -35,7 +36,7 @@ export default defineConfig([
       // Push the release commit.
       gitPushCommand,
       // Remove the re-pack directory.
-      task(() => fs.rm(path.resolve('.re-pack'), { recursive: true, force: true }))
+      fn(() => fs.rm(path.resolve('.re-pack'), { recursive: true, force: true }))
     ], {
       group: 'Release',
       description: `Publish the package using ${log.chalk.white.bold('re-pack')}.`,
@@ -50,7 +51,7 @@ export default defineConfig([
       description: '[hook] After the bump script, publish the project and push the release commit.'
     });
 
-    if (!isCI) {
+    if (!IS_CI) {
       script('postBuild', [
         command.node('./scripts/update-readme.mts', {
           nodeOptions: ['--loader=ts-node/esm', '--no-warnings']
