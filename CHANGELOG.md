@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.20.4](https://github.com/darkobits/ts/compare/v0.20.4-beta.1...v0.20.4) (2024-02-01)
+
+
+### 🛠 Refactoring
+
+* Deprecate `withDefaultPackageScripts`. ([16d8482](https://github.com/darkobits/ts/commit/16d84823db4ca27d2d5d0f1ca78f255a6c5d0528))
+
 ## [0.20.4-beta.1](https://github.com/darkobits/ts/compare/v0.20.4-beta.0...v0.20.4-beta.1) (2024-02-01)
 
 
