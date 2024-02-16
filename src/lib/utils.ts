@@ -233,6 +233,7 @@ export function createPluginReconfigurator(config: ViteConfigurationScaffold) {
 
         if (resolvedPlugin.name === resolvedExistingPlugin.name) {
           pluginFound = true;
+          // eslint-disable-next-line @typescript-eslint/no-floating-promises
           existingPluginsAsFlatArray[i] = curPlugin;
           log.verbose(log.prefix('reconfigurePlugin'), `Reconfigured plugin: ${resolvedExistingPlugin.name}`);
           break;
@@ -245,6 +246,7 @@ export function createPluginReconfigurator(config: ViteConfigurationScaffold) {
     }
 
     // Because we modified this value in-place, we can return it as-is.
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     config.plugins = existingPluginsAsFlatArray;
   };
 }
