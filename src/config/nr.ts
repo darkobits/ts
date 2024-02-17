@@ -201,10 +201,11 @@ export default (async ({ command, fn, script }) => {
       }
     }), {
       group: 'Bump',
-      description: [
-        `Generate a change log entry and tagged commit for a ${releaseType} release using ${log.chalk.white.bold('standard-version')}.`,
-        description
-      ].filter(Boolean).join(EOL),
+      description: [[
+        'Generate a change log entry and tagged commit for a',
+        releaseType,
+        `release using ${log.chalk.white.bold('standard-version')}.`
+      ].filter(Boolean).join(' '), description].filter(Boolean).join(EOL),
       timing: true
     });
   };
