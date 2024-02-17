@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.20.6](https://github.com/darkobits/ts/compare/v0.20.5...v0.20.6) (2024-02-17)
+
+
+### 🐞 Bug Fixes
+
+* Update description for bump scripts. ([488699f](https://github.com/darkobits/ts/commit/488699f070857b12442918e5fe3478860174562f))
+
 ## [0.20.5](https://github.com/darkobits/ts/compare/v0.20.4...v0.20.5) (2024-02-16)
 
 
