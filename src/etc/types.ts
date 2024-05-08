@@ -1,4 +1,4 @@
-import type { NormalizedPackageJson } from 'read-pkg-up';
+import type { NormalizedPackageJson } from 'read-package-up';
 import type { UserConfig, ConfigEnv } from 'vite';
 import type { InlineConfig } from 'vitest';
 

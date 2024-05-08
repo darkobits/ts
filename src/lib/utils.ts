@@ -2,7 +2,9 @@ import { execSync } from 'node:child_process';
 import path from 'node:path';
 
 import merge from 'deepmerge';
+import { findUp } from 'find-up';
 import { getTsconfig } from 'get-tsconfig';
+import { readPackageUp } from 'read-package-up';
 
 import log from './log';
 import {
@@ -39,10 +41,6 @@ function isPromise(value: any): value is PromiseLike<any> {
 export async function getPackageContext(): Promise<PackageContext> {
   try {
     const timer = log.createTimer();
-
-    // N.B. These are ESM, so we must import them dynamically.
-    const { readPackageUp } = await import('read-pkg-up');
-    const { findUp } = await import('find-up');
 
     // Find and parse package.json.
     const pkgResult = await readPackageUp({ cwd: process.cwd() });
