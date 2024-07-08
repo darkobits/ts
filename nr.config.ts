@@ -1,6 +1,6 @@
 import path from 'node:path';
 
-import defineConfig from '@darkobits/nr';
+import { defineConfig } from '@darkobits/nr';
 import fs from 'fs-extra';
 import IS_CI from 'is-ci';
 
