@@ -2,7 +2,6 @@ import type { NormalizedPackageJson } from 'read-package-up';
 import type { UserConfig, ConfigEnv } from 'vite';
 import type { InlineConfig } from 'vitest';
 
-
 /**
  * Custom type we use for Vite configuration that has various properties
  * pre-defined to make updating the object in-place easier.
@@ -14,7 +13,6 @@ export interface ViteConfigurationScaffold extends UserConfig {
   resolve: NonNullable<UserConfig['resolve']>;
   server: NonNullable<UserConfig['server']>;
 }
-
 
 /**
  * Object returned by `getPackageContext`.
@@ -64,7 +62,6 @@ export interface PackageContext {
   };
 }
 
-
 /**
  * Context object that will be passed to user configuration functions. Extends
  * the default ConfigEnv provided by Vite with the values from PackageContext
@@ -73,7 +70,6 @@ export interface PackageContext {
 export type ConfigurationContext = ConfigEnv & PackageContext & {
   config: ViteConfigurationScaffold;
 };
-
 
 /**
  * Signature of configuration functions passed to a Vite configuration preset.

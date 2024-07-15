@@ -1,5 +1,6 @@
 import { EOL } from 'node:os';
 
+import chalk from 'chalk';
 import IS_CI from 'is-ci';
 import waitOn from 'wait-on';
 
@@ -9,18 +10,16 @@ import { getPackageContext, inferESLintConfigurationStrategy } from '../lib/util
 
 import type { Thunk, UserConfigurationExport } from '@darkobits/nr';
 
-
 export default (async ({ command, fn, script }) => {
   const { root, srcDir, packageJson } = await getPackageContext();
 
   /**
-   * Any arguments provided after a "--" argument that will be forwarded to
+   * Gather any arguments provided after a "--"; these will be forwarded to
    * child processes started by a command.
    */
   const forwardArgs = process.argv.includes('--')
     ? process.argv.slice(process.argv.indexOf('--') + 1)
     : [];
-
 
   // ----- Lint Scripts --------------------------------------------------------
 
@@ -35,10 +34,7 @@ export default (async ({ command, fn, script }) => {
    * If the host project doesn't have an ESLint configuration file, we'll log
    * a warning and bail.
    */
-  const noOpLintFn = fn(() => log.warn(
-    log.prefix('lint'),
-    log.chalk.dim('No-op; missing ESLint configuration file.')
-  ));
+  const noOpLintFn = fn(() => log.warn(chalk.dim('No-op; missing ESLint configuration file.')));
 
   /**
    * By default, use our no-op function as the default instruction for the
@@ -59,12 +55,12 @@ export default (async ({ command, fn, script }) => {
       // Project is using the newer flat configuration format; we will need to
       // set the ESLINT_USE_FLAT_CONFIG environment variable in order for ESLint
       // to use it.
-      log.silly(log.prefix('script:lint'), `Using flat ESLint configuration via ${log.chalk.green(eslintConfig.configFile)}.`);
+      log.trace('[script:lint]', `Using flat ESLint configuration via ${chalk.green(eslintConfig.configFile)}.`);
       eslintEnvVars.ESLINT_USE_FLAT_CONFIG = 'true';
     } else {
       // Project is using the legacy configuration format; we will need to
       // explicitly pass a list of extensions to lint.
-      log.silly(log.prefix('script:lint'), `Using legacy ESLint configuration via ${log.chalk.green(eslintConfig.configFile)}.`);
+      log.trace('[script:lint]', `Using legacy ESLint configuration via ${chalk.green(eslintConfig.configFile)}.`);
       eslintFlags.ext = EXTENSIONS.join(',');
     }
 
@@ -80,24 +76,23 @@ export default (async ({ command, fn, script }) => {
       env: eslintEnvVars
     });
   } else {
-    log.silly(
-      log.prefix('script:lint'),
+    log.trace(
+      '[script:lint]',
       'Unable to determine ESLint configuration strategy; project may lack an ESLint configuration file.'
     );
   }
 
   script('lint', lintInstruction, {
     group: 'Lint',
-    description: `Lint the project using ${log.chalk.white.bold('ESLint')}.`,
+    description: `Lint the project using ${chalk.white.bold('ESLint')}.`,
     timing: true
   });
 
   script('lint.fix', lintFixInstruction, {
     group: 'Lint',
-    description: `Lint the project using ${log.chalk.white.bold('ESLint')} and automatically fix any fixable errors.`,
+    description: `Lint the project using ${chalk.white.bold('ESLint')} and automatically fix any fixable errors.`,
     timing: true
   });
-
 
   // ----- Build Scripts -------------------------------------------------------
 
@@ -109,7 +104,7 @@ export default (async ({ command, fn, script }) => {
     'script:lint'
   ]], {
     group: 'Build',
-    description: `Build, type-check, and lint the project using ${log.chalk.white.bold('Vite')}.`,
+    description: `Build, type-check, and lint the project using ${chalk.white.bold('Vite')}.`,
     timing: true
   });
 
@@ -118,9 +113,8 @@ export default (async ({ command, fn, script }) => {
     env: eslintEnvVars
   }), {
     group: 'Build',
-    description: `Continuously build and type-check the project using ${log.chalk.white.bold('Vite')}.`
+    description: `Continuously build and type-check the project using ${chalk.white.bold('Vite')}.`
   });
-
 
   // ----- Testing Scripts -----------------------------------------------------
 
@@ -130,7 +124,7 @@ export default (async ({ command, fn, script }) => {
     env: eslintEnvVars
   }), {
     group: 'Test',
-    description: `Run unit tests using ${log.chalk.white.bold('Vitest')}.`,
+    description: `Run unit tests using ${chalk.white.bold('Vitest')}.`,
     timing: true
   });
 
@@ -142,7 +136,7 @@ export default (async ({ command, fn, script }) => {
     preserveArgumentCasing: true
   }), {
     group: 'Test',
-    description: `Run unit tests using ${log.chalk.white.bold('Vitest')} in watch mode.`
+    description: `Run unit tests using ${chalk.white.bold('Vitest')} in watch mode.`
   });
 
   script('test.coverage', command('vitest', {
@@ -151,10 +145,9 @@ export default (async ({ command, fn, script }) => {
     env: eslintEnvVars
   }), {
     group: 'Test',
-    description: `Run unit tests using ${log.chalk.white.bold('Vitest')} and generate a coverage report.`,
+    description: `Run unit tests using ${chalk.white.bold('Vitest')} and generate a coverage report.`,
     timing: true
   });
-
 
   // ----- Release Scripts -----------------------------------------------------
 
@@ -163,7 +156,7 @@ export default (async ({ command, fn, script }) => {
       extends: '@darkobits/semantic-release-config'
     }
   }), {
-    description: `Create a release in a CI environment using ${log.chalk.white.bold('semantic-release')}.`,
+    description: `Create a release in a CI environment using ${chalk.white.bold('semantic-release')}.`,
     group: 'Release',
     timing: true
   });
@@ -174,11 +167,10 @@ export default (async ({ command, fn, script }) => {
       extends: '@darkobits/semantic-release-config'
     }
   }), {
-    description: `Create a release locally using ${log.chalk.white.bold('semantic-release')}.`,
+    description: `Create a release locally using ${chalk.white.bold('semantic-release')}.`,
     group: 'Release',
     timing: true
   });
-
 
   // ----- Bump Scripts --------------------------------------------------------
 
@@ -204,7 +196,7 @@ export default (async ({ command, fn, script }) => {
       description: [[
         'Generate a change log entry and tagged commit for a',
         releaseType,
-        `release using ${log.chalk.white.bold('standard-version')}.`
+        `release using ${chalk.white.bold('standard-version')}.`
       ].filter(Boolean).join(' '), description].filter(Boolean).join(EOL),
       timing: true
     });
@@ -239,7 +231,6 @@ export default (async ({ command, fn, script }) => {
     args: { prerelease: 'beta' }
   });
 
-
   // ----- Dependency Management -----------------------------------------------
 
   script('deps.check', command('npm-check-updates', {
@@ -260,17 +251,16 @@ export default (async ({ command, fn, script }) => {
     reject: false
   }), {
     group: 'Dependency Management',
-    description: `Check for newer versions of installed dependencies using ${log.chalk.white.bold('npm-check-updates')}.`
+    description: `Check for newer versions of installed dependencies using ${chalk.white.bold('npm-check-updates')}.`
   });
-
 
   // ----- Lifecycles ----------------------------------------------------------
 
   // In CI environments, skip our usual prepare steps; users can will likely
   // need to build and test projects explicitly in such cases.
   script('prepare', IS_CI ? fn(() => log.info(
-    log.prefix('prepare'),
-    log.chalk.yellow(`CI environment detected. Skipping ${log.chalk.bold('prepare')} script.`)
+    '[prepare]',
+    chalk.yellow(`CI environment detected. Skipping ${chalk.bold('prepare')} script.`)
   )) : [
     'script:build',
     'script:test'
@@ -294,8 +284,7 @@ export default (async ({ command, fn, script }) => {
         : packageJson.main;
 
       if (!entrypoint) throw new Error('[script:start] No "bin" (string) or "main" declarations in package.json.');
-      log.info(log.prefix('start'), log.chalk.gray('Using entrypoint:'), log.chalk.green(entrypoint));
-
+      log.info('[start]', chalk.gray('Using entrypoint:'), chalk.green(entrypoint));
 
       /**
        * This will wait for our build artifacts to be completely written to disk
@@ -325,7 +314,7 @@ export default (async ({ command, fn, script }) => {
   ]], {
     group: 'Lifecycle',
     description: [
-      `Starts ${log.chalk.bold.white('Vite')} and ${log.chalk.bold.white('nodemon')}, watching for`,
+      `Starts ${chalk.bold.white('Vite')} and ${chalk.bold.white('nodemon')}, watching for`,
       'changes to build artifacts.'
     ].join(' ')
   });

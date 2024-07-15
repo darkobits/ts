@@ -1,3 +1,8 @@
-import LogFactory from '@darkobits/log';
+import env from '@darkobits/env';
+import consola, { LogLevels } from 'consola';
 
-export default LogFactory({heading: 'ts'});
+const logLevel = env<keyof typeof LogLevels>('LOG_LEVEL');
+
+export default consola.create({
+  level: (logLevel && LogLevels[logLevel]) ?? LogLevels.info
+});

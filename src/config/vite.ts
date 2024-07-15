@@ -2,6 +2,7 @@ import path from 'node:path';
 
 import { interopImportDefault } from '@darkobits/interop-import-default';
 import typescriptPlugin from '@rollup/plugin-typescript';
+import chalk from 'chalk';
 import glob from 'fast-glob';
 // @ts-expect-error - Package has no type definitions.
 import preserveShebangPlugin from 'rollup-plugin-preserve-shebang';
@@ -18,13 +19,11 @@ import { createViteConfigurationPreset } from '../lib/utils';
 
 const tsconfigPathsPlugin = interopImportDefault(tsconfigPathsPluginExport);
 
-
 /**
  * Hacky way to determine if we are in watch mode, in which case we want to
  * change the behavior of certain plugins.
  */
 const isWatchMode = process.argv.includes('--watch') || process.argv.includes('-w');
-
 
 /**
  * Vite configuration preset suitable for publishing libraries or CLIs to NPM.
@@ -75,8 +74,7 @@ export const library = createViteConfigurationPreset(async context => {
   // User forgot to write any code or did not set up paths correctly in
   // tsconfig.json.
   if (entry.length === 0)
-    throw new Error(`[preset:library] No entry files found in ${log.chalk.green(srcDir)}.`);
-
+    throw new Error(`[preset:library] No entry files found in ${chalk.green(srcDir)}.`);
 
   // ----- Build Configuration -------------------------------------------------
 
@@ -84,9 +82,9 @@ export const library = createViteConfigurationPreset(async context => {
   const isExplicitESM = packageJson.type === 'module';
 
   if (isExplicitESM) {
-    log.verbose(log.prefix('preset:library'), `Emitting ${log.chalk.green('ESM')} because ${log.chalk.green.bold('type')} is ${log.chalk.green('module')} in package.json.`);
+    log.verbose('[preset:library]', `Emitting ${chalk.green('ESM')} because ${chalk.green.bold('type')} is ${chalk.green('module')} in package.json.`);
   } else {
-    log.verbose(log.prefix('preset:library'), `Emitting ${log.chalk.green('CommonJS')} because ${log.chalk.green('type')} ${log.chalk.bold('is not')} ${log.chalk.green('module')} in package.json.`);
+    log.verbose('[preset:library]', `Emitting ${chalk.green('CommonJS')} because ${chalk.green('type')} ${chalk.bold('is not')} ${chalk.green('module')} in package.json.`);
   }
 
   config.build = {
@@ -102,7 +100,6 @@ export const library = createViteConfigurationPreset(async context => {
       formats: isExplicitESM ? ['es'] : ['cjs']
     }
   };
-
 
   // ----- Vitest Configuration ------------------------------------------------
 
@@ -125,7 +122,6 @@ export const library = createViteConfigurationPreset(async context => {
     }
   };
 
-
   // ----- Plugin: Externalize Dependencies ------------------------------------
 
   /**
@@ -138,7 +134,6 @@ export const library = createViteConfigurationPreset(async context => {
     optionalDeps: true,
     peerDeps: true
   }));
-
 
   // ----- Plugin: TypeScript --------------------------------------------------
 
@@ -174,7 +169,6 @@ export const library = createViteConfigurationPreset(async context => {
     }
   }));
 
-
   // ----- Plugin: tsconfig-paths ----------------------------------------------
 
   /**
@@ -184,7 +178,6 @@ export const library = createViteConfigurationPreset(async context => {
    * See: https://github.com/aleclarson/vite-tsconfig-paths
    */
   config.plugins.push(tsconfigPathsPlugin({ root }));
-
 
   // ----- Plugin: tsc-alias ---------------------------------------------------
 
@@ -202,7 +195,6 @@ export const library = createViteConfigurationPreset(async context => {
    */
   config.plugins.push(tscAliasPlugin({ configFile: tsConfigPath }));
 
-
   // ----- Plugin: No Bundle ---------------------------------------------------
 
   /**
@@ -216,7 +208,6 @@ export const library = createViteConfigurationPreset(async context => {
    */
   config.plugins.push(noBundlePlugin({ root: srcDir }));
 
-
   // ----- Plugin: Preserve Shebangs -------------------------------------------
 
   /**
@@ -228,7 +219,6 @@ export const library = createViteConfigurationPreset(async context => {
    */
   config.plugins.push(preserveShebangPlugin());
 
-
   // ----- Plugin: Executable --------------------------------------------------
 
   /**
@@ -237,7 +227,6 @@ export const library = createViteConfigurationPreset(async context => {
    * they will be given an executable flag.
    */
   config.plugins.push(executablePlugin());
-
 
   // ----- Plugin: Copy Files --------------------------------------------------
 
@@ -257,7 +246,6 @@ export const library = createViteConfigurationPreset(async context => {
       })
     }));
   }
-
 
   // ----- Plugin: ESLint ------------------------------------------------------
 

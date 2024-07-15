@@ -1,22 +1,17 @@
 import path from 'node:path';
 
 import { defineConfig } from '@darkobits/nr';
+import chalk from 'chalk';
 import fs from 'fs-extra';
 import IS_CI from 'is-ci';
 
 import { defaultPackageScripts } from './src';
-import log from './src/lib/log';
-
 
 export default defineConfig([
   // Register the default scripts defined by this package.
   defaultPackageScripts,
   // Additionally, register our own custom scripts.
   ({ command, fn, script }) => {
-    const gitPushCommand = command('git', {
-      args: ['push', 'origin', 'HEAD', { setUpstream: true, followTags: true }]
-    });
-
     script('test.smoke', [[
       command.node('index.js', { cwd: './tests/fixtures/cjs' }),
       command.node('index.js', { cwd: './tests/fixtures/esm' })
@@ -27,28 +22,30 @@ export default defineConfig([
     });
 
     // When publishing this package, we use re-pack's 'publish' command to
-    // publish from the .re-pack folder rather than `npm publish`.
+    // publish from the .re-pack directory rather than `npm publish`.
     script('publish', [
-    // Re-pack the project.
+      // Re-pack the project.
       command('re-pack'),
-      // Publish the project from the re-pack directory.
+      // Publish the project.
       command('re-pack', { args: ['publish'] }),
       // Push the release commit.
-      gitPushCommand,
+      command('git', { args: ['push', 'origin', 'HEAD', { setUpstream: true, followTags: true }] }),
       // Remove the re-pack directory.
       fn(() => fs.rm(path.resolve('.re-pack'), { recursive: true, force: true }))
     ], {
       group: 'Release',
-      description: `Publish the package using ${log.chalk.white.bold('re-pack')}.`,
+      description: `Publish the package using ${chalk.white.bold('re-pack')}.`,
       timing: true
     });
 
+    // Automatically publish a new version of the package after performing a
+    // version bump.
     script('postBump', [
       'script:publish',
-      gitPushCommand
+      command('git', { args: ['push', 'origin', 'HEAD', { setUpstream: true, followTags: true }] })
     ], {
       group: 'Lifecycle',
-      description: '[hook] After the bump script, publish the project and push the release commit.'
+      description: '[hook] After a bump script completes, publish to NPM and push the release commit.'
     });
 
     if (!IS_CI) {

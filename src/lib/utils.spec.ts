@@ -2,7 +2,6 @@ import path from 'node:path';
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
-
 const mockExecSync = vi.fn();
 vi.doMock('child_process', () => ({
   execSync: mockExecSync
@@ -22,7 +21,6 @@ const mockGetTsconfig = vi.fn();
 vi.doMock('get-tsconfig', () => ({
   getTsconfig: mockGetTsconfig
 }));
-
 
 describe('gitDescribe', () => {
   it('should parse results', async () => {

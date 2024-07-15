@@ -1,6 +1,7 @@
 import { execSync } from 'node:child_process';
 import path from 'node:path';
 
+import chalk from 'chalk';
 import merge from 'deepmerge';
 import { findUp } from 'find-up';
 import { getTsconfig } from 'get-tsconfig';
@@ -24,7 +25,6 @@ import type {
   PluginOption
 } from 'vite';
 
-
 /**
  * @private
  *
@@ -34,24 +34,23 @@ function isPromise(value: any): value is PromiseLike<any> {
   return Reflect.has(value, 'then') && Reflect.has(value, 'catch');
 }
 
-
 /**
  * Infers information about the host package.
  */
 export async function getPackageContext(): Promise<PackageContext> {
   try {
-    const timer = log.createTimer();
+    const startTime = Date.now();
 
     // Find and parse package.json.
     const pkgResult = await readPackageUp({ cwd: process.cwd() });
     if (!pkgResult) throw new Error('[ts:getPackageContext] Unable to find package.json.');
     const packageJson = pkgResult.packageJson;
-    log.silly(log.prefix('getPackageContext'), log.chalk.bold('packageJson'), log.chalk.green(pkgResult.path));
+    log.trace('[getPackageContext]', chalk.bold('packageJson'), chalk.green(pkgResult.path));
 
     // Find tsconfig.json.
     const tsConfigPath = await findUp('tsconfig.json', { cwd: process.cwd() });
     if (!tsConfigPath) throw new Error('[ts:getPackageContext] Unable to find tsconfig.json');
-    log.silly(log.prefix('getPackageContext'), log.chalk.bold('tsConfig'),  log.chalk.green(tsConfigPath));
+    log.trace('[getPackageContext]', chalk.bold('tsConfig'),  chalk.green(tsConfigPath));
 
     // If we found a package.json and tsconfig.json in the same folder, use that
     // folder as our root. Otherwise, use the directory where we found
@@ -60,17 +59,17 @@ export async function getPackageContext(): Promise<PackageContext> {
     const root = pkgResult.path === path.dirname(tsConfigPath)
       ? pkgResult.path
       : path.dirname(tsConfigPath);
-    log.silly(log.prefix('getPackageContext'), log.chalk.bold('root'), root);
+    log.trace('[getPackageContext]', chalk.bold('root'), root);
 
     // Parse tsconfig.json.
     const tsConfigResult = getTsconfig(tsConfigPath);
-    if (!tsConfigResult) throw new Error(`[ts:getPackageContext] Unable to locate a tsconfig.json file at or above ${log.chalk.green(tsConfigPath)}`);
+    if (!tsConfigResult) throw new Error(`[ts:getPackageContext] Unable to locate a tsconfig.json file at or above ${chalk.green(tsConfigPath)}`);
     const { config: tsConfig } = tsConfigResult;
 
     // Infer source root. This will already be an absolute directory.
     const srcDir = tsConfig.compilerOptions?.baseUrl;
     if (!srcDir) throw new Error('[ts:getPackageContext] "compilerOptions.baseUrl" must be set in tsconfig.json');
-    log.silly(log.prefix('getPackageContext'), log.chalk.bold('srcDir'), log.chalk.green(srcDir));
+    log.trace('[getPackageContext]', chalk.bold('srcDir'), chalk.green(srcDir));
 
     // Infer output directory. If it is not absolute, resolve it relative to the
     // root directory.
@@ -80,13 +79,14 @@ export async function getPackageContext(): Promise<PackageContext> {
         : path.resolve(root, tsConfig.compilerOptions.outDir)
       : undefined;
     if (!outDir) throw new Error('[ts:getPackageContext] "compilerOptions.outDir" must be set in tsconfig.json');
-    log.silly(log.prefix('getPackageContext'), log.chalk.bold('outDir'), log.chalk.green(path.resolve(root, outDir)));
+    log.trace('[getPackageContext]', chalk.bold('outDir'), chalk.green(path.resolve(root, outDir)));
 
     // Build glob patterns to match source files and test files.
     const SOURCE_FILES = [srcDir, '**', `*.{${BARE_EXTENSIONS.join(',')}}`].join(path.sep);
     const TEST_FILES = [srcDir, '**', `*.{${TEST_FILE_PATTERNS.join(',')}}.{${BARE_EXTENSIONS.join(',')}}`].join(path.sep);
 
-    log.silly(log.prefix('getPackageContext'), `Done in ${timer}.`);
+    const time = Date.now() - startTime;
+    log.trace('[getPackageContext]', `Done in ${time}ms.`);
 
     return {
       root,
@@ -105,7 +105,6 @@ export async function getPackageContext(): Promise<PackageContext> {
   }
 }
 
-
 export interface ESLintConfigurationStrategy {
   type: 'flat' | 'legacy';
   configFile: string;
@@ -123,8 +122,6 @@ export interface ESLintConfigurationStrategy {
  */
 export async function inferESLintConfigurationStrategy(cwd: string = process.cwd()): Promise<ESLintConfigurationStrategy | false> {
   try {
-    const { findUp } = await import('find-up');
-
     const [
       flatConfigFilePath,
       legacyConfigFilePath
@@ -164,25 +161,17 @@ export async function inferESLintConfigurationStrategy(cwd: string = process.cwd
 
     return false;
   } catch (err: any) {
-    log.error(log.prefix('inferESLintConfigurationStrategy'), err);
+    log.error('[inferESLintConfigurationStrategy]', err);
     return false;
   }
 }
-
 
 /**
  * Returns a new ViteConfigurationScaffold.
  */
 export function createViteConfigurationScaffold(): ViteConfigurationScaffold {
-  return {
-    build: {},
-    plugins: [],
-    resolve: {},
-    server: {},
-    test: {}
-  };
+  return { build: {}, plugins: [], resolve: {}, server: {}, test: {} };
 }
-
 
 /**
  * Provided a Vite configuration object, returns a function that accepts a
@@ -208,16 +197,17 @@ export function createPluginReconfigurator(config: ViteConfigurationScaffold) {
     for (const curPlugin of newPluginsAsFlatArray) {
       let pluginFound = false;
 
-      const resolvedPlugin = isPromise(curPlugin) ? await curPlugin : curPlugin;
+      const resolvedPlugin = isPromise(curPlugin)
+        ? await curPlugin
+        : curPlugin;
 
       if (!resolvedPlugin) continue;
 
       // Only necessary for TypeScript; the PluginOption type contains a
       // recursive reference to an array of itself, so no amount of flattening
       // will ever allow us to narrow this to a non-array type.
-      if (Array.isArray(resolvedPlugin)) {
+      if (Array.isArray(resolvedPlugin))
         throw new TypeError('[reconfigurePlugin] Unexpected: Found an array in a flattened list of plugins');
-      }
 
       for (let i = 0; i < existingPluginsAsFlatArray.length; i += 1) {
         const existingPlugin = existingPluginsAsFlatArray[i];
@@ -233,14 +223,13 @@ export function createPluginReconfigurator(config: ViteConfigurationScaffold) {
           pluginFound = true;
           // eslint-disable-next-line @typescript-eslint/no-floating-promises
           existingPluginsAsFlatArray[i] = curPlugin;
-          log.verbose(log.prefix('reconfigurePlugin'), `Reconfigured plugin: ${resolvedExistingPlugin.name}`);
+          log.verbose('[reconfigurePlugin]', `Reconfigured plugin: ${resolvedExistingPlugin.name}`);
           break;
         }
       }
 
-      if (!pluginFound) {
+      if (!pluginFound)
         throw new Error(`[reconfigurePlugin] Unable to find an existing plugin instance for ${resolvedPlugin.name}`);
-      }
     }
 
     // Because we modified this value in-place, we can return it as-is.
@@ -248,7 +237,6 @@ export function createPluginReconfigurator(config: ViteConfigurationScaffold) {
     config.plugins = existingPluginsAsFlatArray;
   };
 }
-
 
 /**
  * Used to create Vite configuration presets for different project types.
@@ -264,11 +252,11 @@ export function createViteConfigurationPreset<
   C extends ConfigurationContext = ConfigurationContext
 >(baseConfigurationFactory: CustomConfigurationFactory<C>) {
   // N.B. This is the function that the user will invoke in their Vite
-  // configuration file and pass an optional value/function to set configuration
+  // configuration file and pass an optional value/function to define config
   // overrides.
-  return (userConfigExport?: CustomUserConfigExport<C>) => {
+  return (userConfig?: CustomUserConfigExport<C>) => {
     // N.B. This is the function that will ultimately be provided to Vite, which
-    // it will invoke with the default ConfigEnv type.
+    // it will invoke with the default ConfigEnv param.
     return async (configEnv: ConfigEnv) => {
       const packageContext = await getPackageContext();
       const config = createViteConfigurationScaffold();
@@ -283,23 +271,19 @@ export function createViteConfigurationPreset<
       await baseConfigurationFactory(context);
 
       // User did not provide any configuration overrides.
-      if (!userConfigExport) {
-        return context.config;
-      }
+      if (!userConfig) return context.config;
 
       // User provided a function that will modify config.context in-place, or
       // return a Vite configuration object, or both.
-      if (typeof userConfigExport === 'function') {
-        return merge(context.config, await userConfigExport(context) ?? {});
-      }
+      if (typeof userConfig === 'function')
+        return merge(context.config, await userConfig(context) ?? {});
 
       // User provided a configuration value or a Promise that will resolve with
       // a configuration value.
-      return merge(context.config, await userConfigExport);
+      return merge(context.config, await userConfig);
     };
   };
 }
-
 
 /**
  * Returns a short description of the current Git commit using 'git describe'.
@@ -322,7 +306,7 @@ export function gitDescribe() {
       // Replace the 'commits since last tag' segment with a dash.
       .replaceAll(/-\d+-/g, '-');
   } catch (err: any) {
-    log.error(log.prefix('gitDescribe'), err);
+    log.error('[gitDescribe]', err);
     return '';
   }
 }

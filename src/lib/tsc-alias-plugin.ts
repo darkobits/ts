@@ -8,7 +8,6 @@ import log from './log';
 
 import type { Plugin } from 'vite';
 
-
 /**
  * @private
  *
@@ -17,7 +16,7 @@ import type { Plugin } from 'vite';
  * options, so we must define every required property for `output`
  */
 const defaultOptions: ReplaceTscAliasPathsOptions = {
-  debug: log.isLevelAtLeast('verbose'),
+  debug: log.level >= 4,
   output: {
     verbose: true,
     clear: () => {
@@ -25,13 +24,13 @@ const defaultOptions: ReplaceTscAliasPathsOptions = {
       console.clear();
     },
     debug: message => {
-      log.silly(log.prefix('tscAliasPlugin'), message);
+      log.trace('[tscAliasPlugin]', message);
     },
     info: message => {
-      log.verbose(log.prefix('tscAliasPlugin'), message);
+      log.verbose('[tscAliasPlugin]', message);
     },
     error(message) {
-      log.error(log.prefix('tscAliasPlugin'), message);
+      log.error('[tscAliasPlugin]', message);
       this.error(message, true);
     },
     assert(claim, message) {
@@ -39,7 +38,6 @@ const defaultOptions: ReplaceTscAliasPathsOptions = {
     }
   }
 };
-
 
 /**
  * Responsible for running tsc-alias on emitted declaration files.
@@ -51,11 +49,13 @@ export default function tscAliasPlugin(userOptions: ReplaceTscAliasPathsOptions 
     name: 'vite-plugin-tsc-alias',
     enforce: 'post',
     async closeBundle() {
-      const timer = log.createTimer();
+      // const timer = log.createTimer();
+      const startTime = Date.now();
 
       try {
         await replaceTscAliasPaths(options);
-        log.verbose(log.prefix('tscAliasPlugin'), `Done in ${timer}.`);
+        const time = Date.now() - startTime;
+        log.verbose('[tscAliasPlugin]', `Done in ${time}ms.`);
       } catch (err: any) {
         this.error(err);
       }

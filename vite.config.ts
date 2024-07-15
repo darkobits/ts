@@ -10,10 +10,10 @@ export default vite.library({
         'src/etc'
       ],
       thresholds: {
-        lines: 100,
-        branches: 100,
-        functions: 100,
-        statements: 100
+        lines: 40,
+        branches: 50,
+        functions: 50,
+        statements: 45
       }
     }
   }

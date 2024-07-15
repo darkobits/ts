@@ -3,12 +3,10 @@ import { EOL } from 'node:os';
 import ejs from 'ejs';
 import fs from 'fs-extra';
 
-
 interface DependencyInfo {
   name: string;
   url: string;
 }
-
 
 /**
  * Gets the current local version of the provided dependency.
@@ -24,7 +22,6 @@ async function getDependencyVersion(name: string) {
 
   throw new Error(`[getDependencyVersion] Unable to get dependency version for "${name}".`);
 }
-
 
 /**
  * Constructs a Markdown table with each dependency and its version.
@@ -43,7 +40,6 @@ async function buildDependencyTable(dependencies: Array<DependencyInfo>) {
 
   return table.join(EOL);
 }
-
 
 /**
  * List of major dependencies we want to show version information for.
@@ -74,11 +70,9 @@ const dependencies = [{
   url: 'https://github.com/darkobits/nr'
 }];
 
-
 const data = {
   dependencyVersionTable: await buildDependencyTable(dependencies)
 };
-
 
 ejs.renderFile('scripts/README.md.ejs', data, {}, (err, result) => {
   // return err ? reject(err) : resolve(result);
