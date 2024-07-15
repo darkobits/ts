@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.21.0](https://github.com/darkobits/ts/compare/v0.20.10...v0.21.0) (2024-07-15)
+
+
+### ⚠ BREAKING CHANGES
+
+* **deps:** * Update to Vitest `2.0.0`. See: https://github.com/vitest-dev/vitest/releases/tag/v2.0.0
+
+### 🏗 Chores
+
+* **deps:** Update dependencies. ([2a405e2](https://github.com/darkobits/ts/commit/2a405e270fcd25759bb32baffe14e3c37a5fb9b8))
+* Update CI workflows. ([e79572a](https://github.com/darkobits/ts/commit/e79572a9ca66a5af71961adb4f00ca0d7fbff964))
+
+
+### 📖 Documentation
+
+* Add `CONTRIBUTING.md`. ([a3a9169](https://github.com/darkobits/ts/commit/a3a91699e1307ff3c0338e54644e5ed22b7e26fb))
+
 ## [0.20.10](https://github.com/darkobits/ts/compare/v0.20.9...v0.20.10) (2024-07-08)
 
 
