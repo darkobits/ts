@@ -29,17 +29,17 @@
     "@darkobits/eslint-plugin": "~0.5.5",
     "@darkobits/nr": "~0.18.0",
     "@darkobits/semantic-release-config": "~0.1.1",
-    "@types/node": ">=20.14.10",
-    "@vitest/coverage-v8": "^2.0.2",
-    "@vitest/ui": "^2.0.2",
+    "@types/node": ">=20.14.11",
+    "@vitest/coverage-v8": "^2.0.3",
+    "@vitest/ui": "^2.0.3",
     "eslint": "~8.57.0",
     "nodemon": "~3.1.4",
     "npm-check-updates": "~16.14.20",
     "semantic-release": "~21.1.1",
     "standard-version": "~9.5.0",
     "typescript": "~5.5.3",
-    "vite": "^5.3.3",
-    "vitest": "^2.0.2"
+    "vite": "^5.3.4",
+    "vitest": "^2.0.3"
   },
   "dependencies": {
     "@darkobits/interop-import-default": "^1.0.0",
@@ -52,15 +52,12 @@
     "fast-glob": "^3.3.2",
     "find-up": "^7.0.0",
     "fs-extra": "^11.2.0",
-    "get-tsconfig": "^4.7.5",
+    "get-tsconfig": "^4.7.6",
     "is-ci": "^3.0.1",
     "read-package-up": "^11.0.0",
     "rollup-plugin-preserve-shebang": "^1.0.1",
-    "rollup-plugin-tsconfig-paths": "^1.5.2",
     "tsc-alias": "^1.8.10",
     "vite-plugin-eslint": "^1.8.1",
-    "vite-plugin-externalize-deps": "^0.8.0",
-    "vite-plugin-no-bundle": "^4.0.0",
     "vite-plugin-static-copy": "~1.0.6",
     "vite-tsconfig-paths": "^4.3.2",
     "wait-on": "^7.2.0"
@@ -70,15 +67,17 @@
     "@types/ejs": "^3.1.5",
     "@types/fs-extra": "^11.0.4",
     "@types/is-ci": "^3.0.4",
+    "@types/micromatch": "^4.0.9",
     "@types/wait-on": "^5.3.4",
     "ejs": "^3.1.10",
     "ts-node": "^10.9.2"
   },
   "keywords": [
     "typescript",
-    "build-tool",
+    "library",
     "vitest",
     "build",
+    "tool",
     "vite",
     "node"
   ]

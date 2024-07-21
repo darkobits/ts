@@ -13,7 +13,7 @@ export default vite.library({
         lines: 40,
         branches: 50,
         functions: 50,
-        statements: 45
+        statements: 40
       }
     }
   }

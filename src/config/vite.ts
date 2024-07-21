@@ -6,14 +6,13 @@ import chalk from 'chalk';
 import glob from 'fast-glob';
 // @ts-expect-error - Package has no type definitions.
 import preserveShebangPlugin from 'rollup-plugin-preserve-shebang';
-import { externalizeDeps } from 'vite-plugin-externalize-deps';
-import noBundlePlugin from 'vite-plugin-no-bundle';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 import tsconfigPathsPluginExport from 'vite-tsconfig-paths';
 
 import { BARE_EXTENSIONS, TEST_FILE_PATTERNS } from '../etc/constants';
 import executablePlugin from '../lib/executable-plugin';
 import log from '../lib/log';
+import { nodeExternalPlugin } from '../lib/node-external-plugin';
 import tscAliasPlugin from '../lib/tsc-alias-plugin';
 import { createViteConfigurationPreset } from '../lib/utils';
 
@@ -96,8 +95,15 @@ export const library = createViteConfigurationPreset(async context => {
     sourcemap: true,
     lib: {
       entry,
+      fileName: '[name]',
       // Infer output format based on the "type" setting in package.json.
       formats: isExplicitESM ? ['es'] : ['cjs']
+    },
+    rollupOptions: {
+      output: {
+        preserveModules: true,
+        preserveModulesRoot: srcDir
+      }
     }
   };
 
@@ -122,18 +128,12 @@ export const library = createViteConfigurationPreset(async context => {
     }
   };
 
-  // ----- Plugin: Externalize Dependencies ------------------------------------
+  // ----- Plugin: Node Externals ----------------------------------------------
 
   /**
-   * Ensures that all dependencies are externalized.
+   * Ensures modules from node_modules are not bundled with output.
    */
-  config.plugins.push(externalizeDeps({
-    deps: true,
-    devDeps: true,
-    nodeBuiltins: true,
-    optionalDeps: true,
-    peerDeps: true
-  }));
+  config.plugins.push(nodeExternalPlugin({ root }));
 
   // ----- Plugin: TypeScript --------------------------------------------------
 
@@ -194,19 +194,6 @@ export const library = createViteConfigurationPreset(async context => {
    * - src/lib/tsc-alias-plugin.ts
    */
   config.plugins.push(tscAliasPlugin({ configFile: tsConfigPath }));
-
-  // ----- Plugin: No Bundle ---------------------------------------------------
-
-  /**
-   * This plugin helps us preserve the directory structure of source files in
-   * the output directory by skipping the "bundling" phase. This type of output
-   * is ideal for a Node library; if the project winds up being used in an
-   * application that runs in the browser, that project's build system will
-   * bundle and minify library code as part of its own build process.
-   *
-   * See: https://github.com/ManBearTM/vite-plugin-no-bundle
-   */
-  config.plugins.push(noBundlePlugin({ root: srcDir }));
 
   // ----- Plugin: Preserve Shebangs -------------------------------------------
 
