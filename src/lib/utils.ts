@@ -31,7 +31,9 @@ import type {
  * Uses duck-typing to determine if the provided value is Promise-like.
  */
 function isPromise(value: any): value is PromiseLike<any> {
-  return Reflect.has(value, 'then') && Reflect.has(value, 'catch');
+  return Reflect.has(value, 'then')
+    && Reflect.has(value, 'catch')
+    && Reflect.has(value, 'finally');
 }
 
 /**
@@ -39,18 +41,19 @@ function isPromise(value: any): value is PromiseLike<any> {
  */
 export async function getPackageContext(): Promise<PackageContext> {
   try {
+    const prefix = chalk.green.bold('getPackageContext');
     const startTime = Date.now();
 
     // Find and parse package.json.
     const pkgResult = await readPackageUp({ cwd: process.cwd() });
-    if (!pkgResult) throw new Error('[ts:getPackageContext] Unable to find package.json.');
+    if (!pkgResult) throw new Error('[getPackageContext] Unable to find package.json.');
     const packageJson = pkgResult.packageJson;
-    log.trace('[getPackageContext]', chalk.bold('packageJson'), chalk.green(pkgResult.path));
+    log.info(prefix, chalk.bold('packageJson'), chalk.green(pkgResult.path));
 
     // Find tsconfig.json.
     const tsConfigPath = await findUp('tsconfig.json', { cwd: process.cwd() });
     if (!tsConfigPath) throw new Error('[ts:getPackageContext] Unable to find tsconfig.json');
-    log.trace('[getPackageContext]', chalk.bold('tsConfig'),  chalk.green(tsConfigPath));
+    log.info(prefix, chalk.bold('tsConfig'),  chalk.green(tsConfigPath));
 
     // If we found a package.json and tsconfig.json in the same folder, use that
     // folder as our root. Otherwise, use the directory where we found
@@ -59,17 +62,17 @@ export async function getPackageContext(): Promise<PackageContext> {
     const root = pkgResult.path === path.dirname(tsConfigPath)
       ? pkgResult.path
       : path.dirname(tsConfigPath);
-    log.trace('[getPackageContext]', chalk.bold('root'), root);
+    log.info(prefix, chalk.bold('root'), chalk.green(root));
 
     // Parse tsconfig.json.
     const tsConfigResult = getTsconfig(tsConfigPath);
-    if (!tsConfigResult) throw new Error(`[ts:getPackageContext] Unable to locate a tsconfig.json file at or above ${chalk.green(tsConfigPath)}`);
+    if (!tsConfigResult) throw new Error(`[getPackageContext] Unable to locate a tsconfig.json file at or above ${chalk.green(tsConfigPath)}`);
     const { config: tsConfig } = tsConfigResult;
 
     // Infer source root. This will already be an absolute directory.
     const srcDir = tsConfig.compilerOptions?.baseUrl;
-    if (!srcDir) throw new Error('[ts:getPackageContext] "compilerOptions.baseUrl" must be set in tsconfig.json');
-    log.trace('[getPackageContext]', chalk.bold('srcDir'), chalk.green(srcDir));
+    if (!srcDir) throw new Error('[getPackageContext] "compilerOptions.baseUrl" must be set in tsconfig.json');
+    log.info(prefix, chalk.bold('srcDir'), chalk.green(path.resolve(srcDir)));
 
     // Infer output directory. If it is not absolute, resolve it relative to the
     // root directory.
@@ -78,15 +81,15 @@ export async function getPackageContext(): Promise<PackageContext> {
         ? tsConfig.compilerOptions.outDir
         : path.resolve(root, tsConfig.compilerOptions.outDir)
       : undefined;
-    if (!outDir) throw new Error('[ts:getPackageContext] "compilerOptions.outDir" must be set in tsconfig.json');
-    log.trace('[getPackageContext]', chalk.bold('outDir'), chalk.green(path.resolve(root, outDir)));
+    if (!outDir) throw new Error('[getPackageContext] "compilerOptions.outDir" must be set in tsconfig.json');
+    log.info(prefix, chalk.bold('outDir'), chalk.green(path.resolve(root, outDir)));
 
     // Build glob patterns to match source files and test files.
     const SOURCE_FILES = [srcDir, '**', `*.{${BARE_EXTENSIONS.join(',')}}`].join(path.sep);
     const TEST_FILES = [srcDir, '**', `*.{${TEST_FILE_PATTERNS.join(',')}}.{${BARE_EXTENSIONS.join(',')}}`].join(path.sep);
 
     const time = Date.now() - startTime;
-    log.trace('[getPackageContext]', `Done in ${time}ms.`);
+    log.info(prefix, `Done in ${time}ms.`);
 
     return {
       root,
@@ -101,7 +104,7 @@ export async function getPackageContext(): Promise<PackageContext> {
       }
     };
   } catch (err) {
-    throw new Error(`[ts:getPackageContext] ${err}`);
+    throw new Error(`[getPackageContext] ${err}`);
   }
 }
 
@@ -223,7 +226,7 @@ export function createPluginReconfigurator(config: ViteConfigurationScaffold) {
           pluginFound = true;
           // eslint-disable-next-line @typescript-eslint/no-floating-promises
           existingPluginsAsFlatArray[i] = curPlugin;
-          log.verbose('[reconfigurePlugin]', `Reconfigured plugin: ${resolvedExistingPlugin.name}`);
+          log.info('[reconfigurePlugin]', `Reconfigured plugin: ${resolvedExistingPlugin.name}`);
           break;
         }
       }

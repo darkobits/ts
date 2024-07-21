@@ -2,7 +2,6 @@ import { vite } from './src';
 
 export default vite.library({
   test: {
-
     coverage: {
       exclude: [
         'src/index.ts',

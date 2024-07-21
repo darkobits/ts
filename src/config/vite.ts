@@ -81,9 +81,9 @@ export const library = createViteConfigurationPreset(async context => {
   const isExplicitESM = packageJson.type === 'module';
 
   if (isExplicitESM) {
-    log.verbose('[preset:library]', `Emitting ${chalk.green('ESM')} because ${chalk.green.bold('type')} is ${chalk.green('module')} in package.json.`);
+    log.info('[preset:library]', `Emitting ${chalk.green('ESM')} because ${chalk.green.bold('type')} is ${chalk.green('module')} in package.json.`);
   } else {
-    log.verbose('[preset:library]', `Emitting ${chalk.green('CommonJS')} because ${chalk.green('type')} ${chalk.bold('is not')} ${chalk.green('module')} in package.json.`);
+    log.info('[preset:library]', `Emitting ${chalk.green('CommonJS')} because ${chalk.green('type')} ${chalk.bold('is not')} ${chalk.green('module')} in package.json.`);
   }
 
   config.build = {

@@ -8,22 +8,22 @@ import { getPackageContext } from './utils';
 
 import type { Plugin } from 'vite';
 
+const prefix = chalk.blue.bold('tsc-alias-plugin');
+
 /**
  * Adds an executable flag to any output files that match `"bin"` declarations
  * in the project's `package.json`.
  */
 export default function executablePlugin(): Plugin {
-  const prefix = '[executablePlugin]';
-
   return {
-    name: 'vite-plugin-executable',
+    name: 'ts-vite-plugin-executable',
     enforce: 'post',
     async closeBundle() {
       const binList: Array<string> = [];
       const { root, packageJson: { bin } } = await getPackageContext();
 
       if (!bin) {
-        log.verbose(prefix, 'Project does not declare any executable scripts.');
+        log.info(prefix, 'Project does not declare any executable scripts.');
         return;
       }
 
@@ -35,19 +35,19 @@ export default function executablePlugin(): Plugin {
         this.error(new TypeError(`Expected type of "bin" in package.json to be "string" or "object", got "${typeof bin}".`));
       }
 
-      log.trace(prefix, `Root: ${root}`);
-      log.trace(prefix, 'Executables:', binList);
+      log.info(prefix, `Root: ${root}`);
+      log.info(prefix, 'Executables:', binList);
 
       try {
         for (const binPath of binList) {
           if (await fs.exists(binPath)) {
             await fs.chmod(binPath, '0755');
-            log.verbose(prefix, `Set executable flag on ${chalk.green(binPath)}.`);
+            log.info(prefix, `Set executable flag on ${chalk.green(binPath)}.`);
           } else {
             // We may not see the file we're looking for if the compilation
             // encountered errors that prevented writing.
             const relativeBinPath = path.relative(root, binPath);
-            log.verbose(prefix, `Executable script ${chalk.green(relativeBinPath)} declared in package.json does not exist.`);
+            log.info(prefix, `Executable script ${chalk.green(relativeBinPath)} declared in package.json does not exist.`);
           }
         }
       } catch (err: any) {

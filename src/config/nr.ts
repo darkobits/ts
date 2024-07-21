@@ -55,12 +55,18 @@ export default (async ({ command, fn, script }) => {
       // Project is using the newer flat configuration format; we will need to
       // set the ESLINT_USE_FLAT_CONFIG environment variable in order for ESLint
       // to use it.
-      log.trace('[script:lint]', `Using flat ESLint configuration via ${chalk.green(eslintConfig.configFile)}.`);
+      log.info(
+        chalk.green('script:lint'),
+        `Using flat ESLint configuration via ${chalk.green(eslintConfig.configFile)}.`
+      );
       eslintEnvVars.ESLINT_USE_FLAT_CONFIG = 'true';
     } else {
       // Project is using the legacy configuration format; we will need to
       // explicitly pass a list of extensions to lint.
-      log.trace('[script:lint]', `Using legacy ESLint configuration via ${chalk.green(eslintConfig.configFile)}.`);
+      log.info(
+        chalk.green('script:lint'),
+        `Using legacy ESLint configuration via ${chalk.green(eslintConfig.configFile)}.`
+      );
       eslintFlags.ext = EXTENSIONS.join(',');
     }
 
@@ -76,8 +82,8 @@ export default (async ({ command, fn, script }) => {
       env: eslintEnvVars
     });
   } else {
-    log.trace(
-      '[script:lint]',
+    log.info(
+      chalk.green('script:lint'),
       'Unable to determine ESLint configuration strategy; project may lack an ESLint configuration file.'
     );
   }
@@ -259,9 +265,12 @@ export default (async ({ command, fn, script }) => {
   // In CI environments, skip our usual prepare steps; users can will likely
   // need to build and test projects explicitly in such cases.
   script('prepare', IS_CI ? fn(() => log.info(
-    '[prepare]',
+    chalk.green('script:prepare'),
     chalk.yellow(`CI environment detected. Skipping ${chalk.bold('prepare')} script.`)
   )) : [
+    // N.B. By using strings to reference these scripts, we will always use the
+    // most recent value from the registry, allowing downstream users to
+    // overwrite them.
     'script:build',
     'script:test'
   ], {
@@ -284,7 +293,12 @@ export default (async ({ command, fn, script }) => {
         : packageJson.main;
 
       if (!entrypoint) throw new Error('[script:start] No "bin" (string) or "main" declarations in package.json.');
-      log.info('[start]', chalk.gray('Using entrypoint:'), chalk.green(entrypoint));
+
+      log.info(
+        chalk.green('script:start'),
+        chalk.gray('Using entrypoint:'),
+        chalk.green(entrypoint)
+      );
 
       /**
        * This will wait for our build artifacts to be completely written to disk
