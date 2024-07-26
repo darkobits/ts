@@ -1,17 +1,17 @@
-import type { NormalizedPackageJson } from 'read-package-up';
-import type { UserConfig, ConfigEnv } from 'vite';
-import type { InlineConfig } from 'vitest';
+import type { NormalizedPackageJson } from 'read-package-up'
+import type { UserConfig, ConfigEnv } from 'vite'
+import type { InlineConfig } from 'vitest'
 
 /**
  * Custom type we use for Vite configuration that has various properties
  * pre-defined to make updating the object in-place easier.
  */
 export interface ViteConfigurationScaffold extends UserConfig {
-  test?: InlineConfig;
-  build: NonNullable<UserConfig['build']>;
-  plugins: NonNullable<UserConfig['plugins']>;
-  resolve: NonNullable<UserConfig['resolve']>;
-  server: NonNullable<UserConfig['server']>;
+  test?: InlineConfig
+  build: NonNullable<UserConfig['build']>
+  plugins: NonNullable<UserConfig['plugins']>
+  resolve: NonNullable<UserConfig['resolve']>
+  server: NonNullable<UserConfig['server']>
 }
 
 /**
@@ -24,42 +24,42 @@ export interface PackageContext {
    *
    * @default process.cwd()
    */
-  root: string;
+  root: string
 
   /**
    * Sub-directory that contains the project's source files. Read from
    * "compilerOptions.baseUrl" in tsconfig.json.
    */
-  srcDir: string;
+  srcDir: string
 
   /**
    * Sub-directory to which output files should be written. Read from
    * "compilerOptions.outDir" in tsconfig.json.
    */
-  outDir: string;
+  outDir: string
 
   /**
    * Path to the project's tsconfig.json file.
    */
-  tsConfigPath: string;
+  tsConfigPath: string
 
   /**
    * Parsed tsconfig.json file.
    */
-  tsConfig: any;
+  tsConfig: any
 
   /**
    * Parsed and normalized package.json file.
    */
-  packageJson: NormalizedPackageJson;
+  packageJson: NormalizedPackageJson
 
   /**
    * Glob patterns that may be used to match various file types in the project.
    */
   patterns: {
-    SOURCE_FILES: string;
-    TEST_FILES: string;
-  };
+    SOURCE_FILES: string
+    TEST_FILES: string
+  }
 }
 
 /**
@@ -68,11 +68,11 @@ export interface PackageContext {
  * above.
  */
 export type ConfigurationContext = ConfigEnv & PackageContext & {
-  config: ViteConfigurationScaffold;
-};
+  config: ViteConfigurationScaffold
+}
 
 /**
  * Signature of configuration functions passed to a Vite configuration preset.
  */
-export type CustomConfigurationFactory<C extends ConfigurationContext = ConfigurationContext> = (context: C) => void | UserConfig | Promise<void | UserConfig>;
-export type CustomUserConfigExport<C extends ConfigurationContext = ConfigurationContext> = UserConfig | Promise<UserConfig> | CustomConfigurationFactory<C>;
+export type CustomConfigurationFactory<C extends ConfigurationContext = ConfigurationContext> = (context: C) => void | UserConfig | Promise<void | UserConfig>
+export type CustomUserConfigExport<C extends ConfigurationContext = ConfigurationContext> = UserConfig | Promise<UserConfig> | CustomConfigurationFactory<C>

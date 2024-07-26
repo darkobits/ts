@@ -1,28 +1,28 @@
-import path from 'node:path';
+import path from 'node:path'
 
-import { interopImportDefault } from '@darkobits/interop-import-default';
-import typescriptPlugin from '@rollup/plugin-typescript';
-import chalk from 'chalk';
-import glob from 'fast-glob';
+import { interopImportDefault } from '@darkobits/interop-import-default'
+import typescriptPlugin from '@rollup/plugin-typescript'
+import chalk from 'chalk'
+import glob from 'fast-glob'
 // @ts-expect-error - Package has no type definitions.
-import preserveShebangPlugin from 'rollup-plugin-preserve-shebang';
-import { viteStaticCopy } from 'vite-plugin-static-copy';
-import tsconfigPathsPluginExport from 'vite-tsconfig-paths';
+import preserveShebangPlugin from 'rollup-plugin-preserve-shebang'
+import { viteStaticCopy } from 'vite-plugin-static-copy'
+import tsconfigPathsPluginExport from 'vite-tsconfig-paths'
 
-import { BARE_EXTENSIONS, TEST_FILE_PATTERNS } from '../etc/constants';
-import executablePlugin from '../lib/executable-plugin';
-import log from '../lib/log';
-import { nodeExternalPlugin } from '../lib/node-external-plugin';
-import tscAliasPlugin from '../lib/tsc-alias-plugin';
-import { createViteConfigurationPreset } from '../lib/utils';
+import { BARE_EXTENSIONS, TEST_FILE_PATTERNS } from '../etc/constants'
+import executablePlugin from '../lib/executable-plugin'
+import log from '../lib/log'
+import { nodeExternalPlugin } from '../lib/node-external-plugin'
+import tscAliasPlugin from '../lib/tsc-alias-plugin'
+import { createViteConfigurationPreset } from '../lib/utils'
 
-const tsconfigPathsPlugin = interopImportDefault(tsconfigPathsPluginExport);
+const tsconfigPathsPlugin = interopImportDefault(tsconfigPathsPluginExport)
 
 /**
  * Hacky way to determine if we are in watch mode, in which case we want to
  * change the behavior of certain plugins.
  */
-const isWatchMode = process.argv.includes('--watch') || process.argv.includes('-w');
+const isWatchMode = process.argv.includes('--watch') || process.argv.includes('-w')
 
 /**
  * Vite configuration preset suitable for publishing libraries or CLIs to NPM.
@@ -41,14 +41,14 @@ const isWatchMode = process.argv.includes('--watch') || process.argv.includes('-
 export const library = createViteConfigurationPreset(async context => {
   // ----- Preflight Checks ----------------------------------------------------
 
-  const { command, mode, root, srcDir, patterns: { SOURCE_FILES, TEST_FILES } } = context;
+  const { command, mode, root, srcDir, patterns: { SOURCE_FILES, TEST_FILES } } = context
 
   // It does not make sense to use 'vite serve' with this preset, so issue a
   // warning and terminate the build when this command is used. However, Vitest
   // invokes Vite with the 'serve' command, so handle that case by checking
   // `mode`.
   if (command === 'serve' && mode !== 'test')
-    throw new Error('[preset:library] The "library" configuration preset does not support the "serve" command.');
+    throw new Error('[preset:library] The "library" configuration preset does not support the "serve" command.')
 
   const [
     // Array of all source files. To prevent bundling, we tell Rollup that each
@@ -68,22 +68,22 @@ export const library = createViteConfigurationPreset(async context => {
     //   'eslint.config.mjs',
     //   'eslint.config.cjs'
     // ], { cwd: root })
-  ]);
+  ])
 
   // User forgot to write any code or did not set up paths correctly in
   // tsconfig.json.
   if (entry.length === 0)
-    throw new Error(`[preset:library] No entry files found in ${chalk.green(srcDir)}.`);
+    throw new Error(`[preset:library] No entry files found in ${chalk.green(srcDir)}.`)
 
   // ----- Build Configuration -------------------------------------------------
 
-  const { config, outDir, packageJson } = context;
-  const isExplicitESM = packageJson.type === 'module';
+  const { config, outDir, packageJson } = context
+  const isExplicitESM = packageJson.type === 'module'
 
   if (isExplicitESM) {
-    log.info('[preset:library]', `Emitting ${chalk.green('ESM')} because ${chalk.green.bold('type')} is ${chalk.green('module')} in package.json.`);
+    log.info('[preset:library]', `Emitting ${chalk.green('ESM')} because ${chalk.green.bold('type')} is ${chalk.green('module')} in package.json.`)
   } else {
-    log.info('[preset:library]', `Emitting ${chalk.green('CommonJS')} because ${chalk.green('type')} ${chalk.bold('is not')} ${chalk.green('module')} in package.json.`);
+    log.info('[preset:library]', `Emitting ${chalk.green('CommonJS')} because ${chalk.green('type')} ${chalk.bold('is not')} ${chalk.green('module')} in package.json.`)
   }
 
   config.build = {
@@ -105,7 +105,7 @@ export const library = createViteConfigurationPreset(async context => {
         preserveModulesRoot: srcDir
       }
     }
-  };
+  }
 
   // ----- Vitest Configuration ------------------------------------------------
 
@@ -126,14 +126,14 @@ export const library = createViteConfigurationPreset(async context => {
       // paths.
       include: entry.map(entry => path.relative(root, entry))
     }
-  };
+  }
 
   // ----- Plugin: Node Externals ----------------------------------------------
 
   /**
    * Ensures modules from node_modules are not bundled with output.
    */
-  config.plugins.push(nodeExternalPlugin({ root }));
+  config.plugins.push(nodeExternalPlugin({ root }))
 
   // ----- Plugin: TypeScript --------------------------------------------------
 
@@ -167,7 +167,7 @@ export const library = createViteConfigurationPreset(async context => {
       // setting has no effect on Rollup's output.
       module: 'ESNext'
     }
-  }));
+  }))
 
   // ----- Plugin: tsconfig-paths ----------------------------------------------
 
@@ -177,11 +177,11 @@ export const library = createViteConfigurationPreset(async context => {
    *
    * See: https://github.com/aleclarson/vite-tsconfig-paths
    */
-  config.plugins.push(tsconfigPathsPlugin({ root }));
+  config.plugins.push(tsconfigPathsPlugin({ root }))
 
   // ----- Plugin: tsc-alias ---------------------------------------------------
 
-  const { tsConfigPath } = context;
+  const { tsConfigPath } = context
 
   /**
    * Rollup does not resolve (and by extension, re-write) import/export
@@ -193,7 +193,7 @@ export const library = createViteConfigurationPreset(async context => {
    * - https://github.com/justkey007/tsc-alias
    * - src/lib/tsc-alias-plugin.ts
    */
-  config.plugins.push(tscAliasPlugin({ configFile: tsConfigPath }));
+  config.plugins.push(tscAliasPlugin({ configFile: tsConfigPath }))
 
   // ----- Plugin: Preserve Shebangs -------------------------------------------
 
@@ -204,7 +204,7 @@ export const library = createViteConfigurationPreset(async context => {
    *
    * See: https://github.com/developit/rollup-plugin-preserve-shebang
    */
-  config.plugins.push(preserveShebangPlugin());
+  config.plugins.push(preserveShebangPlugin())
 
   // ----- Plugin: Executable --------------------------------------------------
 
@@ -213,7 +213,7 @@ export const library = createViteConfigurationPreset(async context => {
    * by introspecting its package.json. If the project has any "bin" scripts,
    * they will be given an executable flag.
    */
-  config.plugins.push(executablePlugin());
+  config.plugins.push(executablePlugin())
 
   // ----- Plugin: Copy Files --------------------------------------------------
 
@@ -226,12 +226,12 @@ export const library = createViteConfigurationPreset(async context => {
     config.plugins.push(viteStaticCopy({
       targets: filesToCopy.map(filePath => {
         // Produces something like 'src/foo/bar/baz.ts'.
-        const src = path.relative(root, filePath);
+        const src = path.relative(root, filePath)
         // Produces something like 'foo/bar'.
-        const dest = path.dirname(src).split(path.sep).slice(1).join(path.sep);
-        return { src, dest };
+        const dest = path.dirname(src).split(path.sep).slice(1).join(path.sep)
+        return { src, dest }
       })
-    }));
+    }))
   }
 
   // ----- Plugin: ESLint ------------------------------------------------------
@@ -249,4 +249,4 @@ export const library = createViteConfigurationPreset(async context => {
   //     failOnWarning: false
   //   }));
   // }
-});
+})

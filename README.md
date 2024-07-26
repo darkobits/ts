@@ -49,11 +49,11 @@ and start building something great.
 
 | Name | Version
 | :-- | :--
-| [`typescript`](https://github.com/microsoft/TypeScript) | `~5.5.3`
-| [`vite`](https://github.com/vitejs/vite) | `^5.3.4`
-| [`vitest`](https://github.com/vitest-dev/vitest) | `^2.0.3`
-| [`eslint`](https://github.com/eslint/eslint) | `~8.57.0`
-| [`@darkobits/eslint-plugin`](https://github.com/darkobits/eslint-plugin) | `~0.5.5`
-| [`semantic-release`](https://github.com/semantic-release/semantic-release) | `~21.1.1`
-| [`npm-check-updates`](https://github.com/raineorshine/npm-check-updates) | `~16.14.20`
+| [`typescript`](https://github.com/microsoft/TypeScript) | `~5.5.4`
+| [`vite`](https://github.com/vitejs/vite) | `^5.3.5`
+| [`vitest`](https://github.com/vitest-dev/vitest) | `^2.0.5`
+| [`eslint`](https://github.com/eslint/eslint) | `^9.8.0`
+| [`@darkobits/eslint-plugin`](https://github.com/darkobits/eslint-plugin) | `^2.1.0`
+| [`semantic-release`](https://github.com/semantic-release/semantic-release) | `~24.0.0`
+| [`npm-check-updates`](https://github.com/raineorshine/npm-check-updates) | `~17.0.3`
 | [`@darkobits/nr`](https://github.com/darkobits/nr) | `~0.18.0`

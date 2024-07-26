@@ -1,11 +1,11 @@
-import path from 'node:path';
+import path from 'node:path'
 
-import { defineConfig } from '@darkobits/nr';
-import chalk from 'chalk';
-import fs from 'fs-extra';
-import IS_CI from 'is-ci';
+import { defineConfig } from '@darkobits/nr'
+import chalk from 'chalk'
+import fs from 'fs-extra'
+import IS_CI from 'is-ci'
 
-import { defaultPackageScripts } from './src';
+import { defaultPackageScripts } from './src'
 
 export default defineConfig([
   // Register the default scripts defined by this package.
@@ -19,7 +19,7 @@ export default defineConfig([
       group: 'Test',
       description: 'Run smoke tests against the compiled version of the project.',
       timing: true
-    });
+    })
 
     // When publishing this package, we use re-pack's 'publish' command to
     // publish from the .re-pack directory rather than `npm publish`.
@@ -36,7 +36,7 @@ export default defineConfig([
       group: 'Release',
       description: `Publish the package using ${chalk.white.bold('re-pack')}.`,
       timing: true
-    });
+    })
 
     // Automatically publish a new version of the package after performing a
     // version bump.
@@ -46,7 +46,7 @@ export default defineConfig([
     ], {
       group: 'Lifecycle',
       description: '[hook] After a bump script completes, publish to NPM and push the release commit.'
-    });
+    })
 
     if (!IS_CI) {
       script('postBuild', [
@@ -57,12 +57,12 @@ export default defineConfig([
       ], {
         group: 'Lifecycle',
         description: '[hook] Update dependency versions in README.'
-      });
+      })
 
       script('postPrepare', 'script:test.smoke', {
         group: 'Lifecycle',
         description: '[hook] After the prepare script, run smoke tests.'
-      });
+      })
     }
   }
-]);
+])

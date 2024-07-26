@@ -1,4 +1,4 @@
-import { vite } from './src';
+import { vite } from './src'
 
 export default vite.library({
   test: {
@@ -16,4 +16,4 @@ export default vite.library({
       }
     }
   }
-});
+})
