@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.23.0](https://github.com/darkobits/ts/compare/v0.22.2...v0.23.0) (2024-08-13)
+
+
+### ⚠ BREAKING CHANGES
+
+* The `library` preset has been renamed to `node`.
+
+* Rename `library` preset to `node`. ([dde4e44](https://github.com/darkobits/ts/commit/dde4e4418465e2fcb0536a61a1a2c54c50faa381))
+
 ### [0.22.2](https://github.com/darkobits/ts/compare/v0.22.1...v0.22.2) (2024-08-13)
 
 
