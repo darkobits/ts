@@ -38,7 +38,7 @@ const isWatchMode = process.argv.includes('--watch') || process.argv.includes('-
  * - Any other files in the source directory will be copied to the output
  *   directory as-is, similar to Babel's `copyFiles` feature.
  */
-export const library = createViteConfigurationPreset(async context => {
+export const node = createViteConfigurationPreset(async context => {
   const prefix = chalk.dim.cyan('ts:preset:node')
   const startTime = Date.now()
 

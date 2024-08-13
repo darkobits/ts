@@ -1,6 +1,6 @@
 import { vite } from './src'
 
-export default vite.library({
+export default vite.node({
   test: {
     coverage: {
       exclude: [
