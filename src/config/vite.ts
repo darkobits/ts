@@ -4,6 +4,7 @@ import { interopImportDefault } from '@darkobits/interop-import-default'
 import typescriptPlugin from '@rollup/plugin-typescript'
 import chalk from 'chalk'
 import glob from 'fast-glob'
+import ms from 'ms'
 // @ts-expect-error - Package has no type definitions.
 import preserveShebangPlugin from 'rollup-plugin-preserve-shebang'
 import { viteStaticCopy } from 'vite-plugin-static-copy'
@@ -25,7 +26,8 @@ const tsconfigPathsPlugin = interopImportDefault(tsconfigPathsPluginExport)
 const isWatchMode = process.argv.includes('--watch') || process.argv.includes('-w')
 
 /**
- * Vite configuration preset suitable for publishing libraries or CLIs to NPM.
+ * Vite configuration preset suitable for libraries, CLIs, or simple Node
+ * applications.
  *
  * - Source files will not be bundled.
  * - Dependencies will be externalized.
@@ -35,10 +37,11 @@ const isWatchMode = process.argv.includes('--watch') || process.argv.includes('-
  * - Shebangs will be preserved in files that have them.
  * - Any other files in the source directory will be copied to the output
  *   directory as-is, similar to Babel's `copyFiles` feature.
- *
- * Note: ESLint plugin is disabled until it can support flat configuration.
  */
 export const library = createViteConfigurationPreset(async context => {
+  const prefix = chalk.dim.cyan('ts:preset:node')
+  const startTime = Date.now()
+
   // ----- Preflight Checks ----------------------------------------------------
 
   const { command, mode, root, srcDir, patterns: { SOURCE_FILES, TEST_FILES } } = context
@@ -47,8 +50,11 @@ export const library = createViteConfigurationPreset(async context => {
   // warning and terminate the build when this command is used. However, Vitest
   // invokes Vite with the 'serve' command, so handle that case by checking
   // `mode`.
-  if (command === 'serve' && mode !== 'test')
-    throw new Error('[preset:library] The "library" configuration preset does not support the "serve" command.')
+  if (command === 'serve' && mode !== 'test') {
+    log.error(prefix, 'The "serve" command is not available when using the "node" preset.')
+    // eslint-disable-next-line unicorn/no-process-exit
+    process.exit(1)
+  }
 
   const [
     // Array of all source files. To prevent bundling, we tell Rollup that each
@@ -72,8 +78,11 @@ export const library = createViteConfigurationPreset(async context => {
 
   // User forgot to write any code or did not set up paths correctly in
   // tsconfig.json.
-  if (entry.length === 0)
-    throw new Error(`[preset:library] No entry files found in ${chalk.green(srcDir)}.`)
+  if (entry.length === 0) {
+    log.error(prefix, `No entry files found in ${chalk.green(srcDir)}.`)
+    // eslint-disable-next-line unicorn/no-process-exit
+    process.exit(1)
+  }
 
   // ----- Build Configuration -------------------------------------------------
 
@@ -81,9 +90,9 @@ export const library = createViteConfigurationPreset(async context => {
   const isExplicitESM = packageJson.type === 'module'
 
   if (isExplicitESM) {
-    log.info('[preset:library]', `Emitting ${chalk.green('ESM')} because ${chalk.green.bold('type')} is ${chalk.green('module')} in package.json.`)
+    log.info(prefix, `Emitting ${chalk.green('ESM')} because ${chalk.green.bold('type')} is ${chalk.green('module')} in package.json.`)
   } else {
-    log.info('[preset:library]', `Emitting ${chalk.green('CommonJS')} because ${chalk.green('type')} ${chalk.bold('is not')} ${chalk.green('module')} in package.json.`)
+    log.info(prefix, `Emitting ${chalk.green('CommonJS')} because ${chalk.green('type')} ${chalk.bold('is not')} ${chalk.green('module')} in package.json.`)
   }
 
   config.build = {
@@ -148,7 +157,8 @@ export const library = createViteConfigurationPreset(async context => {
     // If TypeScript sees .ts files in the project root (configuration files,
     // for example) it will assume that they need to be compiled and use the
     // project root as a reference for the directory structure it needs to
-    // create in the output folder.
+    // create in the output folder. To prevent this, specify the configured
+    // source folder as the root of the compilation.
     filterRoot: srcDir,
     compilerOptions: {
       baseUrl: srcDir,
@@ -191,7 +201,6 @@ export const library = createViteConfigurationPreset(async context => {
    *
    * See:
    * - https://github.com/justkey007/tsc-alias
-   * - src/lib/tsc-alias-plugin.ts
    */
   config.plugins.push(tscAliasPlugin({ configFile: tsConfigPath }))
 
@@ -249,4 +258,17 @@ export const library = createViteConfigurationPreset(async context => {
   //     failOnWarning: false
   //   }));
   // }
+
+  // ----- Plugin: Post-Build --------------------------------------------------
+
+  config.plugins.push({
+    name: 'ts:postbuild-commands', // the name of your custom plugin. Could be anything.
+    apply: 'build',
+    closeBundle: () => {
+      const time = Date.now() - startTime
+      process.on('beforeExit', () => {
+        log.info(prefix, chalk.green(`Built project in ${ms(time)}.`))
+      })
+    }
+  })
 })

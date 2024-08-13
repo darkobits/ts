@@ -8,7 +8,7 @@ import { getPackageContext } from './utils'
 
 import type { Plugin } from 'vite'
 
-const prefix = chalk.blue.bold('tsc-alias-plugin')
+const prefix = chalk.dim.cyan('ts:executable-plugin')
 
 /**
  * Adds an executable flag to any output files that match `"bin"` declarations
@@ -16,14 +16,14 @@ const prefix = chalk.blue.bold('tsc-alias-plugin')
  */
 export default function executablePlugin(): Plugin {
   return {
-    name: 'ts-vite-plugin-executable',
+    name: 'ts:executable-plugin',
     enforce: 'post',
     async closeBundle() {
       const binList: Array<string> = []
       const { root, packageJson: { bin } } = await getPackageContext()
 
       if (!bin) {
-        log.info(prefix, 'Project does not declare any executable scripts.')
+        log.info(prefix, chalk.yellow.dim('Project does not declare any executable scripts.'))
         return
       }
 

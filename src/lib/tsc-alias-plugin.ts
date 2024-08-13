@@ -1,5 +1,6 @@
 import chalk from 'chalk'
 import merge from 'deepmerge'
+import ms from 'ms'
 import {
   replaceTscAliasPaths,
   type ReplaceTscAliasPathsOptions
@@ -9,7 +10,7 @@ import log from './log'
 
 import type { Plugin } from 'vite'
 
-const prefix = chalk.blue.bold('tsc-alias-plugin')
+const prefix = chalk.dim.cyan('ts:tsc-alias-plugin')
 
 /**
  * @private
@@ -27,7 +28,8 @@ const defaultOptions: ReplaceTscAliasPathsOptions = {
       console.clear()
     },
     debug: message => {
-      log.debug(prefix, message)
+      void message
+      // log.debug(prefix, message)
     },
     info: message => {
       log.info(prefix, message)
@@ -49,7 +51,7 @@ export default function tscAliasPlugin(userOptions: ReplaceTscAliasPathsOptions 
   const options = merge(defaultOptions, userOptions)
 
   return {
-    name: 'ts-vite-plugin-tsc-alias',
+    name: 'ts:tsc-alias-plugin',
     enforce: 'post',
     async closeBundle() {
       const startTime = Date.now()
@@ -57,7 +59,7 @@ export default function tscAliasPlugin(userOptions: ReplaceTscAliasPathsOptions 
       try {
         await replaceTscAliasPaths(options)
         const time = Date.now() - startTime
-        log.info(prefix, `Done in ${time}ms.`)
+        log.info(prefix, chalk.dim(`Done in ${ms(time)}.`))
       } catch (err: any) {
         this.error(err)
       }

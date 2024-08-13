@@ -5,6 +5,7 @@ import chalk from 'chalk'
 import merge from 'deepmerge'
 import { findUp } from 'find-up'
 import { getTsconfig } from 'get-tsconfig'
+import ms from 'ms'
 import { readPackageUp } from 'read-package-up'
 
 import log from './log'
@@ -41,19 +42,17 @@ function isPromise(value: any): value is PromiseLike<any> {
  */
 export async function getPackageContext(): Promise<PackageContext> {
   try {
-    const prefix = chalk.green.bold('getPackageContext')
+    const prefix = chalk.dim.cyan('ts:getPackageContext')
     const startTime = Date.now()
 
     // Find and parse package.json.
     const pkgResult = await readPackageUp({ cwd: process.cwd() })
     if (!pkgResult) throw new Error('[getPackageContext] Unable to find package.json.')
     const packageJson = pkgResult.packageJson
-    log.info(prefix, chalk.bold('packageJson'), chalk.green(pkgResult.path))
 
     // Find tsconfig.json.
     const tsConfigPath = await findUp('tsconfig.json', { cwd: process.cwd() })
     if (!tsConfigPath) throw new Error('[ts:getPackageContext] Unable to find tsconfig.json')
-    log.info(prefix, chalk.bold('tsConfig'),  chalk.green(tsConfigPath))
 
     // If we found a package.json and tsconfig.json in the same folder, use that
     // folder as our root. Otherwise, use the directory where we found
@@ -62,7 +61,9 @@ export async function getPackageContext(): Promise<PackageContext> {
     const root = pkgResult.path === path.dirname(tsConfigPath)
       ? pkgResult.path
       : path.dirname(tsConfigPath)
-    log.info(prefix, chalk.bold('root'), chalk.green(root))
+    log.info(prefix, chalk.gray('root'), chalk.green(root))
+    log.info(prefix, chalk.gray('package.json'), chalk.green(pkgResult.path))
+    log.info(prefix, chalk.gray('tsconfig.json'),  chalk.green(tsConfigPath))
 
     // Parse tsconfig.json.
     const tsConfigResult = getTsconfig(tsConfigPath)
@@ -72,7 +73,7 @@ export async function getPackageContext(): Promise<PackageContext> {
     // Infer source root. This will already be an absolute directory.
     const srcDir = tsConfig.compilerOptions?.baseUrl
     if (!srcDir) throw new Error('[getPackageContext] "compilerOptions.baseUrl" must be set in tsconfig.json')
-    log.info(prefix, chalk.bold('srcDir'), chalk.green(path.resolve(srcDir)))
+    log.info(prefix, chalk.gray('srcDir'), chalk.green(path.resolve(srcDir)))
 
     // Infer output directory. If it is not absolute, resolve it relative to the
     // root directory.
@@ -82,14 +83,14 @@ export async function getPackageContext(): Promise<PackageContext> {
         : path.resolve(root, tsConfig.compilerOptions.outDir)
       : undefined
     if (!outDir) throw new Error('[getPackageContext] "compilerOptions.outDir" must be set in tsconfig.json')
-    log.info(prefix, chalk.bold('outDir'), chalk.green(path.resolve(root, outDir)))
+    log.info(prefix, chalk.gray('outDir'), chalk.green(path.resolve(root, outDir)))
 
     // Build glob patterns to match source files and test files.
     const SOURCE_FILES = [srcDir, '**', `*.{${BARE_EXTENSIONS.join(',')}}`].join(path.sep)
     const TEST_FILES = [srcDir, '**', `*.{${TEST_FILE_PATTERNS.join(',')}}.{${BARE_EXTENSIONS.join(',')}}`].join(path.sep)
 
     const time = Date.now() - startTime
-    log.info(prefix, `Done in ${time}ms.`)
+    log.info(prefix, chalk.dim(`Done in ${ms(time)}.`))
 
     return {
       root,
@@ -224,7 +225,7 @@ export function createPluginReconfigurator(config: ViteConfigurationScaffold) {
 
         if (resolvedPlugin.name === resolvedExistingPlugin.name) {
           pluginFound = true
-           
+
           existingPluginsAsFlatArray[i] = curPlugin
           log.info('[reconfigurePlugin]', `Reconfigured plugin: ${resolvedExistingPlugin.name}`)
           break
@@ -236,7 +237,7 @@ export function createPluginReconfigurator(config: ViteConfigurationScaffold) {
     }
 
     // Because we modified this value in-place, we can return it as-is.
-     
+
     config.plugins = existingPluginsAsFlatArray
   }
 }
