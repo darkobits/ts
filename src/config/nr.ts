@@ -193,7 +193,7 @@ export default (async ({ command, fn, script }) => {
       args: {
         // This will map to @darkobits/conventional-changelog-preset.
         // See: https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog-preset-loader
-        preset: '@darkobits/preset',
+        // preset: '@darkobits/preset',
         releaseCommitMessageFormat: 'chore(release): {{currentTag}}\n[skip ci]',
         ...args
       }
