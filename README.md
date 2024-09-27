@@ -50,10 +50,10 @@ and start building something great.
 | Name | Version
 | :-- | :--
 | [`typescript`](https://github.com/microsoft/TypeScript) | `~5.6.2`
-| [`vite`](https://github.com/vitejs/vite) | `^5.4.6`
+| [`vite`](https://github.com/vitejs/vite) | `^5.4.8`
 | [`vitest`](https://github.com/vitest-dev/vitest) | `^2.1.1`
-| [`eslint`](https://github.com/eslint/eslint) | `^9.10.0`
-| [`@darkobits/eslint-plugin`](https://github.com/darkobits/eslint-plugin) | `^2.1.7`
+| [`eslint`](https://github.com/eslint/eslint) | `^9.11.1`
+| [`@darkobits/eslint-plugin`](https://github.com/darkobits/eslint-plugin) | `^2.1.8`
 | [`semantic-release`](https://github.com/semantic-release/semantic-release) | `~24.1.1`
-| [`npm-check-updates`](https://github.com/raineorshine/npm-check-updates) | `~17.1.2`
+| [`npm-check-updates`](https://github.com/raineorshine/npm-check-updates) | `~17.1.3`
 | [`@darkobits/nr`](https://github.com/darkobits/nr) | `~0.18.0`
