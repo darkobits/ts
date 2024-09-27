@@ -61,9 +61,9 @@ export async function getPackageContext(): Promise<PackageContext> {
     const root = pkgResult.path === path.dirname(tsConfigPath)
       ? pkgResult.path
       : path.dirname(tsConfigPath)
-    log.info(prefix, chalk.gray('root'), chalk.green(root))
-    log.info(prefix, chalk.gray('package.json'), chalk.green(pkgResult.path))
-    log.info(prefix, chalk.gray('tsconfig.json'),  chalk.green(tsConfigPath))
+    log.verbose(prefix, chalk.gray('root'), chalk.green(root))
+    log.verbose(prefix, chalk.gray('package.json'), chalk.green(pkgResult.path))
+    log.verbose(prefix, chalk.gray('tsconfig.json'),  chalk.green(tsConfigPath))
 
     // Parse tsconfig.json.
     const tsConfigResult = getTsconfig(tsConfigPath)
@@ -73,7 +73,7 @@ export async function getPackageContext(): Promise<PackageContext> {
     // Infer source root. This will already be an absolute directory.
     const srcDir = tsConfig.compilerOptions?.baseUrl
     if (!srcDir) throw new Error('[getPackageContext] "compilerOptions.baseUrl" must be set in tsconfig.json')
-    log.info(prefix, chalk.gray('srcDir'), chalk.green(path.resolve(srcDir)))
+    log.verbose(prefix, chalk.gray('srcDir'), chalk.green(path.resolve(srcDir)))
 
     // Infer output directory. If it is not absolute, resolve it relative to the
     // root directory.
@@ -83,14 +83,14 @@ export async function getPackageContext(): Promise<PackageContext> {
         : path.resolve(root, tsConfig.compilerOptions.outDir)
       : undefined
     if (!outDir) throw new Error('[getPackageContext] "compilerOptions.outDir" must be set in tsconfig.json')
-    log.info(prefix, chalk.gray('outDir'), chalk.green(path.resolve(root, outDir)))
+    log.verbose(prefix, chalk.gray('outDir'), chalk.green(path.resolve(root, outDir)))
 
     // Build glob patterns to match source files and test files.
     const SOURCE_FILES = [srcDir, '**', `*.{${BARE_EXTENSIONS.join(',')}}`].join(path.sep)
     const TEST_FILES = [srcDir, '**', `*.{${TEST_FILE_PATTERNS.join(',')}}.{${BARE_EXTENSIONS.join(',')}}`].join(path.sep)
 
     const time = Date.now() - startTime
-    log.info(prefix, chalk.dim(`Done in ${ms(time)}.`))
+    log.verbose(prefix, chalk.dim(`Done in ${ms(time)}.`))
 
     return {
       root,

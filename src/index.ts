@@ -1,3 +1,7 @@
-export { default as defaultPackageScripts } from './config/nr'
+/**
+ * Vite configuration presets based on project type.
+*/
 export * as vite from './config/vite'
+
+export { defaultPackageScripts } from './config/package-scripts'
 export { gitDescribe } from './lib/utils'
