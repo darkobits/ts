@@ -1,8 +1,8 @@
 import { EOL } from 'node:os'
+import path from 'node:path'
 
 import chalk from 'chalk'
 import IS_CI from 'is-ci'
-import waitOn from 'wait-on'
 
 import { EXTENSIONS } from '../etc/constants'
 import log from '../lib/log'
@@ -10,8 +10,12 @@ import { getPackageContext, inferESLintConfigurationStrategy } from '../lib/util
 
 import type { Thunk, UserConfigurationExport } from '@darkobits/nr'
 
-export default (async ({ command, fn, script }) => {
-  const { root, srcDir, packageJson } = await getPackageContext()
+/**
+ * Defines scripts for various common build and release tasks. These may be
+ * extended by consumers.
+ */
+export const defaultPackageScripts = (async ({ command, fn, script }) => {
+  const { root, srcDir, outDir, packageJson } = await getPackageContext()
 
   /**
    * Gather any arguments provided after a "--"; these will be forwarded to
@@ -55,7 +59,7 @@ export default (async ({ command, fn, script }) => {
       // Project is using the newer flat configuration format; we will need to
       // set the ESLINT_USE_FLAT_CONFIG environment variable in order for ESLint
       // to use it.
-      log.info(
+      log.verbose(
         chalk.green('script:lint'),
         `Using flat ESLint configuration via ${chalk.green(eslintConfig.configFile)}.`
       )
@@ -63,7 +67,7 @@ export default (async ({ command, fn, script }) => {
     } else {
       // Project is using the legacy configuration format; we will need to
       // explicitly pass a list of extensions to lint.
-      log.info(
+      log.verbose(
         chalk.green('script:lint'),
         `Using legacy ESLint configuration via ${chalk.green(eslintConfig.configFile)}.`
       )
@@ -82,9 +86,9 @@ export default (async ({ command, fn, script }) => {
       env: eslintEnvVars
     })
   } else {
-    log.info(
+    log.verbose(
       chalk.green('script:lint'),
-      'Unable to determine ESLint configuration strategy; project may lack an ESLint configuration file.'
+      'Unable to determine ESLint configuration strategy; project may be missing an ESLint configuration file.'
     )
   }
 
@@ -158,11 +162,9 @@ export default (async ({ command, fn, script }) => {
   // ----- Release Scripts -----------------------------------------------------
 
   script('release', command('semantic-release', {
-    args: {
-      extends: '@darkobits/semantic-release-config'
-    }
+    args: { extends: '@darkobits/semantic-release-config' }
   }), {
-    description: `Create a release in a CI environment using ${chalk.white.bold('semantic-release')}.`,
+    description: `Publish a release from a CI environment using ${chalk.white.bold('semantic-release')}.`,
     group: 'Release',
     timing: true
   })
@@ -173,7 +175,7 @@ export default (async ({ command, fn, script }) => {
       extends: '@darkobits/semantic-release-config'
     }
   }), {
-    description: `Create a release locally using ${chalk.white.bold('semantic-release')}.`,
+    description: `Publish a release locally using ${chalk.white.bold('semantic-release')}.`,
     group: 'Release',
     timing: true
   })
@@ -268,68 +270,41 @@ export default (async ({ command, fn, script }) => {
     chalk.green('script:prepare'),
     chalk.yellow(`CI environment detected. Skipping ${chalk.bold('prepare')} script.`)
   )) : [
-    // N.B. By using strings to reference these scripts, we will always use the
-    // most recent value from the registry, allowing downstream users to
-    // overwrite them.
+    // By using strings to reference these scripts, we will always use the most
+    // recent value from the registry, allowing consumers to overwrite them.
     'script:build',
     'script:test'
   ], {
     group: 'Lifecycle',
-    description: '[hook] Run after "npm install" to ensure the project builds and tests are passing.',
+    description: 'Runs immediately after dependencies are installed to ensure the project builds and tests pass.',
     timing: !IS_CI
   })
 
-  script('start', [[
-    command('vite', {
-      args: ['build', { watch: true, logLevel: 'error' }],
-      preserveArgumentCasing: true,
-      stdout: 'pipe',
-      stderr: 'ignore'
-    }),
-    fn(async () => {
-      const unscopedName = packageJson.name?.split('/').pop() ?? ''
-      const entrypoint = packageJson.bin
+  script('start', fn(async () => {
+    const fullOutDir = path.resolve(outDir)
+    const fullSrcDir = path.resolve(root, srcDir)
+    const unscopedName = packageJson.name?.split('/').pop() ?? ''
+    const entrypoint = packageJson.bin
         ? packageJson.bin[unscopedName]
         : packageJson.main
+    const resolvedEntrypointInSrc = entrypoint && path.resolve(entrypoint).replace(fullOutDir, fullSrcDir)
 
-      if (!entrypoint) throw new Error('[script:start] No "bin" (string) or "main" declarations in package.json.')
+    if (!resolvedEntrypointInSrc) throw new Error('[script:start] No "bin" (string) or "main" declarations in package.json.')
 
-      log.info(
-        chalk.green('script:start'),
-        chalk.gray('Using entrypoint:'),
-        chalk.green(entrypoint)
-      )
+    log.info(
+      chalk.green('script:start'),
+      chalk.gray('Using entrypoint:'),
+      chalk.green(resolvedEntrypointInSrc)
+    )
 
-      /**
-       * This will wait for our build artifacts to be completely written to disk
-       * before proceeding.
-       * See: https://github.com/jeffbski/wait-on
-       */
-      await waitOn({
-        resources: [entrypoint],
-        // How often to poll the filesystem for updates.
-        interval: 10,
-        // Stabilization time; how long we will wait after the resource becomes
-        // available to report that it's ready. This lets us add a buffer to
-        // allow the bundler to completely finish writing.
-        window: 1000
-      })
-
-      // See: https://github.com/remy/nodemon#nodemon
-      const nodemonCommandThunk = command('nodemon', {
-        args:  [{ quiet: true, delay: 2 }, entrypoint, ...forwardArgs],
-        stdio: 'inherit'
-      })
-
-      return nodemonCommandThunk()
-    }, {
-      name: 'nodemon'
+    const tsxCommandThunk = command('tsx', {
+      args:  ['watch', resolvedEntrypointInSrc, ...forwardArgs],
+      stdio: 'inherit'
     })
-  ]], {
+
+    return tsxCommandThunk()
+  }, { name: 'tsx' }), {
     group: 'Lifecycle',
-    description: [
-      `Starts ${chalk.bold.white('Vite')} and ${chalk.bold.white('nodemon')}, watching for`,
-      'changes to build artifacts.'
-    ].join(' ')
+    description: `Execute the project's "main" or "bin" entrypoint in watch mode using ${chalk.bold.white('tsx')}.`
   })
 }) satisfies UserConfigurationExport
