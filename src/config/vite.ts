@@ -4,7 +4,6 @@ import { interopImportDefault } from '@darkobits/interop-import-default'
 import typescriptPlugin from '@rollup/plugin-typescript'
 import chalk from 'chalk'
 import glob from 'fast-glob'
-import ms from 'ms'
 // @ts-expect-error - Package has no type definitions.
 import preserveShebangPlugin from 'rollup-plugin-preserve-shebang'
 import { viteStaticCopy } from 'vite-plugin-static-copy'
@@ -40,7 +39,6 @@ const isWatchMode = process.argv.includes('--watch') || process.argv.includes('-
  */
 export const node = createViteConfigurationPreset(async context => {
   const prefix = chalk.dim.cyan('ts:preset:node')
-  const startTime = Date.now()
 
   // ----- Preflight Checks ----------------------------------------------------
 
@@ -87,12 +85,28 @@ export const node = createViteConfigurationPreset(async context => {
   // ----- Build Configuration -------------------------------------------------
 
   const { config, outDir, packageJson } = context
-  const isExplicitESM = packageJson.type === 'module'
 
-  if (isExplicitESM) {
-    log.info(prefix, `Emitting ${chalk.green('ESM')} because ${chalk.green.bold('type')} is ${chalk.green('module')} in package.json.`)
-  } else {
-    log.info(prefix, `Emitting ${chalk.green('CommonJS')} because ${chalk.green('type')} ${chalk.bold('is not')} ${chalk.green('module')} in package.json.`)
+  const packageType = packageJson.type === 'module'
+    ? 'EXPLICIT_ESM'
+    : packageJson.type === 'commonjs'
+      ? 'EXPLICIT_CJS'
+      : !packageJson.type
+        ? 'IMPLICIT_CJS'
+        : 'INVALID'
+
+  switch (packageType) {
+    case 'EXPLICIT_ESM':
+      log.info(prefix, `Emitting ${chalk.green('ESM')} because package ${chalk.green.bold('type')} is ${chalk.green.bold('module')}.`)
+      break
+    case 'EXPLICIT_CJS':
+      log.info(prefix, `Emitting ${chalk.green('CommonJS')} because package ${chalk.green.bold('type')} is ${chalk.green.bold('commonjs')}.`)
+      break
+    case 'IMPLICIT_CJS':
+      log.info(prefix, `Emitting ${chalk.green('CommonJS')} because package ${chalk.green.bold('type')} ${chalk.bold('is not set')}.`)
+      break
+    case 'INVALID':
+      log.error(`Invalid package type: ${packageJson.type}`)
+      throw new Error(`Invalid package type: ${packageJson.type}`)
   }
 
   config.build = {
@@ -106,7 +120,7 @@ export const node = createViteConfigurationPreset(async context => {
       entry,
       fileName: '[name]',
       // Infer output format based on the "type" setting in package.json.
-      formats: isExplicitESM ? ['es'] : ['cjs']
+      formats: packageType === 'EXPLICIT_ESM' ? ['es'] : ['cjs']
     },
     rollupOptions: {
       output: {
@@ -228,8 +242,8 @@ export const node = createViteConfigurationPreset(async context => {
 
   /**
    * This plugin will copy all non-source files (excluding test files, and
-   * preserving directory structure) from `srcDir` to `outDir`. Ths behavior was
-   * available in Babel using the `copyFiles` option.
+   * preserving directory structure) from `srcDir` to `outDir`. This is designed
+   * to mimic Babel's `copyFiles` option.
    */
   if (filesToCopy.length > 0) {
     config.plugins.push(viteStaticCopy({
@@ -244,6 +258,9 @@ export const node = createViteConfigurationPreset(async context => {
   }
 
   // ----- Plugin: ESLint ------------------------------------------------------
+
+  // Disabled: This plugin appears to be unmaintained and does not support
+  // ESLint 9 or flat configuration files.
 
   // Only add this plugin to the compilation if the user has an ESLint
   // configuration file in their project root.
@@ -261,14 +278,14 @@ export const node = createViteConfigurationPreset(async context => {
 
   // ----- Plugin: Post-Build --------------------------------------------------
 
-  config.plugins.push({
-    name: 'ts:postbuild-commands', // the name of your custom plugin. Could be anything.
-    apply: 'build',
-    closeBundle: () => {
-      const time = Date.now() - startTime
-      process.on('beforeExit', () => {
-        log.info(prefix, chalk.green(`Built project in ${ms(time)}.`))
-      })
-    }
-  })
+  // config.plugins.push({
+  //   name: 'ts:postbuild-commands',
+  //   apply: 'build',
+  //   closeBundle: () => {
+  //     const time = Date.now() - startTime
+  //     process.on('beforeExit', () => {
+  //       log.info(prefix, chalk.green(`Built project in ${ms(time)}.`))
+  //     })
+  //   }
+  // })
 })

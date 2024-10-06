@@ -23,7 +23,7 @@ export default function executablePlugin(): Plugin {
       const { root, packageJson: { bin } } = await getPackageContext()
 
       if (!bin) {
-        log.info(prefix, chalk.yellow.dim('Project does not declare any executable scripts.'))
+        log.verbose(prefix, chalk.yellow.dim('Project does not declare any executable scripts.'))
         return
       }
 
@@ -35,8 +35,8 @@ export default function executablePlugin(): Plugin {
         this.error(new TypeError(`Expected type of "bin" in package.json to be "string" or "object", got "${typeof bin}".`))
       }
 
-      log.info(prefix, `Root: ${root}`)
-      log.info(prefix, 'Executables:', binList)
+      log.verbose(prefix, `Root: ${root}`)
+      log.verbose(prefix, 'Executables:', binList)
 
       try {
         for (const binPath of binList) {
@@ -47,7 +47,7 @@ export default function executablePlugin(): Plugin {
             // We may not see the file we're looking for if the compilation
             // encountered errors that prevented writing.
             const relativeBinPath = path.relative(root, binPath)
-            log.info(prefix, `Executable script ${chalk.green(relativeBinPath)} declared in package.json does not exist.`)
+            log.warn(prefix, `Executable script ${chalk.green(relativeBinPath)} declared in package.json does not exist.`)
           }
         }
       } catch (err: any) {

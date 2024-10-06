@@ -24,15 +24,14 @@ const defaultOptions: ReplaceTscAliasPathsOptions = {
   output: {
     verbose: true,
     clear: () => {
-      // eslint-disable-next-line no-console
-      console.clear()
+      // Empty function.
     },
     debug: message => {
       void message
       // log.debug(prefix, message)
     },
     info: message => {
-      log.info(prefix, message)
+      log.verbose(prefix, message)
     },
     error(message) {
       log.error(prefix, message)
@@ -59,7 +58,7 @@ export default function tscAliasPlugin(userOptions: ReplaceTscAliasPathsOptions 
       try {
         await replaceTscAliasPaths(options)
         const time = Date.now() - startTime
-        log.info(prefix, chalk.dim(`Done in ${ms(time)}.`))
+        log.verbose(prefix, chalk.gray(`Done in ${ms(time)}.`))
       } catch (err: any) {
         this.error(err)
       }
