@@ -49,11 +49,11 @@ and start building something great.
 
 | Name | Version
 | :-- | :--
-| [`typescript`](https://github.com/microsoft/TypeScript) | `~5.6.2`
-| [`vite`](https://github.com/vitejs/vite) | `^5.4.8`
-| [`vitest`](https://github.com/vitest-dev/vitest) | `^2.1.2`
+| [`typescript`](https://github.com/microsoft/TypeScript) | `~5.6.3`
+| [`vite`](https://github.com/vitejs/vite) | `^5.4.9`
+| [`vitest`](https://github.com/vitest-dev/vitest) | `^2.1.3`
 | [`eslint`](https://github.com/eslint/eslint) | `^9.12.0`
 | [`@darkobits/eslint-plugin`](https://github.com/darkobits/eslint-plugin) | `^2.1.10`
 | [`semantic-release`](https://github.com/semantic-release/semantic-release) | `~24.1.2`
-| [`npm-check-updates`](https://github.com/raineorshine/npm-check-updates) | `~17.1.3`
+| [`npm-check-updates`](https://github.com/raineorshine/npm-check-updates) | `~17.1.4`
 | [`@darkobits/nr`](https://github.com/darkobits/nr) | `~0.18.0`
