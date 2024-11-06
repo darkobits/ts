@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.23.4](https://github.com/darkobits/ts/compare/v0.23.3...v0.23.4) (2024-11-06)
+
+
+### Features
+
+* Add cleanup plugin. ([452c204](https://github.com/darkobits/ts/commit/452c204c242a329468eb1ababfd291acf984aadc))
+
+
+### Bug Fixes
+
+* Fix `Reflect` access. ([241910f](https://github.com/darkobits/ts/commit/241910ff762744c62931a06fd7a81836d3f62f11))
+
 ### [0.23.3](https://github.com/darkobits/ts/compare/v0.23.2...v0.23.3) (2024-10-06)
 
 ### [0.23.2](https://github.com/darkobits/ts/compare/v0.23.1...v0.23.2) (2024-09-27)
