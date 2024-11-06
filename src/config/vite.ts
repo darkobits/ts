@@ -10,6 +10,7 @@ import { viteStaticCopy } from 'vite-plugin-static-copy'
 import tsconfigPathsPluginExport from 'vite-tsconfig-paths'
 
 import { BARE_EXTENSIONS, TEST_FILE_PATTERNS } from '../etc/constants'
+import cleanupPlugin from '../lib/cleanup-plugin'
 import executablePlugin from '../lib/executable-plugin'
 import log from '../lib/log'
 import { nodeExternalPlugin } from '../lib/node-external-plugin'
@@ -38,18 +39,18 @@ const isWatchMode = process.argv.includes('--watch') || process.argv.includes('-
  *   directory as-is, similar to Babel's `copyFiles` feature.
  */
 export const node = createViteConfigurationPreset(async context => {
-  const prefix = chalk.dim.cyan('ts:preset:node')
+  const prefix = chalk.dim.cyan('preset:node')
 
   // ----- Preflight Checks ----------------------------------------------------
 
-  const { command, mode, root, srcDir, patterns: { SOURCE_FILES, TEST_FILES } } = context
+  const { command, mode, root, srcDir, outDir, patterns: { SOURCE_FILES, TEST_FILES } } = context
 
   // It does not make sense to use 'vite serve' with this preset, so issue a
   // warning and terminate the build when this command is used. However, Vitest
   // invokes Vite with the 'serve' command, so handle that case by checking
   // `mode`.
   if (command === 'serve' && mode !== 'test') {
-    log.error(prefix, 'The "serve" command is not available when using the "node" preset.')
+    log.error(prefix, `The ${chalk.white('serve')} command is not available when using the ${chalk.cyan('node')} preset.`)
     // eslint-disable-next-line unicorn/no-process-exit
     process.exit(1)
   }
@@ -84,7 +85,7 @@ export const node = createViteConfigurationPreset(async context => {
 
   // ----- Build Configuration -------------------------------------------------
 
-  const { config, outDir, packageJson } = context
+  const { config, packageJson } = context
 
   const packageType = packageJson.type === 'module'
     ? 'EXPLICIT_ESM'
@@ -93,21 +94,6 @@ export const node = createViteConfigurationPreset(async context => {
       : !packageJson.type
         ? 'IMPLICIT_CJS'
         : 'INVALID'
-
-  switch (packageType) {
-    case 'EXPLICIT_ESM':
-      log.info(prefix, `Emitting ${chalk.green('ESM')} because package ${chalk.green.bold('type')} is ${chalk.green.bold('module')}.`)
-      break
-    case 'EXPLICIT_CJS':
-      log.info(prefix, `Emitting ${chalk.green('CommonJS')} because package ${chalk.green.bold('type')} is ${chalk.green.bold('commonjs')}.`)
-      break
-    case 'IMPLICIT_CJS':
-      log.info(prefix, `Emitting ${chalk.green('CommonJS')} because package ${chalk.green.bold('type')} ${chalk.bold('is not set')}.`)
-      break
-    case 'INVALID':
-      log.error(`Invalid package type: ${packageJson.type}`)
-      throw new Error(`Invalid package type: ${packageJson.type}`)
-  }
 
   config.build = {
     // Use the inferred output directory defined in tsconfig.json.
@@ -123,11 +109,31 @@ export const node = createViteConfigurationPreset(async context => {
       formats: packageType === 'EXPLICIT_ESM' ? ['es'] : ['cjs']
     },
     rollupOptions: {
+      logLevel: 'silent',
       output: {
         preserveModules: true,
         preserveModulesRoot: srcDir
       }
     }
+  }
+
+  const packageTypeLabel: Record<typeof packageType, string> = {
+    IMPLICIT_CJS: 'cjs',
+    EXPLICIT_CJS: 'cjs',
+    EXPLICIT_ESM: 'esm',
+    INVALID: ''
+  }
+
+  if (command === 'build') {
+    process.stdout.write('\n')
+    log.info(prefix, [
+      chalk.green(path.parse(srcDir).name),
+      chalk.whiteBright('→'),
+      chalk.green(path.parse(outDir).name),
+      `${chalk.gray('type:')}${chalk.green(packageTypeLabel[packageType])}`,
+      isWatchMode && `${chalk.gray('watch:')}${chalk.green('true')}`
+    ].filter(Boolean).join(' '))
+    process.stdout.write('\n')
   }
 
   // ----- Vitest Configuration ------------------------------------------------
@@ -150,13 +156,6 @@ export const node = createViteConfigurationPreset(async context => {
       include: entry.map(entry => path.relative(root, entry))
     }
   }
-
-  // ----- Plugin: Node Externals ----------------------------------------------
-
-  /**
-   * Ensures modules from node_modules are not bundled with output.
-   */
-  config.plugins.push(nodeExternalPlugin({ root }))
 
   // ----- Plugin: TypeScript --------------------------------------------------
 
@@ -183,7 +182,7 @@ export const node = createViteConfigurationPreset(async context => {
       // This prevents things like Vitest from failing when in watch mode due to
       // trivial errors like a variable not being used, etc.
       noEmitOnError: !isWatchMode && mode === 'production',
-      // This must be set to the same value as config.build.sourcemap or the
+      // This MUST be set to the same value as config.build.sourcemap or the
       // plugin will throw an error.
       sourceMap: config.build.sourcemap,
       // The plugin will issue a warning if this is set a value other than
@@ -217,6 +216,13 @@ export const node = createViteConfigurationPreset(async context => {
    * - https://github.com/justkey007/tsc-alias
    */
   config.plugins.push(tscAliasPlugin({ configFile: tsConfigPath }))
+
+  // ----- Plugin: Node Externals ----------------------------------------------
+
+  /**
+   * Ensures modules from node_modules are not bundled with output.
+   */
+  config.plugins.push(nodeExternalPlugin({ root }))
 
   // ----- Plugin: Preserve Shebangs -------------------------------------------
 
@@ -257,35 +263,12 @@ export const node = createViteConfigurationPreset(async context => {
     }))
   }
 
-  // ----- Plugin: ESLint ------------------------------------------------------
+  // ----- [Plugin] Cleanup ----------------------------------------------------
 
-  // Disabled: This plugin appears to be unmaintained and does not support
-  // ESLint 9 or flat configuration files.
-
-  // Only add this plugin to the compilation if the user has an ESLint
-  // configuration file in their project root.
-  // if (eslintConfigResult.length > 0) {
-  //   console.log('ENV VAR', process.env.ESLINT_USE_FLAT_CONFIG);
-
-  //   config.plugins.push(viteEslintPlugin({
-  //     formatter: 'codeframe',
-  //     // Don't fail due to lint errors when running tests or when in watch
-  //     // mode.
-  //     failOnError: mode === 'test' || isWatchMode ? false : true,
-  //     failOnWarning: false
-  //   }));
-  // }
-
-  // ----- Plugin: Post-Build --------------------------------------------------
-
-  // config.plugins.push({
-  //   name: 'ts:postbuild-commands',
-  //   apply: 'build',
-  //   closeBundle: () => {
-  //     const time = Date.now() - startTime
-  //     process.on('beforeExit', () => {
-  //       log.info(prefix, chalk.green(`Built project in ${ms(time)}.`))
-  //     })
-  //   }
-  // })
+  config.plugins.push(cleanupPlugin({
+    // Only scan the output directory for offending files.
+    root: outDir,
+    // Removes empty .js files created when .ts files only export types.
+    removeEmptyChunks: true
+  }))
 })

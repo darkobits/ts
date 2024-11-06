@@ -10,7 +10,7 @@ import log from './log'
 
 import type { Plugin } from 'vite'
 
-const prefix = chalk.dim.cyan('ts:tsc-alias-plugin')
+const prefix = chalk.dim.cyan('tsc-alias')
 
 /**
  * @private
@@ -28,7 +28,7 @@ const defaultOptions: ReplaceTscAliasPathsOptions = {
     },
     debug: message => {
       void message
-      // log.debug(prefix, message)
+      log.verbose(prefix, message)
     },
     info: message => {
       log.verbose(prefix, message)

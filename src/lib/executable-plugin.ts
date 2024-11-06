@@ -8,7 +8,7 @@ import { getPackageContext } from './utils'
 
 import type { Plugin } from 'vite'
 
-const prefix = chalk.dim.cyan('ts:executable-plugin')
+const prefix = chalk.dim.cyan('executable')
 
 /**
  * Adds an executable flag to any output files that match `"bin"` declarations
@@ -42,12 +42,12 @@ export default function executablePlugin(): Plugin {
         for (const binPath of binList) {
           if (await fs.exists(binPath)) {
             await fs.chmod(binPath, '0755')
-            log.info(prefix, `Set executable flag on ${chalk.green(binPath)}.`)
+            log.info(prefix, chalk.green(path.relative(root, binPath)))
           } else {
             // We may not see the file we're looking for if the compilation
             // encountered errors that prevented writing.
             const relativeBinPath = path.relative(root, binPath)
-            log.warn(prefix, `Executable script ${chalk.green(relativeBinPath)} declared in package.json does not exist.`)
+            log.warn(prefix, `Executable ${chalk.green(relativeBinPath)} declared in package.json does not exist.`)
           }
         }
       } catch (err: any) {

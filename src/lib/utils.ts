@@ -42,7 +42,7 @@ function isPromise(value: any): value is PromiseLike<any> {
  */
 export async function getPackageContext(): Promise<PackageContext> {
   try {
-    const prefix = chalk.dim.cyan('ts:getPackageContext')
+    const prefix = chalk.dim.cyan('ts:context')
     const startTime = Date.now()
 
     // Find and parse package.json.
@@ -61,9 +61,9 @@ export async function getPackageContext(): Promise<PackageContext> {
     const root = pkgResult.path === path.dirname(tsConfigPath)
       ? pkgResult.path
       : path.dirname(tsConfigPath)
-    log.verbose(prefix, chalk.gray('root'), chalk.green(root))
-    log.verbose(prefix, chalk.gray('package.json'), chalk.green(pkgResult.path))
-    log.verbose(prefix, chalk.gray('tsconfig.json'),  chalk.green(tsConfigPath))
+    log.debug(prefix, chalk.gray('root'), chalk.green(root))
+    log.debug(prefix, chalk.gray('package.json'), chalk.green(pkgResult.path))
+    log.debug(prefix, chalk.gray('tsconfig.json'),  chalk.green(tsConfigPath))
 
     // Parse tsconfig.json.
     const tsConfigResult = getTsconfig(tsConfigPath)
@@ -73,7 +73,7 @@ export async function getPackageContext(): Promise<PackageContext> {
     // Infer source root. This will already be an absolute directory.
     const srcDir = tsConfig.compilerOptions?.baseUrl
     if (!srcDir) throw new Error('[getPackageContext] "compilerOptions.baseUrl" must be set in tsconfig.json')
-    log.verbose(prefix, chalk.gray('srcDir'), chalk.green(path.resolve(srcDir)))
+    log.debug(prefix, chalk.gray('srcDir'), chalk.green(path.resolve(srcDir)))
 
     // Infer output directory. If it is not absolute, resolve it relative to the
     // root directory.
@@ -83,7 +83,7 @@ export async function getPackageContext(): Promise<PackageContext> {
         : path.resolve(root, tsConfig.compilerOptions.outDir)
       : undefined
     if (!outDir) throw new Error('[getPackageContext] "compilerOptions.outDir" must be set in tsconfig.json')
-    log.verbose(prefix, chalk.gray('outDir'), chalk.green(path.resolve(root, outDir)))
+    log.debug(prefix, chalk.gray('outDir'), chalk.green(path.resolve(root, outDir)))
 
     // Build glob patterns to match source files and test files.
     const SOURCE_FILES = [srcDir, '**', `*.{${BARE_EXTENSIONS.join(',')}}`].join(path.sep)

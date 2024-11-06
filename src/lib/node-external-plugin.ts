@@ -1,8 +1,14 @@
 /* eslint-disable unicorn/no-null */
 import { createRequire } from 'node:module'
-import path from 'path'
+import path from 'node:path'
+
+import chalk from 'chalk'
+
+import log from './log'
 
 import type { Plugin } from 'vite'
+
+const prefix = chalk.dim.cyan('node-external')
 
 const require = createRequire(import.meta.url)
 
@@ -19,14 +25,17 @@ function isNodeModule(root: string, id: string) {
 
 export function nodeExternalPlugin({ root }: {root: string}): Plugin {
   return {
-    name: 'ts-vite-plugin-node-external',
+    name: 'ts:plugin-node-externals',
     enforce: 'pre',
     apply: 'build',
     resolveId: (source, importer, options: any) => {
-      const [id] = source.split('?')
+      const [importSpecifier] = source.split('?')
       if (options.isEntry) return null
       if (!importer) return null
-      if (isNodeModule(root, id)) return { id, external: true }
+      if (isNodeModule(root, importSpecifier)) {
+        log.verbose(prefix, chalk.cyan(importSpecifier))
+        return { id: importSpecifier, external: true }
+      }
       return null
     }
   }

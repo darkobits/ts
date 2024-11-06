@@ -8,17 +8,19 @@ interface DependencyInfo {
   url: string
 }
 
+const OUR_PACKAGE_JSON_PROMISE = import('../package.json', { with: { type: 'json' }})
+
 /**
  * Gets the current local version of the provided dependency.
  */
 async function getDependencyVersion(name: string) {
-  const ourPackageJson = (await import('../package.json', { assert: { type: 'json' }}) ).default
+  const { dependencies, peerDependencies } = await OUR_PACKAGE_JSON_PROMISE
 
-  if (Reflect.has(ourPackageJson.peerDependencies, name))
-    return Reflect.get(ourPackageJson.peerDependencies, name) as string
+  if (Reflect.has(peerDependencies, name))
+    return Reflect.get(peerDependencies, name) as string
 
-  if (Reflect.has(ourPackageJson.dependencies, name))
-    return Reflect.get(ourPackageJson.dependencies, name) as string
+  if (Reflect.has(dependencies, name))
+    return Reflect.get(dependencies, name) as string
 
   throw new Error(`[getDependencyVersion] Unable to get dependency version for "${name}".`)
 }
@@ -62,9 +64,6 @@ const dependencies = [{
 }, {
   name: 'semantic-release',
   url: 'https://github.com/semantic-release/semantic-release'
-}, {
-  name: 'npm-check-updates',
-  url: 'https://github.com/raineorshine/npm-check-updates'
 }, {
   name: '@darkobits/nr',
   url: 'https://github.com/darkobits/nr'

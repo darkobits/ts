@@ -59,7 +59,7 @@ export const defaultPackageScripts = (async ({ command, fn, script }) => {
       // Project is using the newer flat configuration format; we will need to
       // set the ESLINT_USE_FLAT_CONFIG environment variable in order for ESLint
       // to use it.
-      log.verbose(
+      log.debug(
         chalk.green('script:lint'),
         `Using flat ESLint configuration via ${chalk.green(eslintConfig.configFile)}.`
       )
@@ -67,7 +67,7 @@ export const defaultPackageScripts = (async ({ command, fn, script }) => {
     } else {
       // Project is using the legacy configuration format; we will need to
       // explicitly pass a list of extensions to lint.
-      log.verbose(
+      log.debug(
         chalk.green('script:lint'),
         `Using legacy ESLint configuration via ${chalk.green(eslintConfig.configFile)}.`
       )
