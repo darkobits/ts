@@ -16,10 +16,10 @@ const OUR_PACKAGE_JSON_PROMISE = import('../package.json', { with: { type: 'json
 async function getDependencyVersion(name: string) {
   const { dependencies, peerDependencies } = await OUR_PACKAGE_JSON_PROMISE
 
-  if (Reflect.has(peerDependencies, name))
+  if (peerDependencies && Reflect.has(peerDependencies, name))
     return Reflect.get(peerDependencies, name) as string
 
-  if (Reflect.has(dependencies, name))
+  if (dependencies && Reflect.has(dependencies, name))
     return Reflect.get(dependencies, name) as string
 
   throw new Error(`[getDependencyVersion] Unable to get dependency version for "${name}".`)
