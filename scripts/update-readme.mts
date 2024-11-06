@@ -8,7 +8,7 @@ interface DependencyInfo {
   url: string
 }
 
-const OUR_PACKAGE_JSON_PROMISE = import('../package.json', { with: { type: 'json' }})
+const OUR_PACKAGE_JSON_PROMISE = import('../package.json', { with: { type: 'json' }}).then(mod => mod.default)
 
 /**
  * Gets the current local version of the provided dependency.
