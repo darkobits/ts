@@ -42,7 +42,7 @@ function isPromise(value: any): value is PromiseLike<any> {
  */
 export async function getPackageContext(): Promise<PackageContext> {
   try {
-    const prefix = chalk.dim.cyan('ts:context')
+    const prefix = chalk.dim.cyan('context')
     const startTime = Date.now()
 
     // Find and parse package.json.
@@ -61,9 +61,9 @@ export async function getPackageContext(): Promise<PackageContext> {
     const root = pkgResult.path === path.dirname(tsConfigPath)
       ? pkgResult.path
       : path.dirname(tsConfigPath)
-    log.debug(prefix, chalk.gray('root'), chalk.green(root))
-    log.debug(prefix, chalk.gray('package.json'), chalk.green(pkgResult.path))
-    log.debug(prefix, chalk.gray('tsconfig.json'),  chalk.green(tsConfigPath))
+    log.debug(prefix, 'root', chalk.green(root))
+    log.debug(prefix, 'package.json', chalk.green(pkgResult.path))
+    log.debug(prefix, 'tsconfig.json', chalk.green(tsConfigPath))
 
     // Parse tsconfig.json.
     const tsConfigResult = getTsconfig(tsConfigPath)
@@ -90,7 +90,7 @@ export async function getPackageContext(): Promise<PackageContext> {
     const TEST_FILES = [srcDir, '**', `*.{${TEST_FILE_PATTERNS.join(',')}}.{${BARE_EXTENSIONS.join(',')}}`].join(path.sep)
 
     const time = Date.now() - startTime
-    log.verbose(prefix, chalk.dim(`Done in ${ms(time)}.`))
+    log.debug(prefix, chalk.dim(`Done in ${ms(time)}.`))
 
     return {
       root,

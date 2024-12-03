@@ -175,7 +175,7 @@ describe('cleanupPlugin', () => {
       expect(fs.remove).toHaveBeenCalledWith(
         path.join('/output/dir', 'empty.js')
       )
-      expect(log.verbose).toHaveBeenCalledWith(
+      expect(log.debug).toHaveBeenCalledWith(
         'cleanup-plugin',
         'Removed empty chunk:',
         expect.any(String)
@@ -203,7 +203,7 @@ describe('cleanupPlugin', () => {
         'utf8'
       )
       expect(fs.remove).not.toHaveBeenCalled()
-      expect(log.verbose).not.toHaveBeenCalled()
+      expect(log.debug).not.toHaveBeenCalled()
     })
 
     it('handles errors during cleanup', async () => {

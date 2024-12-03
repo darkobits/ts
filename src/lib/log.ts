@@ -1,3 +1,3 @@
 import { createLogger } from '@darkobits/log'
 
-export default createLogger({ heading: 'ts '})
+export default createLogger({ heading: 'ts'})

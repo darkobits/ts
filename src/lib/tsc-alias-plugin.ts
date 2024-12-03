@@ -28,10 +28,10 @@ const defaultOptions: ReplaceTscAliasPathsOptions = {
     },
     debug: message => {
       void message
-      log.verbose(prefix, message)
+      log.debug(prefix, message)
     },
     info: message => {
-      log.verbose(prefix, message)
+      log.debug(prefix, message)
     },
     error(message) {
       log.error(prefix, message)
@@ -58,7 +58,7 @@ export default function tscAliasPlugin(userOptions: ReplaceTscAliasPathsOptions 
       try {
         await replaceTscAliasPaths(options)
         const time = Date.now() - startTime
-        log.verbose(prefix, chalk.gray(`Done in ${ms(time)}.`))
+        log.debug(prefix, chalk.gray(`Done in ${ms(time)}.`))
       } catch (err: any) {
         this.error(err)
       }

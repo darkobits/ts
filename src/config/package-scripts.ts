@@ -2,7 +2,7 @@ import { EOL } from 'node:os'
 import path from 'node:path'
 
 import chalk from 'chalk'
-import IS_CI from 'is-ci'
+import { isCI } from 'ci-info'
 
 import { EXTENSIONS } from '../etc/constants'
 import log from '../lib/log'
@@ -86,7 +86,7 @@ export const defaultPackageScripts = (async ({ command, fn, script }) => {
       env: eslintEnvVars
     })
   } else {
-    log.verbose(
+    log.debug(
       chalk.green('script:lint'),
       'Unable to determine ESLint configuration strategy; project may be missing an ESLint configuration file.'
     )
@@ -266,7 +266,7 @@ export const defaultPackageScripts = (async ({ command, fn, script }) => {
 
   // In CI environments, skip our usual prepare steps; users can will likely
   // need to build and test projects explicitly in such cases.
-  script('prepare', IS_CI ? fn(() => log.info(
+  script('prepare', isCI ? fn(() => log.info(
     chalk.green('script:prepare'),
     chalk.yellow(`CI environment detected. Skipping ${chalk.bold('prepare')} script.`)
   )) : [
@@ -277,7 +277,7 @@ export const defaultPackageScripts = (async ({ command, fn, script }) => {
   ], {
     group: 'Lifecycle',
     description: 'Runs immediately after dependencies are installed to ensure the project builds and tests pass.',
-    timing: !IS_CI
+    timing: !isCI
   })
 
   script('start', fn(async () => {

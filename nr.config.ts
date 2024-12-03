@@ -2,8 +2,8 @@ import path from 'node:path'
 
 import { defineConfig } from '@darkobits/nr'
 import chalk from 'chalk'
+import { isCI } from 'ci-info'
 import fs from 'fs-extra'
-import IS_CI from 'is-ci'
 
 import { defaultPackageScripts } from './src'
 
@@ -48,7 +48,7 @@ export default defineConfig([
       description: '[hook] After a bump script completes, publish to NPM and push the release commit.'
     })
 
-    if (!IS_CI) {
+    if (!isCI) {
       script('postBuild', [
         command.node('./scripts/update-readme.mts', {
           nodeOptions: ['--loader=ts-node/esm', '--no-warnings']

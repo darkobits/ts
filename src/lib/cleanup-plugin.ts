@@ -45,7 +45,7 @@ export default function cleanupPlugin(options: CleanupPluginOptions): Plugin {
     const isEmptyChunk = EMPTY_CHUNK_PATTERN.test(fileContents)
     if (isEmptyChunk) {
       await fs.remove(filePath)
-      log.verbose(prefix, 'Removed empty chunk:', chalk.green(path.relative(options.root, filePath)))
+      log.debug(prefix, 'Removed empty chunk:', chalk.green(path.relative(options.root, filePath)))
     }
   }))
 

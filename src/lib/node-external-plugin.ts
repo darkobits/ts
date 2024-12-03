@@ -33,7 +33,7 @@ export function nodeExternalPlugin({ root }: {root: string}): Plugin {
       if (options.isEntry) return null
       if (!importer) return null
       if (isNodeModule(root, importSpecifier)) {
-        log.verbose(prefix, chalk.cyan(importSpecifier))
+        log.debug(prefix, chalk.cyan(importSpecifier))
         return { id: importSpecifier, external: true }
       }
       return null

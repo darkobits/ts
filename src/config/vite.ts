@@ -41,7 +41,7 @@ const isWatchMode = process.argv.includes('--watch') || process.argv.includes('-
 export const node = createViteConfigurationPreset(async context => {
   const prefix = chalk.dim.cyan('preset:node')
 
-  // await log.isReady()
+  log.isReady()
   // console.log('logger is ready')
 
   // ----- Preflight Checks ----------------------------------------------------
@@ -70,12 +70,6 @@ export const node = createViteConfigurationPreset(async context => {
   ] = await Promise.all([
     glob(SOURCE_FILES, { cwd: root, ignore: [TEST_FILES] }),
     glob([`${srcDir}/**/*`, `!${SOURCE_FILES}`, `!${TEST_FILES}`], { cwd: root })
-    // glob([
-    //   '.eslintrc.*',
-    //   'eslint.config.js',
-    //   'eslint.config.mjs',
-    //   'eslint.config.cjs'
-    // ], { cwd: root })
   ])
 
   // User forgot to write any code or did not set up paths correctly in
