@@ -6,13 +6,14 @@ export default vite.node({
       exclude: [
         'src/index.ts',
         'src/config',
-        'src/etc'
+        'src/etc',
+        'src/lib/log'
       ],
       thresholds: {
-        lines: 40,
-        branches: 50,
-        functions: 50,
-        statements: 40
+        statements: 80,
+        branches: 80,
+        functions: 80,
+        lines: 80
       }
     }
   }

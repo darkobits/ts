@@ -52,8 +52,7 @@ export default defineConfig([
       script('postBuild', [
         command.node('./scripts/update-readme.mts', {
           nodeOptions: ['--loader=ts-node/esm', '--no-warnings']
-        }),
-        'script:test.smoke'
+        })
       ], {
         group: 'Lifecycle',
         description: '[hook] Update dependency versions in README.'

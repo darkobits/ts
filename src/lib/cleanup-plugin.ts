@@ -1,27 +1,26 @@
 import path from 'node:path'
 
 import chalk from 'chalk'
-// import glob from 'fast-glob'
 import fs from 'fs-extra'
 
 import log from './log'
 
 import type { Plugin } from 'vite'
 
-const prefix = chalk.dim.cyan('cleanup-plugin')
-
 interface CleanupPluginOptions {
   /**
    * Root directory that the plugin will operate on. This should be set to the
    * project's output directory.
-   */
-  root: string
-  /**
-   * If `true`, the plugin will recursively search `root` for empty chunks and
-   * remove them.
-   */
-  removeEmptyChunks: boolean
+  */
+ root: string
+ /**
+  * If `true`, the plugin will recursively search `root` for empty chunks and
+  * remove them.
+ */
+removeEmptyChunks: boolean
 }
+
+const prefix = chalk.dim.cyan('cleanup-plugin')
 
 /**
  * @private

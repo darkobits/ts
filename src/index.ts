@@ -1,3 +1,12 @@
+// import {
+//   // debugEventLoop,
+//   findHangingPromises,
+//   registerShutdownHandlers
+// } from './lib/debug-utils'
+
+// findHangingPromises()
+// registerShutdownHandlers()
+
 /**
  * Vite configuration presets based on project type.
 */

@@ -41,6 +41,9 @@ const isWatchMode = process.argv.includes('--watch') || process.argv.includes('-
 export const node = createViteConfigurationPreset(async context => {
   const prefix = chalk.dim.cyan('preset:node')
 
+  // await log.isReady()
+  // console.log('logger is ready')
+
   // ----- Preflight Checks ----------------------------------------------------
 
   const { command, mode, root, srcDir, outDir, patterns: { SOURCE_FILES, TEST_FILES } } = context
@@ -126,11 +129,12 @@ export const node = createViteConfigurationPreset(async context => {
 
   if (command === 'build') {
     process.stdout.write('\n')
-    log.info(prefix, [
+    // eslint-disable-next-line @typescript-eslint/await-thenable
+    await log.info(prefix, [
       chalk.green(path.parse(srcDir).name),
       chalk.whiteBright('→'),
       chalk.green(path.parse(outDir).name),
-      `${chalk.gray('type:')}${chalk.green(packageTypeLabel[packageType])}`,
+      `${chalk.gray('as')} ${chalk.green(packageTypeLabel[packageType])}`,
       isWatchMode && `${chalk.gray('watch:')}${chalk.green('true')}`
     ].filter(Boolean).join(' '))
     process.stdout.write('\n')

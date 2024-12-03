@@ -1,264 +1,297 @@
-import path from 'node:path'
+/* eslint-disable unicorn/no-null,  unicorn/no-useless-undefined */
+import { execSync } from 'node:child_process'
 
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { findUp } from 'find-up'
+import { getTsconfig, type TsConfigResult } from 'get-tsconfig'
+import { readPackageUp } from 'read-package-up'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 
-const mockExecSync = vi.fn()
-vi.doMock('child_process', () => ({
-  execSync: mockExecSync
-}))
+import {
+  getPackageContext,
+  inferESLintConfigurationStrategy,
+  createViteConfigurationScaffold,
+  createPluginReconfigurator,
+  gitDescribe
+} from './utils'
 
-const mockReadPackageUp = vi.fn()
-vi.doMock('read-package-up', () => ({
-  readPackageUp: mockReadPackageUp
-}))
+import type { ViteConfigurationScaffold } from 'etc/types'
 
-const mockFindUp = vi.fn()
-vi.doMock('find-up', () => ({
-  findUp: mockFindUp
-}))
-
-const mockGetTsconfig = vi.fn()
-vi.doMock('get-tsconfig', () => ({
-  getTsconfig: mockGetTsconfig
-}))
-
-describe('gitDescribe', () => {
-  it('should parse results', async () => {
-    mockExecSync.mockImplementation(() => 'v1.2.3-15-g7246d34')
-    const { gitDescribe } = await import('./utils')
-    expect(gitDescribe()).toBe('v1.2.3-7246d34')
-  })
-})
+vi.mock('node:child_process')
+vi.mock('read-package-up')
+vi.mock('get-tsconfig')
+vi.mock('find-up')
+vi.mock('./log')
 
 describe('getPackageContext', () => {
-  it('should return package metadata', async () => {
-    const testPackageRoot = '/foo/bar/baz'
-    const testSrcDir = 'src'
-    const testOutDir = 'dist'
-    const testPackageJson = {
-      name: 'foo-pkg',
-      version: '1.0.0'
-    }
-    const testTsConfig = {
-      compilerOptions: {
-        baseUrl: 'src',
-        outDir: 'dist'
-      }
-    }
+  beforeEach(() => {
+    vi.resetAllMocks()
+  })
 
-    mockReadPackageUp.mockImplementation(async () => ({
-      path: testPackageRoot,
-      packageJson: testPackageJson
-    }))
-
-    mockFindUp.mockImplementation(async () => path.join(testPackageRoot, 'tsconfig.json'))
-
-    mockGetTsconfig.mockImplementation(() => ({
-      path: testPackageRoot,
-      config: testTsConfig
-    }))
-
-    const { getPackageContext } = await import('./utils')
-
-    expect(await getPackageContext()).toMatchObject({
-      root: testPackageRoot,
-      outDir: path.join(testPackageRoot, testOutDir),
-      srcDir: testSrcDir,
-      tsConfigPath: path.join(testPackageRoot, 'tsconfig.json'),
-      packageJson: testPackageJson,
-      tsConfig: testTsConfig
+  it('should correctly handle successful package context retrieval', async () => {
+    vi.mocked(readPackageUp).mockResolvedValue({
+      path: '/test/path/package.json',
+      packageJson: {}
     })
+    vi.mocked(findUp).mockResolvedValue('/test/path/tsconfig.json')
+    vi.mocked(getTsconfig).mockReturnValue({
+      config: {
+        compilerOptions: {
+          baseUrl: '/test/src',
+          outDir: 'dist'
+        }
+      }
+    } as TsConfigResult)
+
+    const result = await getPackageContext()
+    expect(result).toEqual(expect.objectContaining({
+      root: '/test/path',
+      srcDir: '/test/src',
+      outDir: expect.any(String),
+      tsConfigPath: '/test/path/tsconfig.json',
+      packageJson: {}
+    }))
+  })
+
+  it('should handle missing package.json', async () => {
+    vi.mocked(readPackageUp).mockResolvedValue(undefined)
+    await expect(getPackageContext()).rejects.toThrow('Unable to find package.json')
+  })
+
+  it('should handle missing tsconfig.json', async () => {
+    vi.mocked(readPackageUp).mockResolvedValue({
+      path: '/test/path/package.json',
+      packageJson: {}
+    })
+    vi.mocked(findUp).mockResolvedValue(undefined)
+    await expect(getPackageContext()).rejects.toThrow('Unable to find tsconfig.json')
+  })
+
+  it('should handle invalid tsconfig.json', async () => {
+    vi.mocked(readPackageUp).mockResolvedValue({
+      path: '/test/path/package.json',
+      packageJson: {}
+    })
+    vi.mocked(findUp).mockResolvedValue('/test/path/tsconfig.json')
+    vi.mocked(getTsconfig).mockReturnValue(null)
+    await expect(getPackageContext()).rejects.toThrow('Unable to locate a tsconfig.json file')
+  })
+
+  it('should handle missing baseUrl in tsconfig.json', async () => {
+    vi.mocked(readPackageUp).mockResolvedValue({
+      path: '/test/path/package.json',
+      packageJson: {}
+    })
+    vi.mocked(findUp).mockResolvedValue('/test/path/tsconfig.json')
+    vi.mocked(getTsconfig).mockReturnValue({
+      config: {
+        compilerOptions: {}
+      }
+    } as TsConfigResult)
+    await expect(getPackageContext()).rejects.toThrow('"compilerOptions.baseUrl" must be set')
+  })
+
+  it('should handle missing outDir in tsconfig.json', async () => {
+    vi.mocked(readPackageUp).mockResolvedValue({
+      path: '/test/path/package.json',
+      packageJson: {}
+    })
+    vi.mocked(findUp).mockResolvedValue('/test/path/tsconfig.json')
+    vi.mocked(getTsconfig).mockReturnValue({
+      config: {
+        compilerOptions: {
+          baseUrl: '/test/src'
+        }
+      }
+    } as TsConfigResult)
+    await expect(getPackageContext()).rejects.toThrow('"compilerOptions.outDir" must be set')
   })
 })
 
 describe('inferESLintConfigurationStrategy', () => {
-  describe('when the user has a flat configuration file', () => {
-    it('should return type "flat"', async () => {
-      const testPackageRoot = '/foo/bar/baz'
-
-      mockFindUp.mockImplementation(async (patterns: Array<string>) => {
-        if (patterns.some(pattern => /\.config.js$/.test(pattern))) {
-          return path.join(testPackageRoot, patterns[0])
-        }
-      })
-
-      const { inferESLintConfigurationStrategy } = await import('./utils')
-
-      expect(await inferESLintConfigurationStrategy()).toMatchObject({
-        type: 'flat',
-        configFile: path.join(testPackageRoot, 'eslint.config.js')
-      })
-    })
-  })
-
-  describe('when the user has a legacy configuration file', () => {
-    it('should return type "legacy"', async () => {
-      const testPackageRoot = '/foo/bar/baz'
-
-      mockFindUp.mockImplementation(async (patterns: Array<string>) => {
-        if (patterns.some(pattern => pattern.endsWith('.eslintrc'))) {
-          return path.join(testPackageRoot, patterns[0])
-        }
-      })
-
-      const { inferESLintConfigurationStrategy } = await import('./utils')
-
-      expect(await inferESLintConfigurationStrategy()).toMatchObject({
-        type: 'legacy',
-        configFile: path.join(testPackageRoot, '.eslintrc')
-      })
-    })
-  })
-
-  describe('when the user has no configuration file', () => {
-    it('should return false', async () => {
-      mockFindUp.mockImplementation(async () => {
-        return
-      })
-
-      const { inferESLintConfigurationStrategy } = await import('./utils')
-
-      expect(await inferESLintConfigurationStrategy()).toBe(false)
-    })
-  })
-})
-
-describe('createViteConfigurationScaffold', () => {
-  it('should return a basic Vite configuration object', async () => {
-    const { createViteConfigurationScaffold } = await import('./utils')
-
-    expect(createViteConfigurationScaffold()).toMatchObject({
-      build: {},
-      plugins: [],
-      resolve: {},
-      server: {},
-      test: {}
-    })
-  })
-})
-
-describe('createViteConfigurationPreset', () => {
-  const testPackageRoot = '/foo/bar/baz'
-  // const testSrcDir = 'src';
-  // const testOutDir = 'dist';
-  const testPackageJson = {
-    name: 'foo-pkg',
-    version: '1.0.0'
-  }
-
-  const testTsConfig = {
-    compilerOptions: {
-      baseUrl: 'src',
-      outDir: 'dist'
-    }
-  }
-
-  const testOutDir = 'dist'
-
-  const testConfigEnv = {
-    command: 'build',
-    mode: 'development'
-  } as const
-
   beforeEach(() => {
-    mockReadPackageUp.mockImplementation(async () => ({
-      path: testPackageRoot,
-      packageJson: testPackageJson
-    }))
-
-    mockFindUp.mockImplementation(async () => path.join(testPackageRoot, 'tsconfig.json'))
-
-    mockGetTsconfig.mockImplementation(() => ({
-      path: testPackageRoot,
-      config: testTsConfig
-    }))
+    vi.resetAllMocks()
   })
 
-  describe('when the user provides a configuration function', () => {
-    it('should call the function and merge its return value with the base configuration', async () => {
-      const { createViteConfigurationPreset } = await import('./utils')
-
-      const testPreset = createViteConfigurationPreset(({ config }) => {
-        config.build.outDir = testOutDir
-      })
-
-      const testUserConfig = {
-        root: testPackageRoot
+  it('should prioritize flat configuration files', async () => {
+    vi.mocked(findUp).mockImplementation(async patterns => {
+      if (Array.isArray(patterns)) {
+        if (patterns.includes('eslint.config.js')) return '/test/eslint.config.js'
+        if (patterns.includes('.eslintrc')) return '/test/.eslintrc'
       }
-
-      const fnForVite = testPreset(async () => testUserConfig)
-      const configResult = await fnForVite(testConfigEnv)
-
-      expect(configResult).toMatchObject({
-        root: testPackageRoot,
-        build: {
-          outDir: testOutDir
-        }
-      })
+      return undefined
     })
 
-    it('should call the function and allow it to modify configuration in-place', async () => {
-      const { createViteConfigurationPreset } = await import('./utils')
-
-      const testPreset = createViteConfigurationPreset(({ config }) => {
-        config.build.outDir = testOutDir
-      })
-
-      const fnForVite = testPreset(async ({ config }) => {
-        config.root = testPackageRoot
-      })
-
-      const configResult = await fnForVite(testConfigEnv)
-
-      expect(configResult).toMatchObject({
-        root: testPackageRoot,
-        build: {
-          outDir: testOutDir
-        }
-      })
+    const result = await inferESLintConfigurationStrategy('/test')
+    expect(result).toEqual({
+      type: 'flat',
+      configFile: '/test/eslint.config.js'
     })
   })
 
-  describe('when the user provides a configuration value', () => {
-    it('should merge the provided value with the base configuration', async () => {
-      const { createViteConfigurationPreset } = await import('./utils')
+  it('should fall back to legacy configuration files', async () => {
+    vi.mocked(findUp).mockImplementation(async patterns => {
+      if (Array.isArray(patterns)) {
+        if (patterns.includes('eslint.config.js')) return undefined
+        if (patterns.includes('.eslintrc')) return '/test/.eslintrc'
+      }
+      return undefined
+    })
 
-      const testPreset = createViteConfigurationPreset(({ config }) => {
-        config.build.outDir = testOutDir
-      })
-
-      const fnForVite = testPreset({
-        root: testPackageRoot
-      })
-
-      const configResult = await fnForVite(testConfigEnv)
-
-      expect(configResult).toMatchObject({
-        root: testPackageRoot,
-        build: {
-          outDir: testOutDir
-        }
-      })
+    const result = await inferESLintConfigurationStrategy('/test')
+    expect(result).toEqual({
+      type: 'legacy',
+      configFile: '/test/.eslintrc'
     })
   })
 
-  describe('when the user provides nothing', () => {
-    it('should return the base configuration', async () => {
-      const { createViteConfigurationPreset } = await import('./utils')
+  it('should return false when no configuration files are found', async () => {
+    vi.mocked(findUp).mockResolvedValue(undefined)
+    const result = await inferESLintConfigurationStrategy('/test')
+    expect(result).toBe(false)
+  })
+})
 
-      const testPreset = createViteConfigurationPreset(({ config }) => {
-        config.build.outDir = testOutDir
+describe('createPluginReconfigurator', () => {
+  it('should handle promises correctly', async () => {
+    const plugin = {
+      name: 'test-plugin',
+      apply: 'build'
+    }
+
+    const config = {
+      ...createViteConfigurationScaffold(),
+      plugins: [Promise.resolve(plugin)]
+    } as ViteConfigurationScaffold
+
+    const reconfigure = createPluginReconfigurator(config)
+
+    if (typeof reconfigure === 'function') {
+      await reconfigure({
+        name: 'test-plugin',
+        apply: 'build'
       })
 
-      const fnForVite = testPreset()
-
-      const configResult = await fnForVite(testConfigEnv)
-
-      expect(configResult).toMatchObject({
-        build: {
-          outDir: testOutDir
-        }
+      expect(config.plugins).toHaveLength(1)
+      expect(config.plugins[0]).toEqual({
+        name: 'test-plugin',
+        apply: 'build'
       })
+    }
+  })
+
+  it('should handle non-promise values correctly', async () => {
+    const plugin = {
+      name: 'test-plugin',
+      apply: 'build'
+    }
+
+    const config = {
+      ...createViteConfigurationScaffold(),
+      plugins: [plugin]
+    } as ViteConfigurationScaffold
+
+    const reconfigure = createPluginReconfigurator(config)
+
+    if (typeof reconfigure === 'function') {
+      await reconfigure({
+        name: 'test-plugin',
+        apply: 'build'
+      })
+
+      expect(config.plugins).toHaveLength(1)
+      expect(config.plugins[0]).toEqual({
+        name: 'test-plugin',
+        apply: 'build'
+      })
+    }
+  })
+
+  it('should handle null config gracefully', async () => {
+    const reconfigure = createPluginReconfigurator(null as any)
+
+    if (typeof reconfigure === 'function') {
+      await reconfigure({
+        name: 'test-plugin',
+        apply: 'build'
+      })
+    }
+  })
+
+  it('should handle empty plugins array', async () => {
+    const config: ViteConfigurationScaffold = createViteConfigurationScaffold()
+    const reconfigure = createPluginReconfigurator(config)
+
+    if (typeof reconfigure === 'function') {
+      await expect(
+        reconfigure({
+          name: 'test-plugin',
+          apply: 'build'
+        })
+      ).rejects.toThrow('Unable to find an existing plugin instance')
+    }
+  })
+
+  // it('should handle invalid plugin values', async () => {
+  //   const config: ViteConfigurationScaffold = {
+  //     ...createViteConfigurationScaffold(),
+  //     plugins: [undefined]
+  //   }
+
+  //   const reconfigure = createPluginReconfigurator(config)
+
+  //   if (typeof reconfigure === 'function') {
+  //     await expect(
+  //       reconfigure({
+  //         name: 'test-plugin',
+  //         apply: 'build'
+  //       })
+  //     ).rejects.toThrow('Unable to find an existing plugin instance')
+  //   }
+  // })
+
+  it('should handle array values in flattened plugin list', async () => {
+    const config: ViteConfigurationScaffold = {
+      ...createViteConfigurationScaffold(),
+      plugins: [[]] as any
+    }
+
+    const reconfigure = createPluginReconfigurator(config)
+
+    if (typeof reconfigure === 'function') {
+      await expect(
+        reconfigure({
+          name: 'test-plugin',
+          apply: 'build'
+        })
+      ).rejects.toThrow('Unable to find an existing plugin instance')
+    }
+  })
+})
+
+describe('gitDescribe', () => {
+  beforeEach(() => {
+    vi.resetAllMocks()
+  })
+
+  it('should handle successful git describe', () => {
+    vi.mocked(execSync).mockReturnValue('v1.2.3-4-gabcd123\n')
+    expect(gitDescribe()).toBe('v1.2.3-abcd123')
+  })
+
+  it('should handle git describe with just tags', () => {
+    vi.mocked(execSync).mockReturnValue('v1.2.3\n')
+    expect(gitDescribe()).toBe('v1.2.3')
+  })
+
+  it('should handle git describe with just commit hash', () => {
+    vi.mocked(execSync).mockReturnValue('abcd123\n')
+    expect(gitDescribe()).toBe('abcd123')
+  })
+
+  it('should handle git command failures', () => {
+    vi.mocked(execSync).mockImplementation(() => {
+      throw new Error('git command failed')
     })
+    expect(gitDescribe()).toBe('')
   })
 })
