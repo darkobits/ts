@@ -26,7 +26,7 @@
   },
   "peerDependencies": {
     "@darkobits/conventional-changelog-preset": "^0.2.1",
-    "@darkobits/eslint-plugin": "^2.1.19",
+    "@darkobits/eslint-plugin": "^2.1.20",
     "@darkobits/nr": "~0.18.3",
     "@darkobits/semantic-release-config": "~0.2.0",
     "@types/node": ">=22.10.5",
@@ -85,6 +85,5 @@
   ],
   "overrides": {
     "vite": "^6.0.7"
-  },
-  "packageManager": "npm@11.0.0+sha512.11dff29565d2297c74e7c594a9762581bde969f0aa5cbe6f5b3644bf008a16c065ece61094d9ffbb81125be38df8e1ba43eb8244b3d30c61eb797e9a2440e3ec"
+  }
 }
