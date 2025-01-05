@@ -6,6 +6,5 @@ import log from 'lib/log'
 describe('vitest', () => {
   it('should initialize and run test files.', () => {
     expect(log).toHaveProperty('info')
-    expect(true).toEqual(true)
   })
 })
