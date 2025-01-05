@@ -25,6 +25,11 @@
     src="https://img.shields.io/github/actions/workflow/status/darkobits/ts/ci.yml?style=flat-square"
   ></a>
   <a
+    href="https://app.codecov.io/gh/darkobits/ts"
+  ><img
+    src="https://img.shields.io/codecov/c/github/darkobits/ts?style=flat-square&color=%2346CC10"
+  ></a>
+  <a
     href="https://depfu.com/repos/github/darkobits/ts"
   ><img
     src="https://img.shields.io/depfu/darkobits/ts?style=flat-square"
