@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.24.0](https://github.com/darkobits/ts/compare/v0.23.7...v0.24.0) (2025-02-15)
+
+
+### ⚠ BREAKING CHANGES
+
+* **deps:** Update from Vitest 2.x to 3.x. For a list of breaking changes, see:
+
+https://github.com/vitest-dev/vitest/releases/tag/v3.0.0
+
+* **deps:** Update to `vitest@8`. ([c7eac63](https://github.com/darkobits/ts/commit/c7eac6352bbbf783e99ab7627367b57f33a0952c))
+
 ### [0.23.7](https://github.com/darkobits/ts/compare/v0.23.6...v0.23.7) (2025-02-15)
 
 ### [0.23.6](https://github.com/darkobits/ts/compare/v0.23.5...v0.23.6) (2025-01-05)
