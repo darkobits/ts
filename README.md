@@ -54,10 +54,10 @@ and start building something great.
 
 | Name | Version
 | :-- | :--
-| [`typescript`](https://github.com/microsoft/TypeScript) | `~5.7.2`
-| [`vite`](https://github.com/vitejs/vite) | `^6.0.7`
+| [`typescript`](https://github.com/microsoft/TypeScript) | `~5.7.3`
+| [`vite`](https://github.com/vitejs/vite) | `^6.1.0`
 | [`vitest`](https://github.com/vitest-dev/vitest) | `^2.1.8`
-| [`eslint`](https://github.com/eslint/eslint) | `^9.17.0`
+| [`eslint`](https://github.com/eslint/eslint) | `^9.20.1`
 | [`@darkobits/eslint-plugin`](https://github.com/darkobits/eslint-plugin) | `^2.1.20`
-| [`semantic-release`](https://github.com/semantic-release/semantic-release) | `~24.2.1`
-| [`@darkobits/nr`](https://github.com/darkobits/nr) | `~0.18.3`
+| [`semantic-release`](https://github.com/semantic-release/semantic-release) | `~24.2.2`
+| [`@darkobits/nr`](https://github.com/darkobits/nr) | `~0.18.4`
