@@ -82,8 +82,5 @@
     "tool",
     "vite",
     "node"
-  ],
-  "overrides": {
-    "vite": "^6.1.0"
-  }
+  ]
 }

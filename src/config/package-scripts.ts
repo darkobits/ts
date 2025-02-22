@@ -139,7 +139,7 @@ export const defaultPackageScripts = (async ({ command, fn, script }) => {
   })
 
   script('test.watch', command('vitest', {
-    args: { ui: true, passWithNoTests: true },
+    args: { passWithNoTests: true },
     // This command involves user interaction so we need to use 'inherit'.
     stdio: 'inherit',
     env: eslintEnvVars,
