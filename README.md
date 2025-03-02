@@ -55,9 +55,9 @@ and start building something great.
 | Name | Version
 | :-- | :--
 | [`typescript`](https://github.com/microsoft/TypeScript) | `~5.7.3`
-| [`vite`](https://github.com/vitejs/vite) | `^6.1.0`
-| [`vitest`](https://github.com/vitest-dev/vitest) | `^3.0.5`
-| [`eslint`](https://github.com/eslint/eslint) | `^9.20.1`
-| [`@darkobits/eslint-plugin`](https://github.com/darkobits/eslint-plugin) | `^2.1.20`
-| [`semantic-release`](https://github.com/semantic-release/semantic-release) | `~24.2.2`
-| [`@darkobits/nr`](https://github.com/darkobits/nr) | `~0.18.4`
+| [`vite`](https://github.com/vitejs/vite) | `^6.2.0`
+| [`vitest`](https://github.com/vitest-dev/vitest) | `^3.0.7`
+| [`eslint`](https://github.com/eslint/eslint) | `^9.21.0`
+| [`@darkobits/eslint-plugin`](https://github.com/darkobits/eslint-plugin) | `^2.2.0`
+| [`semantic-release`](https://github.com/semantic-release/semantic-release) | `~24.2.3`
+| [`@darkobits/nr`](https://github.com/darkobits/nr) | `~0.18.7`
