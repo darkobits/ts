@@ -1,20 +1,8 @@
-import path from 'node:path'
-
-import fs from 'fs-extra'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 
 import cleanupPlugin from './cleanup-plugin'
-import log from './log'
 
-import type { NormalizedOutputOptions, OutputBundle, OutputChunk, PluginContext } from 'rollup'
-
-// Properly type the mocked fs module
-vi.mock('fs-extra', () => ({
-  default: {
-    readFile: vi.fn(),
-    remove: vi.fn()
-  }
-}))
+import type { NormalizedOutputOptions, OutputBundle, OutputChunk } from 'rollup'
 
 // Test utilities for creating minimal but type-safe mocks
 const createMinimalOutputOptions = (overrides: Partial<NormalizedOutputOptions> = {}): NormalizedOutputOptions => {
@@ -24,10 +12,11 @@ const createMinimalOutputOptions = (overrides: Partial<NormalizedOutputOptions> 
   } as NormalizedOutputOptions
 }
 
-const createMinimalChunk = (fileName: string): OutputChunk => {
+const createMinimalChunk = (fileName: string, code = ''): OutputChunk => {
   return {
     type: 'chunk',
     fileName,
+    code,
     // eslint-disable-next-line unicorn/no-null
     facadeModuleId: null,
     exports: [],
@@ -41,14 +30,11 @@ const createMinimalBundle = (chunks: Record<string, OutputChunk>): OutputBundle 
   return chunks as OutputBundle
 }
 
-const createMinimalPluginContext = (overrides: Partial<PluginContext> = {}): PluginContext => {
-  return {
-    error: vi.fn(),
-    ...overrides
-  } as PluginContext
-}
-
-vi.mock('./log')
+// vi.mock('./log', () => ({
+//   default: {
+//     verbose: vi.fn()
+//   }
+// }))
 
 vi.mock('chalk', () => ({
   default: {
@@ -70,11 +56,6 @@ describe('cleanupPlugin', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
-    // Type assertion for the mocked functions
-    // eslint-disable-next-line @typescript-eslint/no-misused-promises
-    vi.mocked(fs.readFile).mockImplementation(() => Promise.resolve(''))
-    // eslint-disable-next-line @typescript-eslint/no-misused-promises
-    vi.mocked(fs.remove).mockImplementation(() => Promise.resolve())
   })
 
   afterEach(() => {
@@ -83,161 +64,101 @@ describe('cleanupPlugin', () => {
 
   afterEach(() => {
     vi.resetModules()
-  })
-
-  describe('plugin configuration', () => {
-    it('returns a properly configured Vite plugin', () => {
-      const plugin = cleanupPlugin(mockOptions)
-
-      expect(plugin.name).toBe('ts:cleanup-plugin')
-      expect(plugin.enforce).toBe('post')
-      expect(typeof plugin.generateBundle).toBe('function')
-      expect(typeof plugin.closeBundle).toBe('function')
-    })
   })
 
   describe('generateBundle hook', () => {
-    it('tracks emitted files with explicit output directory', () => {
-      const plugin = cleanupPlugin(mockOptions)
-      const outputOptions = createMinimalOutputOptions({ dir: '/output/dir' })
-      const bundle = createMinimalBundle({
-        'file1.js': createMinimalChunk('file1.js'),
-        'file2.js': createMinimalChunk('file2.js')
-      })
-
-      const generateBundle = plugin.generateBundle as (options: NormalizedOutputOptions, bundle: OutputBundle) => void
-      generateBundle(outputOptions, bundle)
-
-      expect(fs.readFile).not.toHaveBeenCalled()
-    })
-
-    it('tracks emitted files with explicit output file', () => {
-      const plugin = cleanupPlugin(mockOptions)
-      const outputOptions = createMinimalOutputOptions({ file: '/output/bundle.js' })
-      const bundle = createMinimalBundle({
-        'file1.js': createMinimalChunk('file1.js')
-      })
-
-      const generateBundle = plugin.generateBundle as (options: NormalizedOutputOptions, bundle: OutputBundle) => void
-      generateBundle(outputOptions, bundle)
-
-      expect(fs.readFile).not.toHaveBeenCalled()
-    })
-
-    it('handles missing output options gracefully', () => {
-      const plugin = cleanupPlugin(mockOptions)
-      const outputOptions = createMinimalOutputOptions()
-      const bundle = createMinimalBundle({
-        'file1.js': createMinimalChunk('file1.js')
-      })
-
-      const generateBundle = plugin.generateBundle as (options: NormalizedOutputOptions, bundle: OutputBundle) => void
-      generateBundle(outputOptions, bundle)
-
-      expect(fs.readFile).not.toHaveBeenCalled()
-    })
-  })
-
-  describe('closeBundle hook', () => {
-    it('skips empty chunk removal when option is disabled', async () => {
+    it('skips empty chunk removal when option is disabled', () => {
       const plugin = cleanupPlugin({
         ...mockOptions,
         removeEmptyChunks: false
       })
 
-      const closeBundle = plugin.closeBundle as () => Promise<void>
-      await closeBundle()
-
-      expect(fs.readFile).not.toHaveBeenCalled()
-      expect(fs.remove).not.toHaveBeenCalled()
-    })
-
-    it('removes empty chunks when detected', async () => {
-      const plugin = cleanupPlugin(mockOptions)
-      const outputOptions = createMinimalOutputOptions({ dir: '/output/dir' })
+      const outputOptions = createMinimalOutputOptions()
       const bundle = createMinimalBundle({
-        'empty.js': createMinimalChunk('empty.js')
+        'empty.js': createMinimalChunk('empty.js', mockEmptyChunkContent)
       })
 
-      // @ts-expect-error
-      vi.mocked(fs.readFile).mockResolvedValueOnce(mockEmptyChunkContent)
-
       const generateBundle = plugin.generateBundle as (options: NormalizedOutputOptions, bundle: OutputBundle) => void
-      const closeBundle = plugin.closeBundle as () => Promise<void>
-
       generateBundle(outputOptions, bundle)
-      await closeBundle()
 
-      expect(fs.readFile).toHaveBeenCalledWith(
-        path.join('/output/dir', 'empty.js'),
-        'utf8'
-      )
-      expect(fs.remove).toHaveBeenCalledWith(
-        path.join('/output/dir', 'empty.js')
-      )
-      expect(log.debug).toHaveBeenCalledWith(
-        'cleanup-plugin',
-        'Removed empty chunk:',
-        expect.any(String)
-      )
+      // The bundle should still contain the empty chunk.
+      expect(bundle['empty.js']).toBeDefined()
     })
 
-    it('preserves non-empty chunks', async () => {
+    it('removes empty chunks from the bundle', () => {
       const plugin = cleanupPlugin(mockOptions)
-      const outputOptions = createMinimalOutputOptions({ dir: '/output/dir' })
+      const outputOptions = createMinimalOutputOptions()
+
       const bundle = createMinimalBundle({
-        'normal.js': createMinimalChunk('normal.js')
+        'empty.js': createMinimalChunk('empty.js', mockEmptyChunkContent)
       })
 
-      // @ts-expect-error
-      vi.mocked(fs.readFile).mockResolvedValueOnce(mockNormalChunkContent)
-
       const generateBundle = plugin.generateBundle as (options: NormalizedOutputOptions, bundle: OutputBundle) => void
-      const closeBundle = plugin.closeBundle as () => Promise<void>
-
       generateBundle(outputOptions, bundle)
-      await closeBundle()
 
-      expect(fs.readFile).toHaveBeenCalledWith(
-        path.join('/output/dir', 'normal.js'),
-        'utf8'
-      )
-      expect(fs.remove).not.toHaveBeenCalled()
-      expect(log.debug).not.toHaveBeenCalled()
+      // The empty chunk should be removed from the bundle.
+      expect(bundle['empty.js']).toBeUndefined()
     })
 
-    it('handles errors during cleanup', async () => {
+    it('removes source maps for empty chunks', () => {
       const plugin = cleanupPlugin(mockOptions)
-      const outputOptions = createMinimalOutputOptions({ dir: '/output/dir' })
+      const outputOptions = createMinimalOutputOptions()
+
+      // Create a bundle with an empty chunk and its source map.
       const bundle = createMinimalBundle({
-        'error.js': createMinimalChunk('error.js')
+        'empty.js': createMinimalChunk('empty.js', mockEmptyChunkContent)
       })
 
-      const mockError = new Error('Mock filesystem error')
-      vi.mocked(fs.readFile).mockRejectedValueOnce(mockError)
-
-      const mockPluginContext = createMinimalPluginContext({ error: vi.fn() as any })
+      // Add a source map file.
+      bundle['empty.js.map'] = {
+        type: 'asset',
+        fileName: 'empty.js.map',
+        source: '{}'
+      } as any
 
       const generateBundle = plugin.generateBundle as (options: NormalizedOutputOptions, bundle: OutputBundle) => void
-      const closeBundle = plugin.closeBundle as (this: PluginContext) => Promise<void>
-
       generateBundle(outputOptions, bundle)
-      await closeBundle.call(mockPluginContext)
 
-      expect(mockPluginContext.error).toHaveBeenCalledWith(mockError)
+      // Both the empty chunk and its source map should be removed.
+      expect(bundle['empty.js']).toBeUndefined()
+      expect(bundle['empty.js.map']).toBeUndefined()
+    })
+
+    it('preserves non-empty chunks', () => {
+      const plugin = cleanupPlugin(mockOptions)
+      const outputOptions = createMinimalOutputOptions()
+      const bundle = createMinimalBundle({
+        'normal.js': createMinimalChunk('normal.js', mockNormalChunkContent)
+      })
+
+      const generateBundle = plugin.generateBundle as (options: NormalizedOutputOptions, bundle: OutputBundle) => void
+      generateBundle(outputOptions, bundle)
+
+      // The non-empty chunk should still be in the bundle.
+      expect(bundle['normal.js']).toBeDefined()
+    })
+
+    it('handles non-JS files correctly', () => {
+      const plugin = cleanupPlugin(mockOptions)
+      const outputOptions = createMinimalOutputOptions()
+
+      // Create a bundle with a non-JS file.
+      const bundle = {
+        'styles.css': { type: 'asset', fileName: 'styles.css', source: 'body { color: red; }' }
+      } as unknown as OutputBundle
+
+      const generateBundle = plugin.generateBundle as (options: NormalizedOutputOptions, bundle: OutputBundle) => void
+      generateBundle(outputOptions, bundle)
+
+      // The CSS file should still be in the bundle.
+      expect(bundle['styles.css']).toBeDefined()
     })
   })
 
   describe('empty chunk detection', () => {
-    it('correctly identifies empty chunks', async () => {
+    it('correctly identifies empty chunks with various source map formats', () => {
       const plugin = cleanupPlugin(mockOptions)
-      const outputOptions = createMinimalOutputOptions({ dir: '/output/dir' })
-      const bundle = createMinimalBundle({
-        'test.js': createMinimalChunk('test.js')
-      })
-
-      const generateBundle = plugin.generateBundle as (options: NormalizedOutputOptions, bundle: OutputBundle) => void
-      const closeBundle = plugin.closeBundle as () => Promise<void>
+      const outputOptions = createMinimalOutputOptions()
 
       const emptyChunkVariations = [
         '\n//# sourceMappingURL=data:application/json;base64,xyz789\n',
@@ -245,35 +166,48 @@ describe('cleanupPlugin', () => {
       ]
 
       for (const content of emptyChunkVariations) {
-        vi.mocked(fs.readFile).mockReset()
-        // @ts-expect-error
-        vi.mocked(fs.readFile).mockResolvedValueOnce(content)
+        const bundle = createMinimalBundle({
+          'test.js': createMinimalChunk('test.js', content)
+        })
 
+        const generateBundle = plugin.generateBundle as (options: NormalizedOutputOptions, bundle: OutputBundle) => void
         generateBundle(outputOptions, bundle)
-        await closeBundle()
 
-        expect(fs.remove).toHaveBeenCalled()
+        // The empty chunk should be removed
+        expect(bundle['test.js']).toBeUndefined()
+        vi.clearAllMocks()
       }
     })
 
-    it('handles malformed source map comments', async () => {
+    it('handles malformed source map comments', () => {
       const plugin = cleanupPlugin(mockOptions)
-      const outputOptions = createMinimalOutputOptions({ dir: '/output/dir' })
-      const bundle = createMinimalBundle({
-        'test.js': createMinimalChunk('test.js')
-      })
+      const outputOptions = createMinimalOutputOptions()
 
       const malformedContent = '\n//# sourceMappingURL\n'
-      // @ts-expect-error
-      vi.mocked(fs.readFile).mockResolvedValueOnce(malformedContent)
+      const bundle = createMinimalBundle({
+        'test.js': createMinimalChunk('test.js', malformedContent)
+      })
 
       const generateBundle = plugin.generateBundle as (options: NormalizedOutputOptions, bundle: OutputBundle) => void
-      const closeBundle = plugin.closeBundle as () => Promise<void>
-
       generateBundle(outputOptions, bundle)
-      await closeBundle()
 
-      expect(fs.remove).not.toHaveBeenCalled()
+      // The chunk with malformed source map should not be identified as empty.
+      expect(bundle['test.js']).toBeDefined()
+    })
+
+    it('handles chunks with no code property', () => {
+      const plugin = cleanupPlugin(mockOptions)
+      const outputOptions = createMinimalOutputOptions()
+
+      // Create a chunk without a code property
+      const chunk = createMinimalChunk('test.js')
+      delete (chunk as any).code
+
+      const bundle = createMinimalBundle({ 'test.js': chunk })
+
+      const generateBundle = plugin.generateBundle as (options: NormalizedOutputOptions, bundle: OutputBundle) => void
+      generateBundle(outputOptions, bundle)
+      expect(bundle['test.js']).toBeDefined()
     })
   })
 })
