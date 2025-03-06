@@ -298,7 +298,7 @@ export const defaultPackageScripts = (async ({ command, fn, script }) => {
     )
 
     const tsxCommandThunk = command('tsx', {
-      args:  ['watch', resolvedEntrypointInSrc, ...forwardArgs],
+      args: ['watch', resolvedEntrypointInSrc, ...forwardArgs],
       stdio: 'inherit'
     })
 

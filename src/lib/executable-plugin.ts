@@ -50,8 +50,8 @@ export default function executablePlugin(): Plugin {
             log.warn(prefix, `Executable ${chalk.green(relativeBinPath)} declared in package.json does not exist.`)
           }
         }
-      } catch (err: any) {
-        this.error(err)
+      } catch (error: any) {
+        this.error(error)
       }
     }
   }

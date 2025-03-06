@@ -23,7 +23,7 @@ function isNodeModule(root: string, id: string) {
   }
 }
 
-export function nodeExternalPlugin({ root }: {root: string}): Plugin {
+export function nodeExternalPlugin({ root }: { root: string }): Plugin {
   return {
     name: 'ts:plugin-node-externals',
     enforce: 'pre',

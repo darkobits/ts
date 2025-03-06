@@ -44,9 +44,9 @@ describe('ts:executable-plugin', () => {
     vi.mocked(getPackageContext).mockResolvedValue({
       root: mockRoot,
       packageJson: { bin: binPath }
-    }  as PackageContext)
+    } as PackageContext)
 
-    // @ts-expect-error
+    // @ts-expect-error Intentionally invalid argument.
     vi.mocked(fs.exists).mockResolvedValue(true)
 
     const plugin = executablePlugin()
@@ -74,7 +74,7 @@ describe('ts:executable-plugin', () => {
       packageJson: { bin: binPaths }
     } as unknown as PackageContext)
 
-    // @ts-expect-error
+    // @ts-expect-error Intentionally invalid argument.
     vi.mocked(fs.exists).mockResolvedValue(true)
 
     const plugin = executablePlugin()
@@ -106,7 +106,7 @@ describe('ts:executable-plugin', () => {
       packageJson: { bin: binPath }
     } as PackageContext)
 
-    // @ts-expect-error
+    // @ts-expect-error Intentionally invalid argument.
     vi.mocked(fs.exists).mockResolvedValue(false)
 
     const plugin = executablePlugin()
@@ -147,7 +147,7 @@ describe('ts:executable-plugin', () => {
       packageJson: { bin: binPath }
     } as PackageContext)
 
-    // @ts-expect-error
+    // @ts-expect-error Intentionally invalid argument.
     vi.mocked(fs.exists).mockResolvedValue(true)
 
     vi.mocked(fs.chmod).mockRejectedValue(mockFsError)

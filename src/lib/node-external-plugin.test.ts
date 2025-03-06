@@ -9,7 +9,7 @@ vi.mock('./log')
 
 vi.mock('node:module', () => ({
   createRequire: () => ({
-    resolve: vi.fn((id: string, options: {paths: Array<string>}) => {
+    resolve: vi.fn((id: string, options: { paths: Array<string> }) => {
       if (id === 'existing-module') return path.join(options.paths[0], 'node_modules', id, 'index.js')
       throw new Error('Module not found')
     })

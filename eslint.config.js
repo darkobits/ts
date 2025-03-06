@@ -1,6 +1,6 @@
-import { ts } from '@darkobits/eslint-plugin'
+import { presetTs } from '@darkobits/eslint-config'
 
 export default [
   { ignores: ['fixtures/**'] },
-  ...ts
+  ...presetTs
 ]

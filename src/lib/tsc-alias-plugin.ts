@@ -59,8 +59,8 @@ export default function tscAliasPlugin(userOptions: ReplaceTscAliasPathsOptions 
         await replaceTscAliasPaths(options)
         const time = Date.now() - startTime
         log.debug(prefix, chalk.gray(`Done in ${ms(time)}.`))
-      } catch (err: any) {
-        this.error(err)
+      } catch (error: any) {
+        this.error(error)
       }
     }
   }

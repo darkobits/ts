@@ -26,10 +26,10 @@
   },
   "peerDependencies": {
     "@darkobits/conventional-changelog-preset": "^0.2.1",
-    "@darkobits/eslint-plugin": "^2.2.0",
-    "@darkobits/nr": "~0.18.7",
+    "@darkobits/eslint-config": "^3.0.2",
+    "@darkobits/nr": "~0.18.8",
     "@darkobits/semantic-release-config": "~0.2.0",
-    "@types/node": ">=22.13.8",
+    "@types/node": ">=22.13.9",
     "@vitest/coverage-v8": "^3.0.7",
     "@vitest/ui": "^3.0.7",
     "eslint": "^9.21.0",

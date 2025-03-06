@@ -104,8 +104,8 @@ export async function getPackageContext(): Promise<PackageContext> {
         TEST_FILES
       }
     }
-  } catch (err) {
-    throw new Error(`[getPackageContext] ${err}`)
+  } catch (cause: any) {
+    throw new Error(`[getPackageContext] ${cause.message}`, { cause })
   }
 }
 
@@ -164,8 +164,8 @@ export async function inferESLintConfigurationStrategy(cwd: string = process.cwd
     }
 
     return false
-  } catch (err: any) {
-    log.error('[inferESLintConfigurationStrategy]', err)
+  } catch (error: any) {
+    log.error('[inferESLintConfigurationStrategy]', error)
     return false
   }
 }
@@ -309,8 +309,8 @@ export function gitDescribe() {
       .replaceAll(/-g(\w{7,})$/g, '-$1')
       // Replace the 'commits since last tag' segment with a dash.
       .replaceAll(/-\d+-/g, '-')
-  } catch (err: any) {
-    log.error('[gitDescribe]', err)
+  } catch (error: any) {
+    log.error('[gitDescribe]', error)
     return ''
   }
 }

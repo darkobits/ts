@@ -8,7 +8,7 @@ interface DependencyInfo {
   url: string
 }
 
-const OUR_PACKAGE_JSON_PROMISE = import('../package.json', { with: { type: 'json' }}).then(mod => mod.default)
+const OUR_PACKAGE_JSON_PROMISE = import('../package.json', { with: { type: 'json' } }).then(mod => mod.default)
 
 /**
  * Gets the current local version of the provided dependency.
@@ -59,8 +59,8 @@ const dependencies = [{
   name: 'eslint',
   url: 'https://github.com/eslint/eslint'
 }, {
-  name: '@darkobits/eslint-plugin',
-  url: 'https://github.com/darkobits/eslint-plugin'
+  name: '@darkobits/eslint-config',
+  url: 'https://github.com/darkobits/eslint-config'
 }, {
   name: 'semantic-release',
   url: 'https://github.com/semantic-release/semantic-release'
