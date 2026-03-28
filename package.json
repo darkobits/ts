@@ -58,7 +58,7 @@
     "rollup-plugin-preserve-shebang": "^1.0.1",
     "tsc-alias": "^1.8.13",
     "vite-plugin-eslint": "^1.8.1",
-    "vite-plugin-static-copy": "~2.3.0",
+    "vite-plugin-static-copy": "~2.3.2",
     "vite-tsconfig-paths": "^5.1.4",
     "wait-on": "^8.0.3"
   },
